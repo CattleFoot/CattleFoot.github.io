@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>linux系统磁盘挂载 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="linux系统挂载知识  linux的硬盘识别2.6 kernel以后，linux会将识别到的硬件设备在/dev下建立相应的设备文件，如：     设备前缀 描述     sda 表示SCSI类硬盘   hda 表示IDE类硬盘   scd 表示USB类设备    我们可以通过fdisk -l命令来查看设备信息：1234567891011121314xxxxxx:~ $ sudo fdisk -l">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux系统磁盘挂载">
+<meta property="og:url" content="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/index.html">
+<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:description" content="linux系统挂载知识  linux的硬盘识别2.6 kernel以后，linux会将识别到的硬件设备在/dev下建立相应的设备文件，如：     设备前缀 描述     sda 表示SCSI类硬盘   hda 表示IDE类硬盘   scd 表示USB类设备    我们可以通过fdisk -l命令来查看设备信息：1234567891011121314xxxxxx:~ $ sudo fdisk -l">
+<meta property="og:updated_time" content="2017-04-22T03:24:40.089Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux系统磁盘挂载">
+<meta name="twitter:description" content="linux系统挂载知识  linux的硬盘识别2.6 kernel以后，linux会将识别到的硬件设备在/dev下建立相应的设备文件，如：     设备前缀 描述     sda 表示SCSI类硬盘   hda 表示IDE类硬盘   scd 表示USB类设备    我们可以通过fdisk -l命令来查看设备信息：1234567891011121314xxxxxx:~ $ sudo fdisk -l">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux系统磁盘挂载" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/22/linux系统磁盘挂载/" class="article-date">
+  <time datetime="2017-04-22T03:24:00.000Z" itemprop="datePublished">2017-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      linux系统磁盘挂载
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>linux系统挂载知识</p>
+<ul>
+<li>linux的硬盘识别<br>2.6 kernel以后，linux会将识别到的硬件设备在/dev下建立相应的设备文件，如：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">设备前缀</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">sda</td>
+<td style="text-align:center">表示SCSI类硬盘</td>
+</tr>
+<tr>
+<td style="text-align:center">hda</td>
+<td style="text-align:center">表示IDE类硬盘</td>
+</tr>
+<tr>
+<td style="text-align:center">scd</td>
+<td style="text-align:center">表示USB类设备</td>
+</tr>
+</tbody>
+</table>
+<p>我们可以通过fdisk -l命令来查看设备信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">xxxxxx:~ $ sudo fdisk -l</div><div class="line">Device         Boot  Start      End  Sectors  Size Id Type</div><div class="line">/dev/mmcblk0p1        8192   137215   129024   63M  c W95 FAT32 (LBA)</div><div class="line">/dev/mmcblk0p2      137216 30367743 30230528 14.4G 83 Linux</div><div class="line"></div><div class="line">Disk /dev/sda: 74.5 GiB, 80026361856 bytes, 156301488 sectors</div><div class="line">Units: sectors of 1 * 512 = 512 bytes</div><div class="line">Sector size (logical/physical): 512 bytes / 512 bytes</div><div class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</div><div class="line">Disklabel type: dos</div><div class="line">Disk identifier: 0x7780b3c2</div><div class="line"></div><div class="line">Device     Boot Start       End   Sectors  Size Id Type</div><div class="line">/dev/sda1        2048 156301487 156299440 74.5G 83 Linux</div></pre></td></tr></table></figure></p>
+<p>通过命令我们可以看到/dev/sda1设备信息，这个设备标识已经分过区并且格式化过了，现在就可以挂载了，但在挂在前我们得设置一个挂载点啊，要不凭空怎么挂呢，是吧，一般可以选择/mnt目录下获知/media目录下，先在选定目录下创建一个文件夹，然后就可以挂载在文件夹上了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mount -t ext4 /dev/sda1 /media/disk1</div><div class="line">umount /dev/sda1</div></pre></td></tr></table></figure></p>
+<p>其中第一句中的ext4 表示文件系统类型（可以通过parted程序查看）；iocharset=utf8文件读取格式，可选参数；umask表示让挂载的分区允许所有用户读取和修改，可选参数。第二句为卸载命令。<br>这个只是临时的挂在，如果要在开机的时候就挂载的话则需要修改/etc/fstab。</p>
+<p>参考资料：<br>1.<a href="http://blog.chinaunix.net/uid-7411781-id-2056205.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-7411781-id-2056205.html</a><br>2.<a href="http://www.jb51.net/os/RedHat/1117.html" target="_blank" rel="external">http://www.jb51.net/os/RedHat/1117.html</a><br>3.<a href="http://qq85609655.iteye.com/blog/1449899" target="_blank" rel="external">http://qq85609655.iteye.com/blog/1449899</a><br>4.<a href="http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html" target="_blank" rel="external">http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html</a><br>5.<a href="http://blog.csdn.net/jiyuanyi1992/article/details/43866273" target="_blank" rel="external">http://blog.csdn.net/jiyuanyi1992/article/details/43866273</a><br>6./etc/fstab文件解析：<a href="http://blog.csdn.net/richerg85/article/details/17917129" target="_blank" rel="external">http://blog.csdn.net/richerg85/article/details/17917129</a><br>7.<a href="http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/" target="_blank" rel="external">http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj1spantl00015cu3ybciz5sn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/22/hexo写blog/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hexo写blog
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Arkiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Siste innlegg</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/04/22/linux系统磁盘挂载/">linux系统磁盘挂载</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/22/hexo写blog/">hexo写blog</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/22/使用hexo向github发布自己的blog/">使用hexo向github发布自己的blog</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

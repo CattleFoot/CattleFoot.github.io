@@ -3,14 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>CallteFoot&#39;s blog</title>
+  <title>使用hexo向github发布自己的blog | CallteFoot&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="CallteFoot's blog">
-<meta property="og:url" content="https://cattlefoot.github.io/index.html">
+  <meta name="description" content="准备：使用hexo在github上搭建博客需要以下东西：   git，下载安装即可  node,下载安装即可，如果自己用压缩包安装，注意配置好环境变量。  通过node安装好hexo。    安装hexo：在装好node才可以安装hexo1npm　install　-g hexo   创建hexo文件夹即自己的blog项目文件夹，切换到目录下，按住shirt键并右击，可以看到《在此处打开命令窗口》">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用hexo向github发布自己的blog">
+<meta property="og:url" content="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/index.html">
 <meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:description" content="准备：使用hexo在github上搭建博客需要以下东西：   git，下载安装即可  node,下载安装即可，如果自己用压缩包安装，注意配置好环境变量。  通过node安装好hexo。    安装hexo：在装好node才可以安装hexo1npm　install　-g hexo   创建hexo文件夹即自己的blog项目文件夹，切换到目录下，按住shirt键并右击，可以看到《在此处打开命令窗口》">
+<meta property="og:updated_time" content="2017-04-22T01:44:19.707Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CallteFoot's blog">
+<meta name="twitter:title" content="使用hexo向github发布自己的blog">
+<meta name="twitter:description" content="准备：使用hexo在github上搭建博客需要以下东西：   git，下载安装即可  node,下载安装即可，如果自己用压缩包安装，注意配置好环境变量。  通过node安装好hexo。    安装hexo：在装好node才可以安装hexo1npm　install　-g hexo   创建hexo文件夹即自己的blog项目文件夹，切换到目录下，按住shirt键并右击，可以看到《在此处打开命令窗口》">
   
     <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
   
@@ -59,207 +64,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-linux系统磁盘挂载" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/22/linux系统磁盘挂载/" class="article-date">
-  <time datetime="2017-04-22T03:24:00.000Z" itemprop="datePublished">2017-04-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/linux系统磁盘挂载/">linux系统磁盘挂载</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>linux系统挂载知识</p>
-<ul>
-<li>linux的硬盘识别<br>2.6 kernel以后，linux会将识别到的硬件设备在/dev下建立相应的设备文件，如：</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">设备前缀</th>
-<th style="text-align:center">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">sda</td>
-<td style="text-align:center">表示SCSI类硬盘</td>
-</tr>
-<tr>
-<td style="text-align:center">hda</td>
-<td style="text-align:center">表示IDE类硬盘</td>
-</tr>
-<tr>
-<td style="text-align:center">scd</td>
-<td style="text-align:center">表示USB类设备</td>
-</tr>
-</tbody>
-</table>
-<p>我们可以通过fdisk -l命令来查看设备信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">xxxxxx:~ $ sudo fdisk -l</div><div class="line">Device         Boot  Start      End  Sectors  Size Id Type</div><div class="line">/dev/mmcblk0p1        8192   137215   129024   63M  c W95 FAT32 (LBA)</div><div class="line">/dev/mmcblk0p2      137216 30367743 30230528 14.4G 83 Linux</div><div class="line"></div><div class="line">Disk /dev/sda: 74.5 GiB, 80026361856 bytes, 156301488 sectors</div><div class="line">Units: sectors of 1 * 512 = 512 bytes</div><div class="line">Sector size (logical/physical): 512 bytes / 512 bytes</div><div class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</div><div class="line">Disklabel type: dos</div><div class="line">Disk identifier: 0x7780b3c2</div><div class="line"></div><div class="line">Device     Boot Start       End   Sectors  Size Id Type</div><div class="line">/dev/sda1        2048 156301487 156299440 74.5G 83 Linux</div></pre></td></tr></table></figure></p>
-<p>通过命令我们可以看到/dev/sda1设备信息，这个设备标识已经分过区并且格式化过了，现在就可以挂载了，但在挂在前我们得设置一个挂载点啊，要不凭空怎么挂呢，是吧，一般可以选择/mnt目录下获知/media目录下，先在选定目录下创建一个文件夹，然后就可以挂载在文件夹上了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mount -t ext4 /dev/sda1 /media/disk1</div><div class="line">umount /dev/sda1</div></pre></td></tr></table></figure></p>
-<p>其中第一句中的ext4 表示文件系统类型（可以通过parted程序查看）；iocharset=utf8文件读取格式，可选参数；umask表示让挂载的分区允许所有用户读取和修改，可选参数。第二句为卸载命令。<br>这个只是临时的挂在，如果要在开机的时候就挂载的话则需要修改/etc/fstab。</p>
-<p>参考资料：<br>1.<a href="http://blog.chinaunix.net/uid-7411781-id-2056205.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-7411781-id-2056205.html</a><br>2.<a href="http://www.jb51.net/os/RedHat/1117.html" target="_blank" rel="external">http://www.jb51.net/os/RedHat/1117.html</a><br>3.<a href="http://qq85609655.iteye.com/blog/1449899" target="_blank" rel="external">http://qq85609655.iteye.com/blog/1449899</a><br>4.<a href="http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html" target="_blank" rel="external">http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html</a><br>5.<a href="http://blog.csdn.net/jiyuanyi1992/article/details/43866273" target="_blank" rel="external">http://blog.csdn.net/jiyuanyi1992/article/details/43866273</a><br>6./etc/fstab文件解析：<a href="http://blog.csdn.net/richerg85/article/details/17917129" target="_blank" rel="external">http://blog.csdn.net/richerg85/article/details/17917129</a><br>7.<a href="http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/" target="_blank" rel="external">http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj1spantl00015cu3ybciz5sn" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hexo写blog" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/22/hexo写blog/" class="article-date">
-  <time datetime="2017-04-22T02:00:19.000Z" itemprop="datePublished">2017-04-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/hexo写blog/">hexo写blog</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&ensp;&ensp;上一篇我们讲了怎么使用hexo向guthub发布自己的blog，这篇我们讲讲怎么通过hexo写blog。<br>&ensp;&ensp;在我们开始写blog之前，我们先了解下hexo的blog目录结构：<br><img src="/images/1492826647877.png" alt="hexo的blog目录"></p>
-<ol>
-<li>deploy_git一看名称我们就知道大概作何用的，是的，最终发布到github的所有东西都在这个目录下，hexo自动生成的；</li>
-<li>node_modules是node执行的资源文件；</li>
-<li>scaffolds模板文件存放的地方；</li>
-<li>source文章资源存放的地方；</li>
-<li>themes主题存放的地方；</li>
-<li>_config.yml我们的blog配置文件,在上篇中也提到过的;<br>暂时理解到这里，以后发现不对会及时补充。</li>
-</ol>
-<p><strong>生成一篇新博客</strong><br>&ensp;&ensp;好了现在可以开始准备写自己的blog啦<br>hexo通过下面的命令来创建一片新的文章：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new [layout] &lt;title&gt;</div></pre></td></tr></table></figure></p>
-<p>其中[]表示可选填的参数，&lt;&gt;表示必填的参数，(layout)为制定了文章的布局，默认为post，这个默认值可以通过 _config.yml 中的 default_layout 参数来修改，其他还有page和draft两种布局，它们也代表了文章最终放在哪里：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">布局</th>
-<th style="text-align:left">路径</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">post</td>
-<td style="text-align:left">source/_posts</td>
-</tr>
-<tr>
-<td style="text-align:left">page</td>
-<td style="text-align:left">source</td>
-</tr>
-<tr>
-<td style="text-align:left">draft</td>
-<td style="text-align:left">source/_drafts</td>
-</tr>
-</tbody>
-</table>
-<p><em>！注意！</em>  如果我们自定义了布局，并且和post相同，也是会放到source/_posts下。<br>&ensp;&ensp;有生成bolg那也有移除（删除）blog，只要删除需要删除的blog的.md文件并运行以下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo clean</div></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp; 该命令会删除node的数据库并重新生成。</p>
-<p><strong>文件名称</strong><br>&ensp;&ensp;Hexo默认是以标题作为文件名称，可以通过new_post_name参数修改默认的文件名称，如:year-:month-:day-:title.md 可让您更方便的通过日期来管理文章，且最终文件的后缀是.md。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">变量</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">:title</td>
-<td style="text-align:left">标题（小写，空格将会被替换为短杠）</td>
-</tr>
-<tr>
-<td style="text-align:left">:year</td>
-<td style="text-align:left">建立的年份，比如， 2015</td>
-</tr>
-<tr>
-<td style="text-align:left">:month</td>
-<td style="text-align:left">建立的月份（有前导零），比如， 04</td>
-</tr>
-<tr>
-<td style="text-align:left">:i_month</td>
-<td style="text-align:left">建立的月份（无前导零），比如， 4</td>
-</tr>
-<tr>
-<td style="text-align:left">:day</td>
-<td style="text-align:left">建立的日期（有前导零），比如， 07</td>
-</tr>
-<tr>
-<td style="text-align:left">:i_day</td>
-<td style="text-align:left">建立的日期（无前导零），比如， 7</td>
-</tr>
-</tbody>
-</table>
-<p><strong>草稿</strong><br>&ensp;&ensp;如上提到的三种布局中的draft，其代表为文件为草稿，存放在source/_drafts 文件夹，在默认发布blog时是不会将草稿发布到github，需要通过publish命令将草稿移动到source/_posts 文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo publish [layout] &lt;title&gt;</div></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp; 草稿默认不会显示在页面中，可在执行时加上 –draft 参数，或是把 render_drafts 参数设为 true 来预览草稿。<br><strong>模板</strong><br>&ensp;&ensp;在新建文章时，Hexo 会根据 scaffolds 文件夹内相对应的文件来建立文件，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new photo &quot;My Gallery&quot;</div></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;在执行这行指令时，Hexo 会尝试在 scaffolds 文件夹中寻找 photo.md，并根据其内容建立文章，以下是您可以在模版中使用的变量：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">变量</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">layout</td>
-<td style="text-align:left">布局</td>
-</tr>
-<tr>
-<td style="text-align:left">title</td>
-<td style="text-align:left">标题</td>
-</tr>
-<tr>
-<td style="text-align:left">draft</td>
-<td style="text-align:left">文件建立日期</td>
-</tr>
-</tbody>
-</table>
-<p><strong>注意</strong>在做表格的时候，一定要<strong>回车换行</strong>、<strong>回车换行</strong>、<strong>回车换行</strong>后做表格，要不不会被解析。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cj1smb1m900005cu3zqf98djm" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-使用hexo向github发布自己的blog" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-使用hexo向github发布自己的blog" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/04/22/使用hexo向github发布自己的blog/" class="article-date">
   <time datetime="2017-04-22T01:41:34.000Z" itemprop="datePublished">2017-04-22</time>
@@ -272,8 +77,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/使用hexo向github发布自己的blog/">使用hexo向github发布自己的blog</a>
+    <h1 class="article-title" itemprop="name">
+      使用hexo向github发布自己的blog
     </h1>
   
 
@@ -333,10 +138,19 @@
     </footer>
   </div>
   
-</article>
-
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/04/22/hexo写blog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hexo写blog</div>
+    </a>
+  
+</nav>
 
   
+</article>
 
 </section>
         
