@@ -61,6 +61,111 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-python切片" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/06/python切片/" class="article-date">
+  <time datetime="2017-05-06T07:21:32.000Z" itemprop="datePublished">2017-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/06/python切片/">python切片</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>原理上分析切片运算：<br>&ensp;&ensp;list的切片，内部是调用<strong>getitem</strong>，<strong>setitem</strong>,<strong>delitem</strong>和slice函数。而slice函数又是和range()函数相关的，给切片传递的键是一个特殊的slice对象。该对象拥有可描述所请求切片方位的属性，例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> ]</div><div class="line">x = a [ <span class="number">1</span> : <span class="number">5</span> ]   <span class="comment">#  x = a.__getitem__( slice ( 1, 5, None ) )</span></div><div class="line">a [ <span class="number">1</span> : <span class="number">3</span> ] = [<span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span> ]<span class="comment">#  a.__setitem__( slice ( 1, 3, None ), [ 10, 11, 12 ] )</span></div><div class="line"><span class="keyword">del</span> a [ <span class="number">1</span> : <span class="number">4</span> ]  <span class="comment">#  a.__delitem__( slice ( 1, 4, None ) )</span></div></pre></td></tr></table></figure></p>
+<p>Python 的切片功能实际上比很多程序员认为的更强大，其形式如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a=m[start:end:step]   <span class="comment">#  带步进的切片（步进值=step）</span></div></pre></td></tr></table></figure></p>
+<p>可见，列表的下标有三个参数：start（起始下标），end（终止下标），step（变化量），简单解释如下：</p>
+<ul>
+<li>当step大于0时，beg默认为0，end默认为最末之后；</li>
+<li>当step小于0时，start默认为len（array）-1，end默认为开头之前；</li>
+<li>当step未给出时：start默认为1；</li>
+</ul>
+<p>比较复杂的解释如下：<br>&ensp;&ensp;<strong>注意：</strong>步进值为step</p>
+<ol>
+<li>当step &gt; 0 时切片从 start(含start)处开始，到end（不含end）处结束，<strong>从左往右</strong>，每隔（step-1）（索引之间的差仍为step，但相隔的元素是step-1个）个元素进行一次截取。这时，start 指向的位置应该在end指向的位置的左边，否则返回值为空；</li>
+<li>当step &lt; 0 时，切片从 start(含start)处开始，到end（不含end）处结束，<strong>从右往左</strong>，每隔（step-1）（索引之间的差仍为step，但相隔的元素是step-1个）个元素进行一次截取。这时，start 指向的位置应该在end指向的位置的右边，否则返回值为空；</li>
+</ol>
+<p>示例如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">str=<span class="string">"abcdefh"</span></div><div class="line"><span class="keyword">print</span> str[<span class="number">0</span>:<span class="number">3</span>] <span class="comment">#截取第一位到第三位的字符</span></div><div class="line"><span class="keyword">print</span> str[:] <span class="comment">#截取字符串的全部字符</span></div><div class="line"><span class="keyword">print</span> str[<span class="number">6</span>:] <span class="comment">#截取第七个字符到结尾</span></div><div class="line"><span class="keyword">print</span> str[:<span class="number">-3</span>] <span class="comment">#截取从头开始到倒数第三个字符之前</span></div><div class="line"><span class="keyword">print</span> str[<span class="number">2</span>] <span class="comment">#截取第三个字符</span></div><div class="line"><span class="keyword">print</span> str[<span class="number">-1</span>] <span class="comment">#截取倒数第一个字符</span></div><div class="line"><span class="keyword">print</span> str[::<span class="number">-1</span>] <span class="comment">#创造一个与原字符串顺序相反的字符串</span></div><div class="line"><span class="keyword">print</span> str[<span class="number">-3</span>:<span class="number">-1</span>] <span class="comment">#截取倒数第三位与倒数第一位之前的字符</span></div><div class="line"><span class="keyword">print</span> str[<span class="number">-3</span>:] <span class="comment">#截取倒数第三位到结尾</span></div><div class="line"><span class="keyword">print</span> str[:<span class="number">-5</span>:<span class="number">-3</span>] <span class="comment">#逆序截取,从末尾到倒数第五个，每三步截取一个；</span></div><div class="line"><span class="keyword">print</span> str[:<span class="number">-5</span>:<span class="number">-3</span>] <span class="comment">#逆序截取,从末尾到开始，每三步截取一个；</span></div></pre></td></tr></table></figure></p>
+<p>参考资料：</p>
+<ol>
+<li><a href="http://www.cnblogs.com/weidiao/p/6428681.html" target="_blank" rel="external">http://www.cnblogs.com/weidiao/p/6428681.html</a></li>
+<li><a href="http://www.pythontab.com/html/2013/pythonjichu_0128/182.html" target="_blank" rel="external">http://www.pythontab.com/html/2013/pythonjichu_0128/182.html</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python切片/" data-id="cj2cyv73a0006dgu3i3u3089l" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-python字符串连接的N种方式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/06/python字符串连接的N种方式/" class="article-date">
+  <time datetime="2017-05-06T05:46:34.000Z" itemprop="datePublished">2017-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/06/python字符串连接的N种方式/">python字符串连接的N种方式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p> &ensp;&ensp;python中有很多字符串连接方式，今天在写代码，顺便总结一下：</p>
+<ul>
+<li>最原始的字符串连接方式：str1 + str2</li>
+<li>python 新字符串连接语法：str1, str2</li>
+<li>奇怪的字符串方式：str1 str2</li>
+<li>% 连接字符串：‘name:%s; sex: ’ % (‘tom’, ‘male’)</li>
+<li>字符串列表连接：str.join(some_list)</li>
+</ul>
+<p><strong>第一种</strong>&ensp;&ensp;想必只要是有编程经验的人，估计都知道，直接用 “+” 来连接两个字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">'Jim'</span> + <span class="string">'Green'</span> <span class="comment">#结果：'JimGreen'</span></div></pre></td></tr></table></figure></p>
+<p><strong>第二种</strong>&ensp;&ensp;比较特殊，如果两个字符串用“逗号”隔开，那么这两个字符串将被连接，但是，字符串之间会多出一个空格：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">'Jim'</span>, <span class="string">'Green'</span> <span class="comment">#结果： 'Jim Green'</span></div></pre></td></tr></table></figure></p>
+<p> <strong>第三种</strong>&ensp;&ensp; python 独有的，只要把两个字符串放在一起，中间有空白或者没有空白：两个字符串自动连接为一个字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="string">'Jim'</span><span class="string">'Green'</span>   <span class="comment">#结果： 'JimGreen'</span></div><div class="line"><span class="string">'Jim'</span>  <span class="string">'Green'</span> <span class="comment">#结果： 'JimGreen'</span></div></pre></td></tr></table></figure></p>
+<p>  <strong>第四种</strong>&ensp;&ensp;功能比较强大，借鉴了C语言中 printf 函数的功能，如果你有C语言基础，看下文档就知道了。这种方式用符号“%”连接一个字符串和一组变量，字符串中的特殊标记会被自动用右边变量组中的变量替换：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">'%s, %s'</span> % (<span class="string">'Jim'</span>, <span class="string">'Green'</span>) <span class="comment">#结果： 'Jim, Green'</span></div></pre></td></tr></table></figure></p>
+<p>  <strong>第五种</strong>&ensp;&ensp;就属于技巧了，利用字符串的函数 join 。这个函数接受一个列表，然后用字符串依次连接列表中每一个元素：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var_list = [<span class="string">'tom'</span>, <span class="string">'david'</span>, <span class="string">'john'</span>]</div><div class="line">a = <span class="string">'###'</span></div><div class="line">a.join(var_list) <span class="comment">#结果： 'tom###david###john'</span></div></pre></td></tr></table></figure></p>
+<p>   <strong>其实</strong>&ensp;&ensp;python 中还有一种字符串连接方式，不过用的不多，就是字符串乘法，如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">a = <span class="string">'abc'</span></div><div class="line">a * <span class="number">3</span> <span class="comment">#结果 'abcabcabc'</span></div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cj2cyv73a0007dgu3lfrx76dc" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-python" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/05/06/python/" class="article-date">
@@ -98,7 +203,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cj2cp9ukm0004you3p4y3un8x" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cj2cyv73a0004dgu3hiq0tmsk" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -190,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cj2cp9ukk0003you3bu4frn7h" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cj2cyv72u0001dgu3g81y077o" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -227,7 +332,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cj2cp9uko0005you33u6rz26k" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cj2cyv73a0005dgu32cqld22j" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -384,7 +489,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj2cp9uki0002you3yvyads6w" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj2cyv72u0003dgu3ib2b2971" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -516,7 +621,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cj2cp9ukf0001you3hdt7sgk6" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cj2cyv72u0002dgu3unyqh4jv" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -594,7 +699,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cj2cp9ukr0006you30erd642c" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cj2cyv73q0008dgu304kvws5n" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -634,6 +739,14 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       <ul>
         
           <li>
+            <a href="/2017/05/06/python切片/">python切片</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/06/python字符串连接的N种方式/">python字符串连接的N种方式</a>
+          </li>
+        
+          <li>
             <a href="/2017/05/06/python/">python中@的作用</a>
           </li>
         
@@ -643,14 +756,6 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
         
           <li>
             <a href="/2017/04/22/reactNative/">关于react native页面全屏设置</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/22/linux系统磁盘挂载/">linux系统磁盘挂载</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/22/hexo写blog/">hexo写blog</a>
           </li>
         
       </ul>

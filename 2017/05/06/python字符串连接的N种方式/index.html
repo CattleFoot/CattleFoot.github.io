@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>python字符串连接的N种方式 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="&amp;ensp;&amp;ensp;python中有很多字符串连接方式，今天在写代码，顺便总结一下：  最原始的字符串连接方式：str1 + str2 python 新字符串连接语法：str1, str2 奇怪的字符串方式：str1 str2 % 连接字符串：‘name:%s; sex: ’ % (‘tom’, ‘male’) 字符串列表连接：str.join(some_list)  第一种&amp;ensp;&amp;e">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python字符串连接的N种方式">
+<meta property="og:url" content="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/index.html">
+<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:description" content="&amp;ensp;&amp;ensp;python中有很多字符串连接方式，今天在写代码，顺便总结一下：  最原始的字符串连接方式：str1 + str2 python 新字符串连接语法：str1, str2 奇怪的字符串方式：str1 str2 % 连接字符串：‘name:%s; sex: ’ % (‘tom’, ‘male’) 字符串列表连接：str.join(some_list)  第一种&amp;ensp;&amp;e">
+<meta property="og:updated_time" content="2017-05-06T05:48:41.509Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python字符串连接的N种方式">
+<meta name="twitter:description" content="&amp;ensp;&amp;ensp;python中有很多字符串连接方式，今天在写代码，顺便总结一下：  最原始的字符串连接方式：str1 + str2 python 新字符串连接语法：str1, str2 奇怪的字符串方式：str1 str2 % 连接字符串：‘name:%s; sex: ’ % (‘tom’, ‘male’) 字符串列表连接：str.join(some_list)  第一种&amp;ensp;&amp;e">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-python字符串连接的N种方式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/06/python字符串连接的N种方式/" class="article-date">
+  <time datetime="2017-05-06T05:46:34.000Z" itemprop="datePublished">2017-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      python字符串连接的N种方式
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p> &ensp;&ensp;python中有很多字符串连接方式，今天在写代码，顺便总结一下：</p>
+<ul>
+<li>最原始的字符串连接方式：str1 + str2</li>
+<li>python 新字符串连接语法：str1, str2</li>
+<li>奇怪的字符串方式：str1 str2</li>
+<li>% 连接字符串：‘name:%s; sex: ’ % (‘tom’, ‘male’)</li>
+<li>字符串列表连接：str.join(some_list)</li>
+</ul>
+<p><strong>第一种</strong>&ensp;&ensp;想必只要是有编程经验的人，估计都知道，直接用 “+” 来连接两个字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">'Jim'</span> + <span class="string">'Green'</span> <span class="comment">#结果：'JimGreen'</span></div></pre></td></tr></table></figure></p>
+<p><strong>第二种</strong>&ensp;&ensp;比较特殊，如果两个字符串用“逗号”隔开，那么这两个字符串将被连接，但是，字符串之间会多出一个空格：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">'Jim'</span>, <span class="string">'Green'</span> <span class="comment">#结果： 'Jim Green'</span></div></pre></td></tr></table></figure></p>
+<p> <strong>第三种</strong>&ensp;&ensp; python 独有的，只要把两个字符串放在一起，中间有空白或者没有空白：两个字符串自动连接为一个字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="string">'Jim'</span><span class="string">'Green'</span>   <span class="comment">#结果： 'JimGreen'</span></div><div class="line"><span class="string">'Jim'</span>  <span class="string">'Green'</span> <span class="comment">#结果： 'JimGreen'</span></div></pre></td></tr></table></figure></p>
+<p>  <strong>第四种</strong>&ensp;&ensp;功能比较强大，借鉴了C语言中 printf 函数的功能，如果你有C语言基础，看下文档就知道了。这种方式用符号“%”连接一个字符串和一组变量，字符串中的特殊标记会被自动用右边变量组中的变量替换：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">'%s, %s'</span> % (<span class="string">'Jim'</span>, <span class="string">'Green'</span>) <span class="comment">#结果： 'Jim, Green'</span></div></pre></td></tr></table></figure></p>
+<p>  <strong>第五种</strong>&ensp;&ensp;就属于技巧了，利用字符串的函数 join 。这个函数接受一个列表，然后用字符串依次连接列表中每一个元素：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var_list = [<span class="string">'tom'</span>, <span class="string">'david'</span>, <span class="string">'john'</span>]</div><div class="line">a = <span class="string">'###'</span></div><div class="line">a.join(var_list) <span class="comment">#结果： 'tom###david###john'</span></div></pre></td></tr></table></figure></p>
+<p>   <strong>其实</strong>&ensp;&ensp;python 中还有一种字符串连接方式，不过用的不多，就是字符串乘法，如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">a = <span class="string">'abc'</span></div><div class="line">a * <span class="number">3</span> <span class="comment">#结果 'abcabcabc'</span></div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cj2cyv73a0007dgu3lfrx76dc" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/06/python/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          python中@的作用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/06/python切片/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">python切片</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/06/python切片/">python切片</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/06/python字符串连接的N种方式/">python字符串连接的N种方式</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/06/python/">python中@的作用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/26/LeastRecentlyUsed-最近最少使用/">LeastRecentlyUsed_最近最少使用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/22/reactNative/">关于react native页面全屏设置</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 CallteFoot<br>
+      Propulsé by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
