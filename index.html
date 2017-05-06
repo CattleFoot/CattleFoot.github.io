@@ -48,9 +48,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
@@ -60,6 +60,259 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-python" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/06/python/" class="article-date">
+  <time datetime="2017-05-06T02:44:28.000Z" itemprop="datePublished">2017-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/06/python/">python中@的作用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&ensp;&ensp;在python2.4以上的函数中经常看到函数定义上一行有@functionName的修饰，注意下这个语法细节，有点像c语言中带参数的宏操作，当解释器读到这样的修饰之后，会先解析@后的内容，直接把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象。<br>例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># !/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">funa</span><span class="params">(a)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"funa"</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">funb</span><span class="params">(b)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"funB"</span></div><div class="line"></div><div class="line"><span class="meta">@funa</span></div><div class="line"><span class="meta">@funb</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(c)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"funC"</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    func</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;最后得到的结果是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">funB  </div><div class="line">funA</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;通过结果我们可以认为:return funa(funb(func))，也即第一个函数修饰符开始，自下而上做参数传递，这样实际是使用了约定的函数修饰符达到函数嵌套的目的。记得没错Java中SSH也有这样的用法哦。<br>其他例子：<br>1.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sayspam</span><span class="params">(*args)</span>:</span></div><div class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></div><div class="line">    <span class="keyword">return</span> sayspam</div><div class="line">    </div><div class="line"><span class="meta">@spamrun</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></div><div class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></div><div class="line">   </div><div class="line">useful(<span class="number">3</span>,<span class="number">4</span>)</div></pre></td></tr></table></figure></p>
+<p>结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">spam，spam，spam</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;解释:只是将函数useful传递给spamrun，并没用使用，因此最终返回的是spamrun函数的结果。<br>2.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></div><div class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></div><div class="line">        </div><div class="line"><span class="meta">@spamrun</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></div><div class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">spam，spam，spam</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;解释:只是将函数useful传递给spamrun，并没用使用，因此最终返回的是spamrun函数的结果。<br>3.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(fn)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(*args)</span>:</span></div><div class="line">        <span class="keyword">print</span> <span class="string">"My god!"</span>*<span class="number">3</span></div><div class="line">        <span class="keyword">return</span> fn(*args)</div><div class="line">    <span class="keyword">return</span> test</div><div class="line"><span class="meta">@decorator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">other</span><span class="params">(a,b)</span>:</span></div><div class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></div><div class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</div><div class="line">    other(<span class="number">4</span>,<span class="number">3</span>)</div><div class="line">    other(<span class="number">3</span>,<span class="number">4</span>)</div></pre></td></tr></table></figure></p>
+<p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">My god!My god!My god!</div><div class="line">25</div><div class="line">My god!My god!My god!</div><div class="line">25</div></pre></td></tr></table></figure></p>
+<p>注释掉//return fn(*args)，结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">My god!My god!My god!</div><div class="line">My god!My god!My god!</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;解释：要想使other函数能正常运行（即调用other函数并将其参数继续往下传），必须加返回值，@decorator是一个statement,会将other函数当作参数传入来执行test方法。</p>
+<p>&ensp;&ensp;总结：’@’符号用作函数修饰符是python2.4新增加的功能，修饰符必须出现在函数定义前一行，不允许和函数定义在同一行。也就是说＠A def f(): 是非法的。 只可以在模块或类定义层内对函数进行修饰，不允许修修饰一个类。一个修饰符就是一个函数，它将被修饰的函数做为参数，并返回修饰后的同名函数或其它可调用的东西。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cj2cp2gny0003dku3kh2fy1sq" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-LeastRecentlyUsed-最近最少使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/26/LeastRecentlyUsed-最近最少使用/" class="article-date">
+  <time datetime="2017-04-26T13:13:53.000Z" itemprop="datePublished">2017-04-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/26/LeastRecentlyUsed-最近最少使用/">LeastRecentlyUsed_最近最少使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&ensp;&ensp;LRU是Least Recently Used 近期最少使用算法，DiskLruCache是通过一个记录文件记录操作过程，从而保存各种文件,记录文件格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">libcore.io.DiskLruCache</div><div class="line"> 1</div><div class="line"> 100</div><div class="line"> 2</div><div class="line"> </div><div class="line"> CLEAN 3400330d1dfc7f3f7f4b8d4d803dfcf6 832 21054</div><div class="line"> DIRTY 335c4c6028171cfddfbaae1a9c313c52</div><div class="line"> CLEAN 335c4c6028171cfddfbaae1a9c313c52 3934 2342</div><div class="line"> REMOVE 335c4c6028171cfddfbaae1a9c313c52</div><div class="line"> DIRTY 1ab96a171faeeee38496d8b330771a7a</div><div class="line"> CLEAN 1ab96a171faeeee38496d8b330771a7a 1600 234</div><div class="line"> READ 335c4c6028171cfddfbaae1a9c313c52</div><div class="line"> READ 3400330d1dfc7f3f7f4b8d4d803dfcf6</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;文件内容解析：</p>
+<ol>
+<li>第一行固定字符串内容，没有多大意义；</li>
+<li>第二行DiskLruCache的版本好，源码常量1；</li>
+<li>第三行为app的版本好，这个可以自己传入；</li>
+<li>第四行值得是每个key对应几个文件，一般为1；</li>
+<li>空行做分割下面内容用；</li>
+<li>DIRTY 表示一个正在被写入（其实就是吧文件的outputstream交给你），写入分我两种情况：成功则写入一行CLEAN的记录；失败则写入一条REMOVE的记录,如果一条DIRTY没有一条CLEAN或REMOVE和它对应，那么这条记录就可以删除；</li>
+<li>REMOVE除了上述情况，当自己手动调用删除remover（key）方法也会写入一条记录；</li>
+<li>READ 说明有一次读取的记录；</li>
+<li>Clean的后面记录了文件的长度，和key关联了多少个文件；<br>&ensp;&ensp;这里看出，只有CLEAN且没有REMOVE的记录，才是真正可用的Cache Entry记录。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">public static DiskLruCache open(File directory, int appVersion, int valueCount, long maxSize)</div><div class="line">      throws IOException &#123;</div><div class="line"></div><div class="line">    // If a bkp file exists, use it instead.</div><div class="line">    File backupFile = new File(directory, JOURNAL_FILE_BACKUP);</div><div class="line">    if (backupFile.exists()) &#123;</div><div class="line">      File journalFile = new File(directory, JOURNAL_FILE);</div><div class="line">      // If journal file also exists just delete backup file.</div><div class="line">      if (journalFile.exists()) &#123;</div><div class="line">        backupFile.delete();</div><div class="line">      &#125; else &#123;</div><div class="line">        renameTo(backupFile, journalFile, false);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Prefer to pick up where we left off.</div><div class="line">    DiskLruCache cache = new DiskLruCache(directory, appVersion, valueCount, maxSize);</div><div class="line">    if (cache.journalFile.exists()) &#123;</div><div class="line">      try &#123;</div><div class="line">        cache.readJournal();</div><div class="line">        cache.processJournal();</div><div class="line">        return cache;</div><div class="line">      &#125; catch (IOException journalIsCorrupt) &#123;</div><div class="line">        System.out</div><div class="line">            .println(&quot;DiskLruCache &quot;</div><div class="line">                + directory</div><div class="line">                + &quot; is corrupt: &quot;</div><div class="line">                + journalIsCorrupt.getMessage()</div><div class="line">                + &quot;, removing&quot;);</div><div class="line">        cache.delete();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Create a new empty cache.</div><div class="line">    directory.mkdirs();</div><div class="line">    cache = new DiskLruCache(directory, appVersion, valueCount, maxSize);</div><div class="line">    cache.rebuildJournal();</div><div class="line">    return cache;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>&ensp;&ensp;验证记录文件是否存在，首先检查存不存在journal.bkp（journal的备份文件）如果存在：然后检查journal文件是否存在，如果正主在，bkp文件就可以删除了；如果不存在，将bkp文件重命名为journal文件。<br>接下里判断journal文件是否存在，</p>
+<ul>
+<li>如果不存在创建directory；重新构造disklrucache；调用rebuildJournal建立journal文件：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">   * Creates a new journal that omits redundant information. This replaces the</div><div class="line">   * current journal if it exists.</div><div class="line">   */</div><div class="line">  private synchronized void rebuildJournal() throws IOException &#123;</div><div class="line">    if (journalWriter != null) &#123;</div><div class="line">      journalWriter.close();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Writer writer = new BufferedWriter(</div><div class="line">        new OutputStreamWriter(new FileOutputStream(journalFileTmp), Util.US_ASCII));</div><div class="line">    try &#123;</div><div class="line">      writer.write(MAGIC);</div><div class="line">      writer.write(&quot;\n&quot;);</div><div class="line">      writer.write(VERSION_1);</div><div class="line">      writer.write(&quot;\n&quot;);</div><div class="line">      writer.write(Integer.toString(appVersion));</div><div class="line">      writer.write(&quot;\n&quot;);</div><div class="line">      writer.write(Integer.toString(valueCount));</div><div class="line">      writer.write(&quot;\n&quot;);</div><div class="line">      writer.write(&quot;\n&quot;);</div><div class="line"></div><div class="line">      for (Entry entry : lruEntries.values()) &#123;</div><div class="line">        if (entry.currentEditor != null) &#123;</div><div class="line">          writer.write(DIRTY + &apos; &apos; + entry.key + &apos;\n&apos;);</div><div class="line">        &#125; else &#123;</div><div class="line">          writer.write(CLEAN + &apos; &apos; + entry.key + entry.getLengths() + &apos;\n&apos;);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125; finally &#123;</div><div class="line">      writer.close();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (journalFile.exists()) &#123;</div><div class="line">      renameTo(journalFile, journalFileBackup, true);</div><div class="line">    &#125;</div><div class="line">    renameTo(journalFileTmp, journalFile, false);</div><div class="line">    journalFileBackup.delete();</div><div class="line"></div><div class="line">    journalWriter = new BufferedWriter(</div><div class="line">        new OutputStreamWriter(new FileOutputStream(journalFile, true), Util.US_ASCII));</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>&ensp;&ensp;可以看到首先构建一个journal.tmp文件，然后写入文件头（5行），然后遍历lruEntries（lruEntries = new LinkedHashMap<string, entry="">(0, 0.75f, true);），当然我们这里没有任何数据。接下来将tmp文件重命名为journal文件。</string,></p>
+<ul>
+<li>如果已经存在，那么调用readJournal</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">private void readJournal() throws IOException &#123;</div><div class="line">StrictLineReader reader = new StrictLineReader(new FileInputStream(journalFile), Util.US_ASCII);</div><div class="line">try &#123;</div><div class="line">  String magic = reader.readLine();</div><div class="line">  String version = reader.readLine();</div><div class="line">  String appVersionString = reader.readLine();</div><div class="line">  String valueCountString = reader.readLine();</div><div class="line">  String blank = reader.readLine();</div><div class="line">  if (!MAGIC.equals(magic)</div><div class="line">      || !VERSION_1.equals(version)</div><div class="line">      || !Integer.toString(appVersion).equals(appVersionString)</div><div class="line">      || !Integer.toString(valueCount).equals(valueCountString)</div><div class="line">      || !&quot;&quot;.equals(blank)) &#123;</div><div class="line">    throw new IOException(&quot;unexpected journal header: [&quot; + magic + &quot;, &quot; + version + &quot;, &quot;</div><div class="line">        + valueCountString + &quot;, &quot; + blank + &quot;]&quot;);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  int lineCount = 0;</div><div class="line">  while (true) &#123;</div><div class="line">    try &#123;</div><div class="line">      readJournalLine(reader.readLine());</div><div class="line">      lineCount++;</div><div class="line">    &#125; catch (EOFException endOfJournal) &#123;</div><div class="line">      break;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  redundantOpCount = lineCount - lruEntries.size();</div><div class="line"></div><div class="line">  // If we ended on a truncated line, rebuild the journal before appending to it.</div><div class="line">  if (reader.hasUnterminatedLine()) &#123;</div><div class="line">    rebuildJournal();</div><div class="line">  &#125; else &#123;</div><div class="line">    journalWriter = new BufferedWriter(new OutputStreamWriter(</div><div class="line">        new FileOutputStream(journalFile, true), Util.US_ASCII));</div><div class="line">  &#125;</div><div class="line">&#125; finally &#123;</div><div class="line">  Util.closeQuietly(reader);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&ensp;&ensp;首先校验文件头，接下来调用readJournalLine按行读取内容。我们来看看readJournalLine中的操作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">private void readJournalLine(String line) throws IOException &#123;</div><div class="line">int firstSpace = line.indexOf(&apos; &apos;);</div><div class="line">if (firstSpace == -1) &#123;</div><div class="line">  throw new IOException(&quot;unexpected journal line: &quot; + line);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int keyBegin = firstSpace + 1;</div><div class="line">int secondSpace = line.indexOf(&apos; &apos;, keyBegin);</div><div class="line">final String key;</div><div class="line">if (secondSpace == -1) &#123;</div><div class="line">  key = line.substring(keyBegin);</div><div class="line">  if (firstSpace == REMOVE.length() &amp;&amp; line.startsWith(REMOVE)) &#123;</div><div class="line">    lruEntries.remove(key);</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line">&#125; else &#123;</div><div class="line">  key = line.substring(keyBegin, secondSpace);</div><div class="line">&#125;</div><div class="line"></div><div class="line">Entry entry = lruEntries.get(key);</div><div class="line">if (entry == null) &#123;</div><div class="line">  entry = new Entry(key);</div><div class="line">  lruEntries.put(key, entry);</div><div class="line">&#125;</div><div class="line"></div><div class="line">if (secondSpace != -1 &amp;&amp; firstSpace == CLEAN.length() &amp;&amp; line.startsWith(CLEAN)) &#123;</div><div class="line">  String[] parts = line.substring(secondSpace + 1).split(&quot; &quot;);</div><div class="line">  entry.readable = true;</div><div class="line">  entry.currentEditor = null;</div><div class="line">  entry.setLengths(parts);</div><div class="line">&#125; else if (secondSpace == -1 &amp;&amp; firstSpace == DIRTY.length() &amp;&amp; line.startsWith(DIRTY)) &#123;</div><div class="line">  entry.currentEditor = new Editor(entry);</div><div class="line">&#125; else if (secondSpace == -1 &amp;&amp; firstSpace == READ.length() &amp;&amp; line.startsWith(READ)) &#123;</div><div class="line">  // This work was already done by calling lruEntries.get().</div><div class="line">&#125; else &#123;</div><div class="line">  throw new IOException(&quot;unexpected journal line: &quot; + line);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;大家可以回忆下：每个记录至少有一个空格，有的包含两个空格。首先，拿到key，如果是REMOVE的记录呢，会调用lruEntries.remove(key);如果不是REMOVE记录，继续往下，如果该key没有加入到lruEntries，则创建并且加入。接下来，如果是CLEAN开头的合法记录，初始化entry，设置readable=true,currentEditor为null，初始化长度等。如果是DIRTY，设置currentEditor对象。如果是READ，那么直接不管。ok，经过上面这个过程，大家回忆下我们的记录格式，一般DIRTY不会单独出现，会和REMOVE、CLEAN成对出现（正常操作）；也就是说，经过上面这个流程，基本上加入到lruEntries里面的只有CLEAN且没有被REMOVE的key。好了，回到readJournal方法，在我们按行读取的时候，会记录一下lineCount，然后最后给redundantOpCount赋值，这个变量记录的应该是没用的记录条数（文件的行数-真正可以的key的行数）。</p>
+<p>最后，如果读取过程中发现journal文件有问题，则重建journal文件。没有问题的话，初始化下journalWriter，关闭reader。<br>readJournal完成了，会继续调用processJournal()这个方法内部：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">private void processJournal() throws IOException &#123;</div><div class="line">deleteIfExists(journalFileTmp);</div><div class="line">for (Iterator&lt;Entry&gt; i = lruEntries.values().iterator(); i.hasNext(); ) &#123;</div><div class="line">  Entry entry = i.next();</div><div class="line">  if (entry.currentEditor == null) &#123;</div><div class="line">    for (int t = 0; t &lt; valueCount; t++) &#123;</div><div class="line">      size += entry.lengths[t];</div><div class="line">    &#125;</div><div class="line">  &#125; else &#123;</div><div class="line">    entry.currentEditor = null;</div><div class="line">    for (int t = 0; t &lt; valueCount; t++) &#123;</div><div class="line">      deleteIfExists(entry.getCleanFile(t));</div><div class="line">      deleteIfExists(entry.getDirtyFile(t));</div><div class="line">    &#125;</div><div class="line">    i.remove();</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>统计所有可用的cache占据的容量，赋值给size；对于所有非法DIRTY状态（就是DIRTY单独出现的）的entry，如果存在文件则删除，并且从lruEntries中移除。此时，剩的就真的只有CLEAN状态的key记录了。<br>&ensp;&ensp;到此就初始化完毕了，太长了，根本记不住，我带大家总结下上面代码。根据我们传入的dir，去找journal文件，如果找不到，则创建个，只写入文件头(5行)。 如果找到，则遍历该文件，将里面所有的CLEAN记录的key，存到lruEntries中。这么长的代码，其实就两句话的意思。经过open以后，journal文件肯定存在了；lruEntries里面肯定有值了；size存储了当前所有的实体占据的容量；</p>
+<p><strong>存入缓存</strong><br>存入操作：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">String key = generateKey(url);  </div><div class="line">DiskLruCache.Editor editor = mDiskLruCache.edit(key); </div><div class="line">OuputStream os = editor.newOutputStream(0); </div><div class="line">//...after op</div><div class="line">editor.commit()；</div></pre></td></tr></table></figure></p>
+<p>首先就是editor方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">   * Returns an editor for the entry named &#123;@code key&#125;, or null if another</div><div class="line">   * edit is in progress.</div><div class="line">   */</div><div class="line">  public Editor edit(String key) throws IOException &#123;</div><div class="line">    return edit(key, ANY_SEQUENCE_NUMBER);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  private synchronized Editor edit(String key, long expectedSequenceNumber) throws IOException &#123;</div><div class="line">      checkNotClosed();</div><div class="line">    validateKey(key);</div><div class="line">    Entry entry = lruEntries.get(key);</div><div class="line">    if (expectedSequenceNumber != ANY_SEQUENCE_NUMBER &amp;&amp; (entry == null</div><div class="line">        || entry.sequenceNumber != expectedSequenceNumber)) &#123;</div><div class="line">      return null; // Snapshot is stale.</div><div class="line">    &#125;</div><div class="line">    if (entry == null) &#123;</div><div class="line">      entry = new Entry(key);</div><div class="line">      lruEntries.put(key, entry);</div><div class="line">    &#125; else if (entry.currentEditor != null) &#123;</div><div class="line">      return null; // Another edit is in progress.</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Editor editor = new Editor(entry);</div><div class="line">    entry.currentEditor = editor;</div><div class="line"></div><div class="line">    // Flush the journal before creating files to prevent file leaks.</div><div class="line">    journalWriter.write(DIRTY + &apos; &apos; + key + &apos;\n&apos;);</div><div class="line">    journalWriter.flush();</div><div class="line">    return editor;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&nesp;&nesp;首先验证key，可以必须是字母、数字、下划线、横线（-）组成，且长度在1-120之间。然后通过key获取实体，因为我们是存，只要不是正在编辑这个实体，理论上都能返回一个合法的editor对象。所以接下来判断，如果不存在，则创建一个Entry加入到lruEntries中（如果存在，直接使用），然后为entry.currentEditor进行赋值为new Editor(entry);，最后在journal文件中写入一条DIRTY记录，代表这个文件正在被操作。</p>
+<p>注意，如果entry.currentEditor != null不为null的时候，意味着该实体正在被编辑，会retrun null ;拿到editor对象以后，就是去调用newOutputStream去获得一个文件输入流了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">     * Returns a new unbuffered output stream to write the value at</div><div class="line">     * &#123;@code index&#125;. If the underlying output stream encounters errors</div><div class="line">     * when writing to the filesystem, this edit will be aborted when</div><div class="line">     * &#123;@link #commit&#125; is called. The returned output stream does not throw</div><div class="line">     * IOExceptions.</div><div class="line">     */</div><div class="line">    public OutputStream newOutputStream(int index) throws IOException &#123;</div><div class="line">      if (index &lt; 0 || index &gt;= valueCount) &#123;</div><div class="line">        throw new IllegalArgumentException(&quot;Expected index &quot; + index + &quot; to &quot;</div><div class="line">                + &quot;be greater than 0 and less than the maximum value count &quot;</div><div class="line">                + &quot;of &quot; + valueCount);</div><div class="line">      &#125;</div><div class="line">      synchronized (DiskLruCache.this) &#123;</div><div class="line">        if (entry.currentEditor != this) &#123;</div><div class="line">          throw new IllegalStateException();</div><div class="line">        &#125;</div><div class="line">        if (!entry.readable) &#123;</div><div class="line">          written[index] = true;</div><div class="line">        &#125;</div><div class="line">        File dirtyFile = entry.getDirtyFile(index);</div><div class="line">        FileOutputStream outputStream;</div><div class="line">        try &#123;</div><div class="line">          outputStream = new FileOutputStream(dirtyFile);</div><div class="line">        &#125; catch (FileNotFoundException e) &#123;</div><div class="line">          // Attempt to recreate the cache directory.</div><div class="line">          directory.mkdirs();</div><div class="line">          try &#123;</div><div class="line">            outputStream = new FileOutputStream(dirtyFile);</div><div class="line">          &#125; catch (FileNotFoundException e2) &#123;</div><div class="line">            // We are unable to recover. Silently eat the writes.</div><div class="line">            return NULL_OUTPUT_STREAM;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">        return new FaultHidingOutputStream(outputStream);</div><div class="line">      &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>首先校验index是否在valueCount范围内，一般我们使用都是一个key对应一个文件所以传入的基本都是0。接下来就是通过entry.getDirtyFile(index);拿到一个dirty File对象，为什么叫dirty file呢，其实就是个中转文件，文件格式为key.index.tmp。<br>将这个文件的FileOutputStream通过FaultHidingOutputStream封装下传给我们。<br>最后，别忘了我们通过os写入数据以后，需要调用commit方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public void commit() throws IOException &#123;</div><div class="line">      if (hasErrors) &#123;</div><div class="line">        completeEdit(this, false);</div><div class="line">        remove(entry.key); // The previous entry is stale.</div><div class="line">      &#125; else &#123;</div><div class="line">        completeEdit(this, true);</div><div class="line">      &#125;</div><div class="line">      committed = true;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>首先通过hasErrors判断，是否有错误发生，如果有调用completeEdit(this, false)且调用remove(entry.key);。如果没有就调用completeEdit(this, true);。</p>
+<p>那么这里这个hasErrors哪来的呢？还记得上面newOutputStream的时候，返回了一个os，这个os是FileOutputStream，但是经过了FaultHidingOutputStream封装么，这个类实际上就是重写了FilterOutputStream的write相关方法，将所有的IOException给屏蔽了，如果发生IOException就将hasErrors赋值为true.</p>
+<p>这样的设计还是很nice的，否则直接将OutputStream返回给用户，如果出错没法检测，还需要用户手动去调用一些操作。</p>
+<p>接下来看completeEdit方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">private synchronized void completeEdit(Editor editor, boolean success) throws IOException &#123;</div><div class="line">    Entry entry = editor.entry;</div><div class="line">    if (entry.currentEditor != editor) &#123;</div><div class="line">      throw new IllegalStateException();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // If this edit is creating the entry for the first time, every index must have a value.</div><div class="line">    if (success &amp;&amp; !entry.readable) &#123;</div><div class="line">      for (int i = 0; i &lt; valueCount; i++) &#123;</div><div class="line">        if (!editor.written[i]) &#123;</div><div class="line">          editor.abort();</div><div class="line">          throw new IllegalStateException(&quot;Newly created entry didn&apos;t create value for index &quot; + i);</div><div class="line">        &#125;</div><div class="line">        if (!entry.getDirtyFile(i).exists()) &#123;</div><div class="line">          editor.abort();</div><div class="line">          return;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    for (int i = 0; i &lt; valueCount; i++) &#123;</div><div class="line">      File dirty = entry.getDirtyFile(i);</div><div class="line">      if (success) &#123;</div><div class="line">        if (dirty.exists()) &#123;</div><div class="line">          File clean = entry.getCleanFile(i);</div><div class="line">          dirty.renameTo(clean);</div><div class="line">          long oldLength = entry.lengths[i];</div><div class="line">          long newLength = clean.length();</div><div class="line">          entry.lengths[i] = newLength;</div><div class="line">          size = size - oldLength + newLength;</div><div class="line">        &#125;</div><div class="line">      &#125; else &#123;</div><div class="line">        deleteIfExists(dirty);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    redundantOpCount++;</div><div class="line">    entry.currentEditor = null;</div><div class="line">    if (entry.readable | success) &#123;</div><div class="line">      entry.readable = true;</div><div class="line">      journalWriter.write(CLEAN + &apos; &apos; + entry.key + entry.getLengths() + &apos;\n&apos;);</div><div class="line">      if (success) &#123;</div><div class="line">        entry.sequenceNumber = nextSequenceNumber++;</div><div class="line">      &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">      lruEntries.remove(entry.key);</div><div class="line">      journalWriter.write(REMOVE + &apos; &apos; + entry.key + &apos;\n&apos;);</div><div class="line">    &#125;</div><div class="line">    journalWriter.flush();</div><div class="line"></div><div class="line">    if (size &gt; maxSize || journalRebuildRequired()) &#123;</div><div class="line">      executorService.submit(cleanupCallable);</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;首先判断if (success &amp;&amp; !entry.readable)是否成功，且是第一次写入（如果以前这个记录有值，则readable=true），内部的判断，我们都不会走，因为written[i]在newOutputStream的时候被写入true了。而且正常情况下，getDirtyFile是存在的。<br>&ensp;&ensp;接下来，如果成功，将dirtyFile 进行重命名为 cleanFile，文件名为：key.index。然后刷新size的长度。如果失败，则删除dirtyFile.<br>&ensp;&ensp;接下来，如果成功或者readable为true，将readable设置为true，写入一条CLEAN记录。如果第一次提交且失败，那么就会从lruEntries.remove(key)，写入一条REMOVE记录。</p>
+<p>写入缓存，肯定要控制下size。于是最后，判断是否超过了最大size，或者需要重建journal文件，什么时候需要重建呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">private boolean journalRebuildRequired() &#123;</div><div class="line">   final int redundantOpCompactThreshold = 2000;</div><div class="line">   return redundantOpCount &gt;= redundantOpCompactThreshold //</div><div class="line">       &amp;&amp; redundantOpCount &gt;= lruEntries.size();</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<p> &ensp;&ensp;如果redundantOpCount达到2000，且超过了lruEntries.size()就重建，这里就可以看到redundantOpCount的作用了。防止journal文件过大。<br> &ensp;&ensp;ok，到此我们的存入缓存就分析完成了。再次总结下，首先调用editor，拿到指定的dirtyFile的OutputStream，你可以尽情的进行写操作，写完以后呢，记得调用commit。<br> &ensp;&ensp;commit中会检测是你是否发生IOException，如果没有发生，则将dirtyFile-&gt;cleanFile，将readable=true，写入CLEAN记录。如果发生错误，则删除dirtyFile,从lruEntries中移除，然后写入一条REMOVE记录。<br><strong>读取缓存</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">DiskLruCache.Snapshot snapShot = mDiskLruCache.get(key);  </div><div class="line">if (snapShot != null) &#123;  </div><div class="line">  InputStream is = snapShot.getInputStream(0);  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>那么首先看get方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">public synchronized Snapshot get(String key) throws IOException &#123;</div><div class="line">    checkNotClosed();</div><div class="line">    validateKey(key);</div><div class="line">    Entry entry = lruEntries.get(key);</div><div class="line">    if (entry == null) &#123;</div><div class="line">      return null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (!entry.readable) &#123;</div><div class="line">      return null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Open all streams eagerly to guarantee that we see a single published</div><div class="line">    // snapshot. If we opened streams lazily then the streams could come</div><div class="line">    // from different edits.</div><div class="line">    InputStream[] ins = new InputStream[valueCount];</div><div class="line">    try &#123;</div><div class="line">      for (int i = 0; i &lt; valueCount; i++) &#123;</div><div class="line">        ins[i] = new FileInputStream(entry.getCleanFile(i));</div><div class="line">      &#125;</div><div class="line">    &#125; catch (FileNotFoundException e) &#123;</div><div class="line">      // A file must have been deleted manually!</div><div class="line">      for (int i = 0; i &lt; valueCount; i++) &#123;</div><div class="line">        if (ins[i] != null) &#123;</div><div class="line">          Util.closeQuietly(ins[i]);</div><div class="line">        &#125; else &#123;</div><div class="line">          break;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">      return null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    redundantOpCount++;</div><div class="line">    journalWriter.append(READ + &apos; &apos; + key + &apos;\n&apos;);</div><div class="line">    if (journalRebuildRequired()) &#123;</div><div class="line">      executorService.submit(cleanupCallable);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return new Snapshot(key, entry.sequenceNumber, ins, entry.lengths);</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>get方法比较简单，如果取到的为null，或者readable=false，则返回null.否则将cleanFile的FileInputStream进行封装返回Snapshot，且写入一条READ语句。 然后getInputStream就是返回该FileInputStream了。<br>好了，到此，我们就分析完成了创建</p>
+<p>DiskLruCache，存入缓存和取出缓存的源码。<br>除此以外，还有一些别的方法我们需要了解的。</p>
+<p><strong>其他方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">   * Drops the entry for &#123;@code key&#125; if it exists and can be removed. Entries</div><div class="line">   * actively being edited cannot be removed.</div><div class="line">   *</div><div class="line">   * @return true if an entry was removed.</div><div class="line">   */</div><div class="line">  public synchronized boolean remove(String key) throws IOException &#123;</div><div class="line">    checkNotClosed();</div><div class="line">    validateKey(key);</div><div class="line">    Entry entry = lruEntries.get(key);</div><div class="line">    if (entry == null || entry.currentEditor != null) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    for (int i = 0; i &lt; valueCount; i++) &#123;</div><div class="line">      File file = entry.getCleanFile(i);</div><div class="line">      if (file.exists() &amp;&amp; !file.delete()) &#123;</div><div class="line">        throw new IOException(&quot;failed to delete &quot; + file);</div><div class="line">      &#125;</div><div class="line">      size -= entry.lengths[i];</div><div class="line">      entry.lengths[i] = 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    redundantOpCount++;</div><div class="line">    journalWriter.append(REMOVE + &apos; &apos; + key + &apos;\n&apos;);</div><div class="line">    lruEntries.remove(key);</div><div class="line"></div><div class="line">    if (journalRebuildRequired()) &#123;</div><div class="line">      executorService.submit(cleanupCallable);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return true;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>如果实体存在且不在被编辑，就可以直接进行删除，然后写入一条REMOVE记录。</p>
+<p>与open对应还有个remove方法，大家在使用完成cache后可以手动关闭。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/** Closes this cache. Stored values will remain on the filesystem. */</div><div class="line">  public synchronized void close() throws IOException &#123;</div><div class="line">    if (journalWriter == null) &#123;</div><div class="line">      return; // Already closed.</div><div class="line">    &#125;</div><div class="line">    for (Entry entry : new ArrayList&lt;Entry&gt;(lruEntries.values())) &#123;</div><div class="line">      if (entry.currentEditor != null) &#123;</div><div class="line">        entry.currentEditor.abort();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    trimToSize();</div><div class="line">    journalWriter.close();</div><div class="line">    journalWriter = null;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>关闭前，会判断所有正在编辑的实体，调用abort方法，最后关闭journalWriter。至于abort方法，其实我们分析过了，就是存储失败的时候的逻辑：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public void abort() throws IOException &#123;</div><div class="line">      completeEdit(this, false);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>到此，我们的整个源码分析就结束了。可以看到DiskLruCache，利用一个journal文件，保证了保证了cache实体的可用性（只有CLEAN的可用），且获取文件的长度的时候可以通过在该文件的记录中读取。利用FaultHidingOutputStream对FileOutPutStream很好的对写入文件过程中是否发生错误进行捕获，而不是让用户手动去调用出错后的处理方法。其内部的很多细节都很值得推敲。</p>
+<p>不过也可以看到，存取的操作不是特别的容易使用，需要大家自己去操作文件流，但在存储比较小的数据的时候（不存在内存问题），很多时候还是希望有类似put(key,value），getAsT(key)等方法直接使用。我看了ASimpleCache 提供的API属于比较好用的了。于是萌生想法，对DiskLruCache公开的API进行扩展，对外除了原有的存取方式以外，提供类似ASimpleCache那样比较简单的API用于存储，而内部的核心实现，依然是DiskLruCache原本的。</p>
+<p>考资料：</p>
+<ul>
+<li><a href="http://blog.csdn.net/lmj623565791/article/details/47251585" target="_blank" rel="external">http://blog.csdn.net/lmj623565791/article/details/47251585</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cj2cp2gno0000dku37ke2vbf7" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-reactNative" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/22/reactNative/" class="article-date">
+  <time datetime="2017-04-22T13:27:45.000Z" itemprop="datePublished">2017-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/reactNative/">关于react native页面全屏设置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&ensp;&ensp;在React Native中，页面使用的是flexbox规则来指定某个组件的子元素布局，因此要实现页面的全拼设置，是需要对view的flex相关属性进行设置。<br>&ensp;&ensp;通常情况下我们考虑的是设置宽高来制定页面为全屏，那系统也没有提供全屏的变量之给我们，我们只能通过系统属性实例const {width, height} = Dimensions.get(‘window’);获取窗口的宽高，在指定view的宽高，这个是一般情况的想法。<br>&ensp;&ensp;正如开头所说，React Native是以flexbox的规则来制定某个组件的子元素布局，因此需要考虑从flex的属性着手，flex属性代表了试图占取窗口比例，默认情况为0，即按照子元素大小绘制内容，如果指定了非0值x，则代表占取总flex的x份，如果其他子元素没有制定flex值，则在绘制完其他子元素后剩余的空间都是该制定flex值的元素的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cj2cp2gnz0004dku3n788qfxx" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-如何和女孩子谈话" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/22/如何和女孩子谈话/" class="article-date">
+  <time datetime="2017-04-22T13:01:26.050Z" itemprop="datePublished">2017-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/如何和女孩子谈话/">如何和女孩子谈话</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>给你三计 </p>
+<ul>
+<li>第一计：百折不挠<br>&ensp;&ensp;男人追女孩子，很少一追就能得手的，特别是两个人各个方面差距都很大、而男人又处于劣势的事情下，男人要想得到女孩子的爱，只能使用此计了。江湖上说：脸皮厚，吃个够；脸皮薄，吃不着。如果一遭到女孩子的拒绝就放弃，那么就什么机会都没有了。<br>&ensp;&ensp;男人这时候就要施展此计，一不怕羞，二不怕辱，三不怕累，四不怕花钱，五不怕浪费时间。男人懂得男怕缠女怕磨的道理，只要百折不挠，永不放弃，胜利一定属于自己的。这也是好汉无好妻，赖汉占花枝的根本原因。 </li>
+<li>第二计：欲擒故纵<br>&ensp;&ensp;这样的男人很狡猾，明明是对女孩子已经垂涎三尺，却总是和女孩子保持着一定的距离。男人采用的就是欲擒故纵之计，在战略上藐视女孩子，在战术上重视女孩子。他知道，女孩子这个猎物，追得越紧，她跑得可能就越快。他表面上装得不在乎女孩子，态度显得不冷不热，不咸不淡，就是想让女孩子放松对他的警惕，从而更容易观察到女孩子的弱点，也不暴露自己的缺点。<br>他在女孩子面前从不谈感情，却总在合适的机会表现自己非常的优秀。他这样做的目的就是让女孩子知道，他与那些苍蝇般的男人不在一个档次上。只要等到机会成熟，一举就把女孩子搞定。 </li>
+<li>第三计：文火慢炖<br>&ensp;&ensp;古人云：心急吃不了热豆腐，感情在于培养。男人对这两句中国古老的名言感悟得非常透彻，追女孩子如同炒菜，武火暴炒肯定是不行的，非炒糊不可，需要用文火慢慢地炒，并从中享受炒菜的快乐。<br>他们具体的做法就是找机会靠近女孩子，先以朋友的名义把女孩子放在自己准备好的锅里，调料就是经常请女孩子去吃饭、郊游、看电影、参加聚会等等，只要女孩子不拒绝，就这样慢慢炒下去，总有一天会把女孩子这块生牛肉炖熟了，也就成了他的下酒菜。 </li>
+</ul>
+<p><strong>怎样追求女孩子 </strong><br>  &ensp;&ensp;从一个女生的角度，我比较了解女孩子的心理。女孩子大多不会主动出击，去追求自己喜欢的男孩，除了确实太喜欢了或者是那种比较有个性的勇敢的女孩子。所以，如果你很喜欢一个女孩子，并且认为她对你也有点意思，那就主动点，别跟她搞拉锯战，自己难受，说不定你喜欢的人也痛苦。<br>&ensp;&ensp;任何一个女孩子在被人追的时候，心理都是很复杂的。她也许很开心，但是又带着点惶恐，她对这个闯进自己平静的生活的男孩子，有着欲拒还迎的矛盾心理，她不是故意的。不要以为她在考验你，她其实也在和自己斗争，她怕受到伤害。<br>不要怕你的主动会带来她的反感，你不主动，她也不主动，也就慢慢淡下来了。如果你开始的表白被她拒绝，那也很正常呀。不要气馁，谁知道这个女孩子心里在想什么呢？<br>也许你再表白两次，她就会被你打动，一个心地善良的好女孩是很容易感动的。<br>如果你受到一次挫折，就立刻离开，再也不去答理这个女孩，把自己紧紧地保护起来，默默地舔舐伤口，在你痛苦的同时，殊不知，那个女孩子也许也正在心里遗憾、后悔呢！也许她会偷偷哭泣，后悔拒绝了你，再看到你漠然的眼神，她也很痛心，但是她却不会对你说，绝对不会请求你回来追她。你的过度的自尊心，可能会伤害了女孩子敏感的心。<br>&ensp;&ensp;她会认为你不是真诚的喜欢他，要不怎么会就这么放弃了她？<br>有人说，男生真难，追女孩子太不容易了。可是我的感觉却是，这种现象跟男人和女人的社会角色定位是分不开的，从生理和社会的角度，女人总是被动的。如果反过来,让男人都脉脉含羞，女人变得勇往直前，世界才乱了套呢！女人的羞涩总是美好的、动人的呀~我总是听说是某个勇敢的男人战胜了多少困难，最终获得佳人芳心。相反的例子却少得很<br>&ensp;&ensp;常听到一句话，女孩子的心情就像天气一样，晴时多云偶有阵雨，心情的起伏真让人捉摸不定，嘿！这句话还真的一针见血，换个角度想，也当然道尽许多男孩子的无奈，如果你没有任何预测的能力，那你迟早会接受狂风暴雨的报应。如果女孩子脾气真的像天气的话，那我们就来好好看看天气的分类！这一回我们就拿风的等级与女孩子的脾气来作比较看看。 </p>
+<ol>
+<li>0级—无风：这时候你完全感觉不到任何女孩子的脾气，似乎像是处在静止的空气中，通常这种情况通常只会发生在女友不在身边时，而你的精神就可以处在完全放松的状况下。 </li>
+<li>1级—软风：这个时候你会微微感觉到女孩子一点的反应，你会看到女孩子是嘟笑着说讨厌，此时你会觉得她就像春天柔软的微风，让人感到十分舒服。 </li>
+<li>2级—轻风：这时候女孩子已经开始表现出一点不悦，通常会轻吐一声无聊，来代表她的感觉，但是很快的就转身走开，这个等级可能不会对你造成任何影响。 </li>
+<li>3级—微风：这时候你会发现女孩子开始表现出更多的不悦，通常是拿个小东西敲打你，让你知道要制止！但是可能还不能影响你，因为你会以为她在与你开玩笑。 </li>
+<li>4级—和风：你会发现，女孩子开始使用一些声音语言来表示不高兴的心情。 </li>
+<li>5级—清风：这时你应该会感到一点寒意了，通常女孩子会狠狠的瞪你一眼，还会说一些风凉话，千万别以为只是清风而已，如果你还长期处在这种情况中而浑然不知情的话，那我可要提醒你，这个等级与下一级的强风可是一级之隔！ </li>
+<li>6级—强风：这是个等级，通常女孩子已经手插着腰开始骂人了，而且声调已经调高，你应该知 道进退了！ </li>
+<li>7级—疾风：这时候已经开始发飙了，呼呼的咒骂声不断。 </li>
+<li>8级—大风：这个等级开始就有点恐怖了，除了不断传来的咒骂声之外，还会伴随着发出一些巨响与噪音，通常就是边骂边拍桌子啦！ </li>
+<li>9级—烈风：这个等级开始会有一些财物的损失，通常是她开始摔一些随手可拿的小东西，如笔、手机、鞋子啦！往往会造成一些小东西的损毁，记住这时候你得要有空中接物的能力。 </li>
+<li>10级—暴风：这时候往往会有大量的东西破裂与伤害的情况发生，这时候你可别故作镇定或坚强，遇到接踵而来又直指你而来的抛丢物，最好先找掩蔽物，处理方式就像遇到地震的情况一样。 </li>
+<li>11级—狂风：这个等级就跟名称一样，她会像发了狂的冲过来打人，往往会造成人类的一些灾害，通常一巴掌是跑不掉的。 </li>
+<li>12级—飓风：这个等级也就是我们熟悉的强烈台风，如果没有做好防范准备，通常有伤亡与灾难。 </li>
+</ol>
+<p><strong>怎样讨女孩子欢心</strong><br> &ensp;&ensp;如果你有了心仪的女孩，就应该珍惜两人之间的感情。你要学会关心她，爱护她，你要让她觉得你是多么在乎她。做男孩要读懂女孩的心，理解她的心意，使女孩感受你无微不至的呵护，她就像一只快乐的鸟儿一般围着你欢唱。你要学会与她一起散步、逛街、唱歌、跳舞，一起郊游……你要经常给她新奇感，买一些小饰品送给她，既便宜，又表达了你的爱慕之情使她感觉到你是懂得情趣，懂得爱情生活的好男孩，她就更爱你了。<br>&ensp;&ensp;只有彼此理解，才能有共同的语言，只有彼此忍让才能使爱情更甜蜜。你要让她明白女孩是要被人宠着，被人爱着被人关心、在乎、爱护的！爱就意味着付出，意味着奉献，爱就意味着使你们终生幸福，这就是真爱！相信以你的聪明和智慧，一定能讨女孩的欢心！<br><strong>教你怎么讨女孩子欢心 </strong></p>
+<ol>
+<li>「我可以向你问路吗?」 「到那里?」 「到你心里。」 </li>
+<li>「我可以向你借一块钱吗?」 「为什么?」 「我想打电话告诉我妈，我刚遇到我的梦中情人。」或「我要打电话给你妈妈谢谢她。」 </li>
+<li>「你爸爸是小偷吗?」 「不是。」 「那他怎么能把灿烂的星星偷来放在你双眸中呢?」(要有心里准备如果她们回答你“是的”) </li>
+<li>「你是如此地温暖，连我内衣里的塑胶都被你融化了。」 </li>
+<li>「你的腿一定很累吧?」 「为什么?」 「因为你在我的脑海中跑了一整天。」 </li>
+<li>(看他/她的衣服标签。当他们说“你在做什么? ”时)回答「只是看看你是不是天堂制造的。」 或者「只是看看你是不是我的号码。」 </li>
+<li>「对不起，我的电话号码掉了，可以借用你的吗?」 </li>
+<li>「我希望你会心肺复苏术，因为你美得让我停止呼吸。」 </li>
+<li>「小姐，请你把它还给我!」 「什么!」 「我的心，你用你的眼睛把它夺走了!」 </li>
+<li>「我的眼睛一定有问题，我的视线无法自你身上离开。」 </li>
+<li>「我今天很不顺利，看见漂亮女生微笑会让我心情好一点， 你可以为我笑一下吗?」 </li>
+<li>「今天的雨真大。」 「是啊!」 「那是因为老天对著你流口水。」 </li>
+<li>「如果可以重新排列英文字母，我会把U跟I放在一起。」 </li>
+<li>「抱歉，我是艺术家，凝视美女是我的工作。」 </li>
+<li>「相信我，我会让你成为世界上第二幸福的人。」 「为什么不是第一呢?」 「有了你，我就是最幸福的人!」 </li>
+</ol>
+<p><strong>追女生技巧</strong><br>&ensp;&ensp;很详细的“追女生技巧”恋人们感到最困难的是不知怎样去开始这个程序。男子会担心自己行为唐突，女子会担心男子会因而视自己虚浮。说到底，应由男方来开始这个程序，不妨参照下面所列之具体技巧<br>手的接触<br>① 过马路时：说：“快点，红灯要亮了然后自然地牵着她的手走过马路。<br>② 一下船或走过崎岖不平的路时：自然地自己伸出手、对她说：“来，这儿危险，请抓住我的手。”<br>③ 人很拥挤时：对她说：“抓住我的手，否则要走散了”她若扭扭捏捏，你就一把抓住她的手；如果她真的心中喜欢你。就只会作势地挣扎几下，然后就顺从。如果她确实不愿意，便会“声色俱厉”地要挣脱。这时，你不要勉强，这是对她的意志的尊重，并不是表示你懦弱。<br>④ 她要说起来时：自然她对她说：“来，我拉你起来”。<br>⑤ 跟她比比手掌大小：“来，我们来比比谁的手大，噎，你的手真可爱。”<br>⑥ 试试你的腕力：能否抵挡得住她用手拉。<br>⑦ 看手相：这方法很旧，但很有效。如果你真对手相学有所研究，能讲五分钟，就可使她大感兴趣。<br><strong>肩膀及其他部位的碰触 </strong><br>① 有车子从后边驶来时；对她说：“车来了”。于是轻松地楼着她的肩膀将她拉近。<br>② 荡秋干时：说：“来，我帮你推”。手自然推其肩<br>③ 来到餐入口时：轻轻拍拍她的肩膀，说：“就这间，怎么样？”她若同意，轻轻扶着她的肩膀一同走进去。<br>④ 突然起风转冷或突然下雨时：脱下大衣披在她身上，然后轻楼其肩膀。<br>⑤ 介绍建筑物或名胜古迹时：从背后把左手搭在她的肩膀上，右手指建筑物或古迹道：“哪，就是那一幢”。<br>⑥ 在游乐场所坐摩天轮或进鬼屋时：紧握她的手或搂着她的肩膀。<br>⑦ 她刚在草地上站起来时：你说：“哎呀，这里脏了”。顺手给她拍几下屁股。记住，碰触动作要自然而温和，语调更要轻松自然，千万不可有紧张感，因为女子与异性第一次接触，内心就已非常紧张。在内心上，如果她喜欢你，她不但不会介意你碰触她，而且还渴望你这样做。但你的动作。神态、语调会对她的情绪产生重要的影响，如果你做得不自然，她就会更不自然，甚至会拒绝你。<br>！下面介绍的其他技巧也是以她喜欢你和你做得自然为前提的。<br><strong>其他初步接触的技巧</strong><br>（1） 摸摸她的头，用手指拢拢她的头发，或用手指抚弄她的头发。如果她神态娇羞不表示反对，你在下次就可以考虑进一步的接触。<br>（2） 轻轻捏捏她的鼻子，会使她心花怒放。<br>（3）用手点她的额头，说：“你这顽皮的小猪猪”会把她逗笑。<br><strong>肌肤接触的技巧 </strong><br>&ensp;&ensp;肌肤接触的条件是外部气氛与环境再加上彼此亲密的交谈。交谈须由自然的话题展开，最好能加上手势神态的配合，激起对方心灵的共鸣。环境与气氛则要着重以下几点：<br>① 处于暗处：这可以消除她的差耻心让感情更开放<br>② 处于窄处：对方身体会自然地接触，彼此会自然产生“磁力”，如果不是讨厌对方，这种“磁力”的诱惑性很大，能使注意力高度集中。<br>③ 幽静的林荫道、浓柳岸边：容易撩起女子心中缕缕情思，也是合适的场所。<br>④ 要气候温暖：太冷了没有情调，温度以25℃为最适宜。<br>⑤ 能使女子陶醉的声音，低沉而断断续续的悄悄话、雨声、汽车声，等<br>⑥ 对方情绪低落时：会产生一种渴望向异性倾吐的欲望。<br><em>注意</em>，在做上面这类初步接触时，要适合当时的环境和气氛，比如在看到苦情剧的高潮时就不能这样做。如果环境适合，你也可以加上点浪漫意味，女孩子不会讨厌的。但对于成熟的大龄女子你就不便太浪漫了。<br><strong>与女子进餐时的注意事项:</strong><br>a. 要主动请她吃饭，因为一般女孩子都不愿明说肚子饿了。<br>b. 先问她想吃什么，如果她不表示意见，你就自己决定菜单。别推来推去，那样你以为礼让对方，其实会令对方尴尬。点菜时要注意别要沾牙的食品，因为那会破坏气氛。<br>c. 进食时尽量不要发出声音，宜一面谈心一面进食。<br>d. 你尽可以放开胃口吃，女孩子通常都喜欢男孩子食欲旺盛。<br><strong>关于饮酒的注意事项:</strong><br>a. 初次约会时万不可强迫女友喝酒，这样会令女友不快，而且她可以你强迫她饮酒为借口拒绝再与你约会。<br>b. 别装海量，不管你会不会。<br>c. 如她喝了，脸色特红，你要赞美她。<br><strong>如果约会迟到：</strong><br>&ensp;&ensp;飞奔赶去约会地点，喘着气向对方诚意道歉，然后自然找个借口，如“在中山路塞车了，急得我跳下车跑步过来，跑得我气喘如牛。”或：“我想找一份你喜欢的礼物送给你，以至赶不上时间……”总之，要编的合情合理，不能让她觉察是你一时疏忽大意造成迟到，根本与什么车呀礼物呀无关。这种诺言有助于消解女友的不满，动机是好的，不能算是不怀好意的欺骗。不过，迟到这种事可一而不可再，谎话说多了，馅终究会露出来。<br><strong>向她道别技巧:</strong><br>&ensp;&ensp;最好在适当的车站跟她说再见，陪她等车，直到车来，待她上车及车开出后自己再离去。这样女方便不会觉得你缠得不紧。如果她愿意让你送她回家，那表示她对你已有点心心相印了。这时必须分别时机，就是说，第一次约会应该在女孩子还想和你相处时结束。这是使她期待下一次约会的绝招。同时，你应运用如下的邀约技巧。比如在等车时，你问她：“今天是夏至，你知道夏至的意思是什么吗？”她说不知道，这时车就来了。你说：“那好，下次约会时我告诉你”。再重复一次下次的时间和地点，然后送她上车。又或者，她在将分手时这样说：“和你相处，我这个晚上过得很愉快”。你必须立即按上话头，说：“那实在太好了，我下次会让你更快乐。”然后再适当地重复一下下次约会时间和地点。<br><strong>结识她的技巧: </strong><br>&ensp;&ensp;一般女子都不讨厌陌生男子的搭讪，因为她们的潜意识里会认为这是因为自己有足够的魁力来吸引男性，但如果你的词句说得不恰当，神态又不自然，那她们就不会停下来和你交谈，因而在搭讪前你应想好交谈的内容，并适当运用如下问句。<br>① 比较适合浓妆艳抹又自信十足的女子的发问：<br>可以请你喝杯咖啡吗？<br>小姐，你真漂亮小姐，你的秀发真是飘逸迷人！<br>小姐，你的气质真迷人，我们可以交个朋友吗？<br>小姐，你这身衣服真好看，在哪儿买的呢？我想告诉我表妹。<br>小姐，你是时装模特儿吗？麻烦你签个名吧……什么？你不是？不是吗，我不相信。你这么漂亮，还 是请签个名吧”。<br>② 比较适合一般女孩的开场白名词，必须说得幽默而风趣。<br>—前面大海的景色真美，一齐去看看海好吗？<br>—我喜欢你的衣着格调，和我谈谈好吗？我想让我妹妹也学学。<br>—-真想请你去渴一杯，赏光吗？<br>—-我知道一家格调，气氛都很美的餐厅，一起去享受。<br><strong>实行时的注意事项: </strong><br>① 不要从背后去跟陌生女子搭讪。<br>② 视线相对时要脸露自然的微笑。<br>③ 不要由上往下打量对方的全身。<br>④ 态度要自然，不要让对方感到你是在有意跟她搭讪。<br>⑤ 不要急着去碰触对方身上的任何地方。<br>⑥ 不要对方一拒绝就气馁败退，需再接再励。至少邀请5次。<br>⑦ 不能缠着对方，更不可挡住对方去路，紧跟不舍。就算失败了也没有什么了不得的。<br>⑧ 这样的结识法能享受到与她短暂相处乐趣就行，若能与她约定下一次见面时间，便是完全的成功。 要懂得在恰当的时候结束这第一次的接触。<br>⑨ 如果女方的反应热烈，你就无需拘泥于上述的做法，而应“乘胜追击”。<br>&ensp;&ensp;首先，一定要有合适的环境，然后要在一个合适的时间，最后要用一句合适的话（那些所谓的经典根本不可能，在你第一次表白不但你根本没勇气清晰的说出那么长的话，别人也没那心思去听那么长饶舌的话）。 所以，我们的场景就设计好了。 听您提问的语气，你们一定认识，并不十分陌生。 所以，首先，要多接触她，比如经常以普通同事（同学）的身份和她说话，慢慢的话题就自然会越聊越深刻，从天气就自然可以聊到人生。在聊天中，你要表现出你是一个有理想有抱负有责任心，值得女孩子依靠的男人。注意事项：此阶段绝对不能让她察觉出你对她有意思。 这样，时间长了，其实看你自己的感觉而定，一般最多俩星期，女孩就会对你产生好感，此时趁热打铁，想个理由，找个机会，选个可能快下雨的天气约她吃顿饭，继续你们的聊天。算准时间，正好在吃完饭你送她回去的路上下起了雨，你帮她体贴的撑起一把伞或者干脆把外套脱掉给她披上，用充满磁性的声音告诉她，小心着凉。此时，她一定会心醉，产生一些如果做你gf会怎样的幻想。但这时，还并不是绝佳时机，你要继续吊她胃口。 然后，等到她已经开始主动想和你说话的时候，时机就成熟了，约她去一个特别幽雅的餐厅，烛光下告诉她：我爱你 大功告成。 附：白天不要表白，人特别是女人在晚上是最容易动感情的！所以要挑在晚上表白！ 用我的方法，大概要一个星期到一个月时间不定，但绝对100%成功呵呵~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/04/22/如何和女孩子谈话/" data-id="cj2cp2go20005dku3cgvic68u" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-linux系统磁盘挂载" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -112,12 +365,103 @@
 <p>我们可以通过fdisk -l命令来查看设备信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">xxxxxx:~ $ sudo fdisk -l</div><div class="line">Device         Boot  Start      End  Sectors  Size Id Type</div><div class="line">/dev/mmcblk0p1        8192   137215   129024   63M  c W95 FAT32 (LBA)</div><div class="line">/dev/mmcblk0p2      137216 30367743 30230528 14.4G 83 Linux</div><div class="line"></div><div class="line">Disk /dev/sda: 74.5 GiB, 80026361856 bytes, 156301488 sectors</div><div class="line">Units: sectors of 1 * 512 = 512 bytes</div><div class="line">Sector size (logical/physical): 512 bytes / 512 bytes</div><div class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</div><div class="line">Disklabel type: dos</div><div class="line">Disk identifier: 0x7780b3c2</div><div class="line"></div><div class="line">Device     Boot Start       End   Sectors  Size Id Type</div><div class="line">/dev/sda1        2048 156301487 156299440 74.5G 83 Linux</div></pre></td></tr></table></figure></p>
 <p>通过命令我们可以看到/dev/sda1设备信息，这个设备标识已经分过区并且格式化过了，现在就可以挂载了，但在挂在前我们得设置一个挂载点啊，要不凭空怎么挂呢，是吧，一般可以选择/mnt目录下获知/media目录下，先在选定目录下创建一个文件夹，然后就可以挂载在文件夹上了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mount -t ext4 /dev/sda1 /media/disk1</div><div class="line">umount /dev/sda1</div></pre></td></tr></table></figure></p>
 <p>其中第一句中的ext4 表示文件系统类型（可以通过parted程序查看）；iocharset=utf8文件读取格式，可选参数；umask表示让挂载的分区允许所有用户读取和修改，可选参数。第二句为卸载命令。<br>这个只是临时的挂在，如果要在开机的时候就挂载的话则需要修改/etc/fstab。</p>
-<p>参考资料：<br>1.<a href="http://blog.chinaunix.net/uid-7411781-id-2056205.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-7411781-id-2056205.html</a><br>2.<a href="http://www.jb51.net/os/RedHat/1117.html" target="_blank" rel="external">http://www.jb51.net/os/RedHat/1117.html</a><br>3.<a href="http://qq85609655.iteye.com/blog/1449899" target="_blank" rel="external">http://qq85609655.iteye.com/blog/1449899</a><br>4.<a href="http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html" target="_blank" rel="external">http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html</a><br>5.<a href="http://blog.csdn.net/jiyuanyi1992/article/details/43866273" target="_blank" rel="external">http://blog.csdn.net/jiyuanyi1992/article/details/43866273</a><br>6./etc/fstab文件解析：<a href="http://blog.csdn.net/richerg85/article/details/17917129" target="_blank" rel="external">http://blog.csdn.net/richerg85/article/details/17917129</a><br>7.<a href="http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/" target="_blank" rel="external">http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/</a></p>
+<p>下面详细来说下mount 命令和mount相关参数设定：<br>标准模式的mount命令使用是如下的形式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mount -t type device dir</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;其中type代表的是挂在文件的文件系统，device代表fdisk查找的块设备，dir代表的是需要挂在的路径；<br><strong>文件系统独立挂载选项</strong><br>&ensp;&ensp;这些参数只在/etc/fstab文件中用到，有些参数在系统内核已经给定了默认值来启用或关闭某些特性，如果要查看这些参数，可以查看/proc/mounts文件。<br>&ensp;&ensp;下面这些参数可以用在一些文件系统挂载时,但是不是每个文件系统都可以使用这些参数，比如sync目前只使用于 ext2、ext3、fat、vfat和ufs文件系统：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">async</td>
+<td style="text-align:left">所有的i/o都要满足异步输入输出，同样sync亦是如此</td>
+</tr>
+<tr>
+<td style="text-align:left">atime</td>
+<td style="text-align:left">不要使用noatime特性，那么对inode的访问将使用内核默认的</td>
+</tr>
+<tr>
+<td style="text-align:left">noatime</td>
+<td style="text-align:left">不更新文件的访问时间</td>
+</tr>
+<tr>
+<td style="text-align:left">auto</td>
+<td style="text-align:left">!自动挂载,可以在mount时候使用-a参数启用</td>
+</tr>
+<tr>
+<td style="text-align:left">noauto</td>
+<td style="text-align:left">只能显示挂载</td>
+</tr>
+</tbody>
+</table>
+<p><strong>/etc/fstab</strong><br>&ensp;&ensp;该文件包含了不同的文件系统的描述信息，是静态的文件系统信息。它由系统管理员修改和管理的，只能通过系统程序读取，对其他用户是不可写的。<br>&ensp;&ensp;文件中每一行代表了一个文件系统，以#开头的是解释性内容，空白行会被忽略。在文件中，每条记录的顺序也是很重要的，因为fsck、mount和umount命令都是顺序迭代fstab来做它们自身的业务。<br>&ensp;&ensp;该文件中每行由六个字段属性组合而成，各字段功能解析：</p>
+<ol>
+<li>（文件块）该字段描述了需要挂载的块设备和远程文件系统。对于普通的挂在，其会保持一个块设备节点（由mknod创建），如‘/dev/cdrom’、‘/dev/sdb7/’，而对于NFS格式文件系统会以<host>:dir形式挂载，如‘knuth.aeb.nl:/’。<br>&ensp;&ensp;除了明确指定块设备路径，我们还可以通过标签或者UUID来挂载块设备，如‘LABEL=Boot’，‘UUID=3e6be9de-8139-11d1-<pre><code>-9106-a43f08d823a6’。
+</code></pre>&ensp;&ensp;另外还可以通过PARTUUID= and PARTLABEL=z来挂载快设备，但是这两个特性只支持GUID分区表（GPT）和MAC分区表。</host></li>
+<li>文件挂载点，对于swap分区，该字段需要指定为‘none’，如果文件挂载点包含了空格字符，需要以‘\040’替换。</li>
+<li>文件系统格式，说明挂载的块设备是什么类型的文件格式，目前linux支持文件系统有：adfs, affs, autofs, coda,<pre><code>coherent, cramfs, devpts, efs, ext2, ext3, hfs,  hpfs,  iso9660,
+jfs,  minix,  msdos,  ncpfs,  nfs,  ntfs,     proc, qnx4, reiserfs,
+romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如果要更详细的可以通过mount查看。
+</code></pre></li>
+<li>声明与文件系统相关的选项，选项列表是以逗号分割开来的，包含挂载类型以及任何适合于文件系统类型的附加选项。有关可用安装选项的文档，请参考<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount(8" target="_blank" rel="external">mount(8)</a>)，在可用的swap选项文件，请参考<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=swapon(8" target="_blank" rel="external">wapon(8)</a>)。<br>基础的一些参数选项有：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">参数</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">defaults</td>
+<td style="text-align:left">使用默认参数:rw,suid,dev,exec,auto,nouser and async</td>
+</tr>
+<tr>
+<td style="text-align:left">noauto</td>
+<td style="text-align:left">在‘mount -a’命令下，不挂载文件系统</td>
+</tr>
+<tr>
+<td style="text-align:left">user</td>
+<td style="text-align:left">允许一个用户挂载</td>
+</tr>
+<tr>
+<td style="text-align:left">owner</td>
+<td style="text-align:left">允许块设备拥有者挂载</td>
+</tr>
+<tr>
+<td style="text-align:left">comment 或 x-<name></name></td>
+<td style="text-align:left">使用fstab维护程序</td>
+</tr>
+<tr>
+<td style="text-align:left">nofail</td>
+<td style="text-align:left">如果快设备不存在，不要报告错误</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>指定该文件系统是否需要备份，如果该字段没有指定，默认则是为0，也即该文件系统不需要备份，如果需要查看备份选项可以看<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=dump(8" target="_blank" rel="external">dump(8)</a>)。</li>
+<li>指定文件系统是否需要检查和检查顺序，具体选项意义可以查看<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=fsck(8" target="_blank" rel="external">fsck(8)</a>),对于root文件系统需要指定为1，其他文件系统指定为2，如果字段没有指定，默认值为0，也即表明文件系统不需要检查。</li>
+</ol>
+<p>参考资料：</p>
+<ul>
+<li><a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount" target="_blank" rel="external">http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount</a></li>
+<li><a href="http://blog.chinaunix.net/uid-7411781-id-2056205.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-7411781-id-2056205.html</a></li>
+<li><a href="http://www.jb51.net/os/RedHat/1117.html" target="_blank" rel="external">http://www.jb51.net/os/RedHat/1117.html</a></li>
+<li><a href="http://qq85609655.iteye.com/blog/1449899" target="_blank" rel="external">http://qq85609655.iteye.com/blog/1449899</a></li>
+<li><a href="http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html" target="_blank" rel="external">http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html</a></li>
+<li><a href="http://blog.csdn.net/jiyuanyi1992/article/details/43866273" target="_blank" rel="external">http://blog.csdn.net/jiyuanyi1992/article/details/43866273</a></li>
+<li>/etc/fstab文件解析：<a href="http://blog.csdn.net/richerg85/article/details/17917129" target="_blank" rel="external">http://blog.csdn.net/richerg85/article/details/17917129</a></li>
+<li><a href="http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/" target="_blank" rel="external">http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/</a>    </li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj1sqsy5g0001eou3p6ob1amb" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj2cp2gnu0001dku3jlhn9am7" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -249,7 +593,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cj1sqsy590000eou39f2xzjfo" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cj2cp2gnw0002dku32g1485ut" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -327,7 +671,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cj1sqsy5q0002eou37ois6vpa" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cj2cp2go60006dku3b3nipkjj" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -354,7 +698,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
     </div>
   </div>
 
@@ -362,20 +706,28 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
           <li>
+            <a href="/2017/05/06/python/">python中@的作用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/26/LeastRecentlyUsed-最近最少使用/">LeastRecentlyUsed_最近最少使用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/22/reactNative/">关于react native页面全屏设置</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/22/如何和女孩子谈话/">如何和女孩子谈话</a>
+          </li>
+        
+          <li>
             <a href="/2017/04/22/linux系统磁盘挂载/">linux系统磁盘挂载</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/22/hexo写blog/">hexo写blog</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/22/使用hexo向github发布自己的blog/">使用hexo向github发布自己的blog</a>
           </li>
         
       </ul>
@@ -391,7 +743,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 CallteFoot<br>
-      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+      Propulsé by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
     </div>
   </div>
 </footer>
