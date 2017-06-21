@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://cattlefoot.github.io/2017/05/06/python/index.html">
 <meta property="og:site_name" content="CallteFoot's blog">
 <meta property="og:description" content="&amp;ensp;&amp;ensp;在python2.4以上的函数中经常看到函数定义上一行有@functionName的修饰，注意下这个语法细节，有点像c语言中带参数的宏操作，当解释器读到这样的修饰之后，会先解析@后的内容，直接把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象。例子：123456789101112131415161718# !/usr/bin/env pyt">
-<meta property="og:updated_time" content="2017-05-06T03:12:26.924Z">
+<meta property="og:updated_time" content="2017-05-06T07:51:53.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python中@的作用">
 <meta name="twitter:description" content="&amp;ensp;&amp;ensp;在python2.4以上的函数中经常看到函数定义上一行有@functionName的修饰，注意下这个语法细节，有点像c语言中带参数的宏操作，当解释器读到这样的修饰之后，会先解析@后的内容，直接把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象。例子：123456789101112131415161718# !/usr/bin/env pyt">
@@ -97,11 +97,12 @@
 <p>注释掉//return fn(*args)，结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">My god!My god!My god!</div><div class="line">My god!My god!My god!</div></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp;解释：要想使other函数能正常运行（即调用other函数并将其参数继续往下传），必须加返回值，@decorator是一个statement,会将other函数当作参数传入来执行test方法。</p>
 <p>&ensp;&ensp;总结：’@’符号用作函数修饰符是python2.4新增加的功能，修饰符必须出现在函数定义前一行，不允许和函数定义在同一行。也就是说＠A def f(): 是非法的。 只可以在模块或类定义层内对函数进行修饰，不允许修修饰一个类。一个修饰符就是一个函数，它将被修饰的函数做为参数，并返回修饰后的同名函数或其它可调用的东西。</p>
+<p>&ensp;&ensp;<strong>感悟</strong>：@的作用有点像代理模式，即@functionName修饰的函数是由functionName函数管理。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cj2cyv73a0004dgu3hiq0tmsk" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cj4767tsa000ihwu3m5ia4oov" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -138,15 +139,29 @@
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 10px;">Download Manager</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/android/" style="font-size: 10px;">android</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
     </div>
   </div>
 
@@ -159,23 +174,23 @@
       <ul>
         
           <li>
-            <a href="/2017/05/06/python切片/">python切片</a>
+            <a href="/2017/06/21/Bitmap压缩/">Bitmap压缩</a>
           </li>
         
           <li>
-            <a href="/2017/05/06/python字符串连接的N种方式/">python字符串连接的N种方式</a>
+            <a href="/2017/06/19/android-download-manager使用/">android_download_manager使用</a>
           </li>
         
           <li>
-            <a href="/2017/05/06/python/">python中@的作用</a>
+            <a href="/2017/06/03/rxjava2基础/">rxjava2基础</a>
           </li>
         
           <li>
-            <a href="/2017/04/26/LeastRecentlyUsed-最近最少使用/">LeastRecentlyUsed_最近最少使用</a>
+            <a href="/2017/05/20/python爬虫/">python爬虫</a>
           </li>
         
           <li>
-            <a href="/2017/04/22/reactNative/">关于react native页面全屏设置</a>
+            <a href="/2017/05/10/raspberryWithPython/">raspberryWithPython</a>
           </li>
         
       </ul>

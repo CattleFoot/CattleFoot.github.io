@@ -3,19 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>关于react native页面全屏设置 | CallteFoot&#39;s blog</title>
+  <title>python编码中问题 | CallteFoot&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="&amp;ensp;&amp;ensp;在React Native中，页面使用的是flexbox规则来指定某个组件的子元素布局，因此要实现页面的全拼设置，是需要对view的flex相关属性进行设置。&amp;ensp;&amp;ensp;通常情况下我们考虑的是设置宽高来制定页面为全屏，那系统也没有提供全屏的变量之给我们，我们只能通过系统属性实例const {width, height} = Dimensions.get(‘win">
+  <meta name="description" content="1.mysql 模块集成：&amp;ensp;&amp;ensp;通过pycharm IDE引入mysql模块时会报错，此时到mysql conenctor下载对应系统的mysql 模块安装包即可。  关于BeautifulSoup使用时引入问题：&amp;ensp;&amp;ensp;网上普遍的引入方法是：1from bs4 import BeautifulSoup   最近在使用是发现此方法报错，因此尝试使用：1from B">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于react native页面全屏设置">
-<meta property="og:url" content="https://cattlefoot.github.io/2017/04/22/reactNative/index.html">
+<meta property="og:title" content="python编码中问题">
+<meta property="og:url" content="https://cattlefoot.github.io/2017/05/06/python编码中问题/index.html">
 <meta property="og:site_name" content="CallteFoot's blog">
-<meta property="og:description" content="&amp;ensp;&amp;ensp;在React Native中，页面使用的是flexbox规则来指定某个组件的子元素布局，因此要实现页面的全拼设置，是需要对view的flex相关属性进行设置。&amp;ensp;&amp;ensp;通常情况下我们考虑的是设置宽高来制定页面为全屏，那系统也没有提供全屏的变量之给我们，我们只能通过系统属性实例const {width, height} = Dimensions.get(‘win">
-<meta property="og:updated_time" content="2017-04-22T13:45:04.016Z">
+<meta property="og:description" content="1.mysql 模块集成：&amp;ensp;&amp;ensp;通过pycharm IDE引入mysql模块时会报错，此时到mysql conenctor下载对应系统的mysql 模块安装包即可。  关于BeautifulSoup使用时引入问题：&amp;ensp;&amp;ensp;网上普遍的引入方法是：1from bs4 import BeautifulSoup   最近在使用是发现此方法报错，因此尝试使用：1from B">
+<meta property="og:image" content="https://cattlefoot.github.io/images/python_mysql_error.png">
+<meta property="og:updated_time" content="2017-05-06T13:36:01.517Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于react native页面全屏设置">
-<meta name="twitter:description" content="&amp;ensp;&amp;ensp;在React Native中，页面使用的是flexbox规则来指定某个组件的子元素布局，因此要实现页面的全拼设置，是需要对view的flex相关属性进行设置。&amp;ensp;&amp;ensp;通常情况下我们考虑的是设置宽高来制定页面为全屏，那系统也没有提供全屏的变量之给我们，我们只能通过系统属性实例const {width, height} = Dimensions.get(‘win">
+<meta name="twitter:title" content="python编码中问题">
+<meta name="twitter:description" content="1.mysql 模块集成：&amp;ensp;&amp;ensp;通过pycharm IDE引入mysql模块时会报错，此时到mysql conenctor下载对应系统的mysql 模块安装包即可。  关于BeautifulSoup使用时引入问题：&amp;ensp;&amp;ensp;网上普遍的引入方法是：1from bs4 import BeautifulSoup   最近在使用是发现此方法报错，因此尝试使用：1from B">
+<meta name="twitter:image" content="https://cattlefoot.github.io/images/python_mysql_error.png">
   
     <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
   
@@ -64,10 +66,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-reactNative" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-python编码中问题" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/04/22/reactNative/" class="article-date">
-  <time datetime="2017-04-22T13:27:45.000Z" itemprop="datePublished">2017-04-22</time>
+    <a href="/2017/05/06/python编码中问题/" class="article-date">
+  <time datetime="2017-05-06T13:02:51.000Z" itemprop="datePublished">2017-05-06</time>
 </a>
     
   </div>
@@ -78,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      关于react native页面全屏设置
+      python编码中问题
     </h1>
   
 
@@ -86,12 +88,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>&ensp;&ensp;在React Native中，页面使用的是flexbox规则来指定某个组件的子元素布局，因此要实现页面的全拼设置，是需要对view的flex相关属性进行设置。<br>&ensp;&ensp;通常情况下我们考虑的是设置宽高来制定页面为全屏，那系统也没有提供全屏的变量之给我们，我们只能通过系统属性实例const {width, height} = Dimensions.get(‘window’);获取窗口的宽高，在指定view的宽高，这个是一般情况的想法。<br>&ensp;&ensp;正如开头所说，React Native是以flexbox的规则来制定某个组件的子元素布局，因此需要考虑从flex的属性着手，flex属性代表了试图占取窗口比例，默认情况为0，即按照子元素大小绘制内容，如果指定了非0值x，则代表占取总flex的x份，如果其他子元素没有制定flex值，则在绘制完其他子元素后剩余的空间都是该制定flex值的元素的。</p>
+        <p>1.mysql 模块集成：<br>&ensp;&ensp;通过pycharm IDE引入mysql模块时会报错<img src="/images/python_mysql_error.png" alt="mysql引入错误">，此时到<a href="https://dev.mysql.com/downloads/connector/python/" target="_blank" rel="external">mysql conenctor</a>下载对应系统的mysql 模块安装包即可。</p>
+<ol>
+<li>关于BeautifulSoup使用时引入问题：<br>&ensp;&ensp;网上普遍的引入方法是：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>最近在使用是发现此方法报错，因此尝试使用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;发下该方法才正确，My god。<br><strong>注意</strong>具体那个版本使用那种形式暂时不是很清楚，希望有人告知。</p>
+<ol>
+<li>python中import x和from x import y的区别<br>&ensp;&ensp;简单解释：<br>import x：把x给我；from x import y：从x里把y拿出来给我。<br>举例子：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line">print(datetime.datetime.now())</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;引入的是整个datetime包<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line">print(datetime.now())</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;只引入datetime包里的datetime类<br><strong>注意</strong>两者的意义何在？：主要是引入内存中的东西大小不一样。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cj4767tsx000ohwu3tz6hjmcq" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cj4767tsn000lhwu3096dgzre" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -100,19 +114,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2017/04/22/linux系统磁盘挂载/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/05/06/python切片/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Récent</strong>
       <div class="article-nav-title">
         
-          linux系统磁盘挂载
+          python切片
         
       </div>
     </a>
   
   
-    <a href="/2017/04/26/LeastRecentlyUsed-最近最少使用/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/05/07/python的List与tuple操作方法详解/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Ancien</strong>
-      <div class="article-nav-title">LeastRecentlyUsed_最近最少使用</div>
+      <div class="article-nav-title">python的List与tuple操作方法详解</div>
     </a>
   
 </nav>

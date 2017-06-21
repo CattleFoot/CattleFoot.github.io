@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>python爬虫 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="urllib2的运用  &amp;ensp;&amp;ensp;urllib2获取网页内容时可以设定超时时间，防止运行过程中假死；在获取网页时需要做异常处理，防止部分网页访问不到程序终止。123456789#coding:utf-8import urllib2try:    url = &quot;http://www.baidu.com&quot;    f = urllib2.urlopen(url, timeout=0) #">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python爬虫">
+<meta property="og:url" content="https://cattlefoot.github.io/2017/05/20/python爬虫/index.html">
+<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:description" content="urllib2的运用  &amp;ensp;&amp;ensp;urllib2获取网页内容时可以设定超时时间，防止运行过程中假死；在获取网页时需要做异常处理，防止部分网页访问不到程序终止。123456789#coding:utf-8import urllib2try:    url = &quot;http://www.baidu.com&quot;    f = urllib2.urlopen(url, timeout=0) #">
+<meta property="og:updated_time" content="2017-05-20T04:20:39.299Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python爬虫">
+<meta name="twitter:description" content="urllib2的运用  &amp;ensp;&amp;ensp;urllib2获取网页内容时可以设定超时时间，防止运行过程中假死；在获取网页时需要做异常处理，防止部分网页访问不到程序终止。123456789#coding:utf-8import urllib2try:    url = &quot;http://www.baidu.com&quot;    f = urllib2.urlopen(url, timeout=0) #">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-python爬虫" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/20/python爬虫/" class="article-date">
+  <time datetime="2017-05-20T04:15:28.000Z" itemprop="datePublished">2017-05-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      python爬虫
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>urllib2的运用</li>
+</ol>
+<p>&ensp;&ensp;urllib2获取网页内容时可以设定超时时间，防止运行过程中假死；在获取网页时需要做异常处理，防止部分网页访问不到程序终止。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#coding:utf-8</span></div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    url = <span class="string">"http://www.baidu.com"</span></div><div class="line">    f = urllib2.urlopen(url, timeout=<span class="number">0</span>) <span class="comment">#timeout设置超时的时间</span></div><div class="line">    result = f.read()</div><div class="line">    <span class="keyword">print</span> result</div><div class="line"><span class="keyword">except</span> Exception,e:</div><div class="line">    <span class="keyword">print</span> <span class="string">'a'</span>,str(e)</div></pre></td></tr></table></figure></p>
+<p>结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a &lt;urlopen error timed out&gt;</div></pre></td></tr></table></figure></p>
+<p><strong>异常处理</strong><br>&ensp;&ensp;如果想在代码中处理URLError和HTTPError有两种方法，代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment">#coding=utf-8</span></div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line">url=<span class="string">"xxxxxx"</span>  <span class="comment">#需要访问的URL</span></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    response=urllib2.urlopen(url)</div><div class="line"><span class="keyword">except</span> urllib2.HTTPError,e:    <span class="comment">#HTTPError必须排在URLError的前面</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"The server couldn't fulfill the request"</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"Error code:"</span>,e.code</div><div class="line">    <span class="keyword">print</span> <span class="string">"Return content:"</span>,e.read()</div><div class="line"><span class="keyword">except</span> urllib2.URLError,e:</div><div class="line">    <span class="keyword">print</span> <span class="string">"Failed to reach the server"</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"The reason:"</span>,e.reason</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    <span class="comment">#something you should do</span></div><div class="line">    <span class="keyword">pass</span>  <span class="comment">#其他异常的处理</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment">#coding=utf-8</span></div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line">url=<span class="string">"http://xxx"</span>  <span class="comment">#需要访问的URL</span></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    response=urllib2.urlopen(url)</div><div class="line"><span class="keyword">except</span> urllib2.URLError,e:</div><div class="line">    <span class="keyword">if</span> hasattr(e,<span class="string">"reason"</span>):</div><div class="line">        <span class="keyword">print</span> <span class="string">"Failed to reach the server"</span></div><div class="line">        <span class="keyword">print</span> <span class="string">"The reason:"</span>,e.reason</div><div class="line">    <span class="keyword">elif</span> hasattr(e,<span class="string">"code"</span>):</div><div class="line">        <span class="keyword">print</span> <span class="string">"The server couldn't fulfill the request"</span></div><div class="line">        <span class="keyword">print</span> <span class="string">"Error code:"</span>,e.code</div><div class="line">        <span class="keyword">print</span> <span class="string">"Return content:"</span>,e.read()</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    <span class="keyword">pass</span>  <span class="comment">#其他异常的处理</span></div></pre></td></tr></table></figure>
+<p>&ensp;&ensp;相比较而言，第二种异常处理方法更优。</p>
+<ol>
+<li>re正则的运用</li>
+</ol>
+<p>字符匹配过成功中，re匹配模式很难定义，主要还是不熟；主要用到以下几种：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">p = re.compile(<span class="string">r'''&lt;a href="http://wiki.jikexueyuan.com/project/start-learning-python/(.+?).html" &gt;.+?&lt;/a&gt;'''</span>)</div><div class="line">matchs = p.findall(contents)</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;这个主要匹配出所有的网页名称出来，结果是得到一个包含list的tuple列表；<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">linkpatten = re.compile(<span class="string">r'''href="/.+?/css'''</span>)</div><div class="line">contents = re.sub(linkpatten, <span class="string">r'href="./css'</span>, contents)</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;这个主要是将contents中的href=”/.+?/css字符串替换成./css形式，所有的哦。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">linkpatten = re.compile(<span class="string">r'''href="/assets/(.+?)\.ico"'''</span>)</div><div class="line">contents = re.sub(linkpatten, <span class="string">r'href="./images/\g&lt;1&gt;.ico"'</span>, contents)</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;这个主要是将contents中的href=”/assets/(.+?).ico”字符串并提取ico的名称用来后台替换，替换成href=”./images/\g<1>.ico”形式，其中\g<1>部分或用提取出来的名称替换，同样是所有的哦.</1></1></p>
+<p><strong>小结</strong><br>&ensp;&ensp;正则中（）代表需要提取出来的内容；re.sub(linkpatten, r’href=”./images/\g<1>.ico”‘, contents)解析；反斜杠加g以及中括号内一个名字，即：\g<name>，对应着命了名的组，named group；文件保存推荐使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</div><div class="line">                       cssfile.write(req.read())</div></pre></td></tr></table></figure></name></1></p>
+<p>&ensp;&ensp;同样需要注意的是在保存图片文件(png或jpg)时，写入模式是“w+b”（以二进制形式保存），但是有的网站图片可能是压缩过的，保存下来是看不了的，可以通过如下格式保存：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(filename,<span class="string">"wb"</span>) <span class="keyword">as</span> code:</div><div class="line">  decompresser = zlib.decompressobj(<span class="number">16</span>+zlib.MAX_WBITS)</div><div class="line">  data = decompresser.decompress(f.read())</div><div class="line">  code.write(data)</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;目前不知道如何判断图片是否压缩及压缩格式，有知道的可以交流下。</p>
+<ol>
+<li>贪婪 vs 不贪婪<br>&ensp;&ensp;当重复一个正则表达式时，如用 a*，操作结果是尽可能多地匹配模式。当你试着匹配一对对称的定界符，如 HTML 标志中的尖括号时这个事实经常困扰你。匹配单个 HTML 标志的模式不能正常工作，因为 .* 的本质是“贪婪”的</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#!python</div><div class="line">&gt;&gt;&gt; s = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Title&lt;/title&gt;'</div><div class="line">&gt;&gt;&gt; len(s)</div><div class="line">32</div><div class="line">&gt;&gt;&gt; print re.match('&lt;.*&gt;', s).span()</div><div class="line">(0, 32)</div><div class="line">&gt;&gt;&gt; print re.match('&lt;.*&gt;', s).group()</div><div class="line">&lt;html&gt;&lt;head&gt;&lt;title&gt;Title&lt;/title&gt;</div></pre></td></tr></table></figure>
+<p>&ensp;&ensp;RE 匹配 在 “<html>“ 中的 “&lt;”，.* 消耗掉字符串的剩余部分。在 RE 中保持更多的左，虽然 &gt; 不能匹配在字符串结尾，因此正则表达式必须一个字符一个字符地回溯，直到它找到 &gt; 的匹配。最终的匹配从 “<html" 中的="" "<"="" 到="" "<="" title="">“ 中的 “&gt;”,这并不是你所想要的结果。</html"></html></p>
+<p>&ensp;&ensp;在这种情况下，解决方案是使用不贪婪的限定符 *?、+?、?? 或 {m,n}?，尽可能匹配小的文本。在上面的例子里， “&gt;” 在第一个 “&lt;” 之后被立即尝试，当它失败时，引擎一次增加一个字符，并在每步重试 “&gt;”。这个处理将得到正确的结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!python</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> re.match(<span class="string">'&lt;.*?&gt;'</span>, s).group()</div><div class="line">&lt;html&gt;</div></pre></td></tr></table></figure></p>
+<p>###最后附上最近写的原始版的极客python教程内容爬取的代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">import</span> zlib</div><div class="line"></div><div class="line">logging.basicConfig(level=logging.INFO)</div><div class="line"><span class="string">"""</span></div><div class="line">"""</div><div class="line">main_dir = <span class="string">r'D:\mugwort\book\python\base_python'</span></div><div class="line">main_url = <span class="string">r'http://wiki.jikexueyuan.com/project/start-learning-python/'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sava_css</span><span class="params">(contents)</span>:</span></div><div class="line">    p = re.compile(<span class="string">r'''&lt;link rel="stylesheet" type="text/css" href="(.+?)"&gt;'''</span>)</div><div class="line">    matchs = p.findall(contents)</div><div class="line">    <span class="keyword">for</span> match <span class="keyword">in</span> matchs:</div><div class="line">        logging.info(match)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match.startswith(<span class="string">"//"</span>):</div><div class="line">            match = <span class="string">"http://wiki.jikexueyuan.com"</span> + match</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            match = <span class="string">"http:"</span> + match</div><div class="line">        logging.info(<span class="string">"format:"</span> + match)</div><div class="line">        req = urllib2.urlopen(match)</div><div class="line">        contents = req.read()</div><div class="line">        names = re.compile(<span class="string">r'''.+?/(.*?)\.css'''</span>).findall(match)</div><div class="line">        name = names.pop(len(names) - <span class="number">1</span>)</div><div class="line">        logging.info(name)</div><div class="line">        logging.info(<span class="string">"rindex %d  length %d "</span> % (name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>, len(name)))</div><div class="line">        logging.info(<span class="string">"name format:"</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)])</div><div class="line">        filename = main_dir + <span class="string">'\\css\\'</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)] + <span class="string">".css"</span></div><div class="line">        <span class="keyword">if</span> filename:</div><div class="line">            logging.info(filename)</div><div class="line">            <span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</div><div class="line">                cssfile.write(contents)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sava_js</span><span class="params">(contents)</span>:</span></div><div class="line">    p = re.compile(<span class="string">r'''&lt;script type="text/javascript" src="(.+?)"&gt;'''</span>)</div><div class="line">    matchs = p.findall(contents)</div><div class="line">    <span class="keyword">for</span> match <span class="keyword">in</span> matchs:</div><div class="line">        logging.info(match)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match.startswith(<span class="string">"//"</span>):</div><div class="line">            match = <span class="string">"http://wiki.jikexueyuan.com"</span> + match</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            match = <span class="string">"http:"</span> + match</div><div class="line">        logging.info(<span class="string">"format:"</span> + match)</div><div class="line">        req = urllib2.urlopen(match)</div><div class="line">        contents = req.read()</div><div class="line">        names = re.compile(<span class="string">r'''.+?/(.*?)\.js'''</span>).findall(match)</div><div class="line">        logging.info(names)</div><div class="line">        name = names.pop(len(names) - <span class="number">1</span>)</div><div class="line">        logging.info(name)</div><div class="line">        logging.info(<span class="string">"rindex %d  length %d "</span> % (name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>, len(name)))</div><div class="line">        logging.info(<span class="string">"name format:"</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)])</div><div class="line">        filename = main_dir + <span class="string">'\\js\\'</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)] + <span class="string">".js"</span></div><div class="line">        <span class="keyword">if</span> filename:</div><div class="line">            logging.info(filename)</div><div class="line">            <span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</div><div class="line">                cssfile.write(contents)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sava_img</span><span class="params">(contents)</span>:</span></div><div class="line">    p = re.compile(<span class="string">r'''&lt;img src="(.+?)".+?&gt;|&lt;link.+?href="(.+?)".+?type="image/x-icon".+?&gt;'''</span>)</div><div class="line">    matchs = p.findall(contents)</div><div class="line">    <span class="keyword">for</span> matchT <span class="keyword">in</span> matchs:</div><div class="line">        logging.info(matchT)</div><div class="line">        match = matchT[<span class="number">0</span>]</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match:</div><div class="line">            match = matchT[<span class="number">1</span>]</div><div class="line">        logging.info(match)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match.startswith(<span class="string">"//"</span>):</div><div class="line">            match = <span class="string">"http://wiki.jikexueyuan.com"</span> + match</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            match = <span class="string">"http:"</span> + match</div><div class="line">        logging.info(<span class="string">"format:"</span> + match)</div><div class="line">        logging.info(<span class="string">"rindex %d  length %d "</span> % (match.rindex(<span class="string">r"."</span>), len(match)))</div><div class="line">        subfix = match[match.rindex(<span class="string">"."</span>):len(match)]</div><div class="line">        logging.info(<span class="string">"subfix:"</span> + subfix)</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            req = urllib2.urlopen(match)</div><div class="line">            names = re.compile(<span class="string">r'''.+?/(.*?)\.png|.+?/(.*?)\.jpg|.+?/(.*?)\.ico'''</span>).findall(match)</div><div class="line">            logging.info(names)</div><div class="line">            nameT = names.pop(<span class="number">0</span>)</div><div class="line">            name = nameT[<span class="number">0</span>]</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> name:</div><div class="line">                name = nameT[<span class="number">1</span>]</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> name:</div><div class="line">                name = nameT[<span class="number">2</span>]</div><div class="line">            logging.info(name)</div><div class="line">            logging.info(<span class="string">"rindex %d  length %d "</span> % (name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>, len(name)))</div><div class="line">            logging.info(<span class="string">"name format:"</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)])</div><div class="line">            filename = main_dir + <span class="string">'\\images\\'</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)] + subfix</div><div class="line">            <span class="keyword">if</span> filename:</div><div class="line">                logging.info(filename)</div><div class="line">                <span class="comment"># 对于png文件需要解压且以二进制保存</span></div><div class="line">                <span class="keyword">if</span> <span class="string">".png"</span> == subfix:</div><div class="line">                    <span class="keyword">with</span> open(filename, <span class="string">'w+b'</span>) <span class="keyword">as</span> cssfile:</div><div class="line">                        cssfile.write(req.read())</div><div class="line">                <span class="comment"># 对于jpg文件需要以二进制写入</span></div><div class="line">                <span class="keyword">elif</span> <span class="string">".jpg"</span> == subfix:</div><div class="line">                    <span class="keyword">with</span> open(filename, <span class="string">'w+b'</span>) <span class="keyword">as</span> cssfile:</div><div class="line">                        cssfile.write(req.read())</div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    <span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</div><div class="line">                        cssfile.write(req.read())</div><div class="line">        <span class="keyword">except</span> urllib2.URLError, e:</div><div class="line">            <span class="keyword">if</span> hasattr(e, <span class="string">"reason"</span>):</div><div class="line">                <span class="keyword">print</span> <span class="string">"The reason:"</span>, e.reason</div><div class="line">            <span class="keyword">elif</span> hasattr(e, <span class="string">"code"</span>):</div><div class="line">                <span class="keyword">print</span> <span class="string">"Error code:"</span>, e.code</div><div class="line">                <span class="keyword">print</span> <span class="string">"Return content:"</span>, e.read()</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">pass</span>  <span class="comment"># 其他异常处理</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_html</span><span class="params">(urlname)</span>:</span></div><div class="line">    <span class="comment"># 打开并保存hmtl</span></div><div class="line">    url = main_url + urlname + <span class="string">'.html'</span></div><div class="line">    file_name = main_dir + <span class="string">'\\'</span> + urlname + <span class="string">'.html'</span></div><div class="line">    req = urllib2.urlopen(url)</div><div class="line">    contents = req.read()</div><div class="line">    sava_css(contents)</div><div class="line">    sava_js(contents)</div><div class="line">    sava_img(contents)</div><div class="line">    <span class="comment"># 替换掉地址信息，让其变为本地</span></div><div class="line">    <span class="comment"># 规范css文件保存</span></div><div class="line">    contents = re.sub(main_url, <span class="string">r""</span>, contents)</div><div class="line">    linkpatten = re.compile(<span class="string">r'''href="/.+?/css'''</span>)</div><div class="line">    contents = re.sub(linkpatten, <span class="string">r'href="./css'</span>, contents)</div><div class="line">    <span class="comment"># 规范js文件保存</span></div><div class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/js/(.+?)\.js.*?"'''</span>)</div><div class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./js/\g&lt;1&gt;.js"'</span>, contents)</div><div class="line">    linkpatten = re.compile(<span class="string">r"src='.*?/js/(.+?)\.js.*?'"</span>)</div><div class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./js/\g&lt;1&gt;.js"'</span>, contents)</div><div class="line">    <span class="comment"># 规范js文件保存</span></div><div class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/src/(.+?)\.js.*?"'''</span>)</div><div class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./js/\g&lt;1&gt;.js"'</span>, contents)</div><div class="line">    <span class="comment"># 规范img文件保存</span></div><div class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/images/(.+?)\.png"'''</span>)</div><div class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./images/\g&lt;1&gt;.png"'</span>, contents)</div><div class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/images/(.+?)\.jpg"'''</span>)</div><div class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./images/\g&lt;1&gt;.jpg"'</span>, contents)</div><div class="line">    linkpatten = re.compile(<span class="string">r'''href="/assets/(.+?)\.ico"'''</span>)</div><div class="line">    contents = re.sub(linkpatten, <span class="string">r'href="./images/\g&lt;1&gt;.ico"'</span>, contents)</div><div class="line"></div><div class="line">    <span class="keyword">with</span> open(file_name, <span class="string">'w'</span>) <span class="keyword">as</span> urlfile:</div><div class="line">        urlfile.write(contents)</div><div class="line">        </div><div class="line"></div><div class="line">req = urllib2.urlopen(<span class="string">r'http://wiki.jikexueyuan.com/project/start-learning-python/'</span>)</div><div class="line">p = re.compile(<span class="string">r'''&lt;a href="http://wiki.jikexueyuan.com/project/start-learning-python/(.+?).html" &gt;.+?&lt;/a&gt;'''</span>)</div><div class="line">contents = req.read().decode(<span class="string">"utf-8"</span>)</div><div class="line">matchs = p.findall(contents)</div><div class="line">logging.info(len(matchs))</div><div class="line">logging.info(time.time())</div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> matchs:</div><div class="line">    save_html(row)</div><div class="line">logging.info(time.time())</div></pre></td></tr></table></figure></p>
+<p>参考地址：</p>
+<ul>
+<li>正则速查表 <a href="http://www.jb51.net/shouce/jquery1.82/regexp.html" target="_blank" rel="external">http://www.jb51.net/shouce/jquery1.82/regexp.html</a></li>
+<li>urllib2异常处理 <a href="http://wangxiaoxu.iteye.com/blog/1844989" target="_blank" rel="external">http://wangxiaoxu.iteye.com/blog/1844989</a></li>
+<li>Python正则表达式操作指南 <a href="http://wiki.ubuntu.org.cn/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97" target="_blank" rel="external">http://wiki.ubuntu.org.cn/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97</a></li>
+<li>re.sub使用示例 <a href="http://www.programcreek.com/python/example/21/re.sub" target="_blank" rel="external">http://www.programcreek.com/python/example/21/re.sub</a></li>
+<li>python替换函数  <a href="http://blog.csdn.net/zcmlimi/article/details/47709049" target="_blank" rel="external">http://blog.csdn.net/zcmlimi/article/details/47709049</a></li>
+<li>re.sub 五个参数解析 <a href="http://www.crifan.com/python_re_sub_detailed_introduction/" target="_blank" rel="external">http://www.crifan.com/python_re_sub_detailed_introduction/</a></li>
+<li>压缩问题 <a href="http://stackoverflow.com/questions/3122145/zlib-error-error-3-while-decompressing-incorrect-header-check" target="_blank" rel="external">http://stackoverflow.com/questions/3122145/zlib-error-error-3-while-decompressing-incorrect-header-check</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/20/python爬虫/" data-id="cj4767tsk000khwu35tv4t5o4" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/10/raspberryWithPython/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          raspberryWithPython
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/03/rxjava2基础/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">rxjava2基础</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 10px;">Download Manager</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/android/" style="font-size: 10px;">android</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/21/Bitmap压缩/">Bitmap压缩</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/19/android-download-manager使用/">android_download_manager使用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/03/rxjava2基础/">rxjava2基础</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/20/python爬虫/">python爬虫</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/10/raspberryWithPython/">raspberryWithPython</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 CallteFoot<br>
+      Propulsé by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
