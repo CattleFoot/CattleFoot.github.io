@@ -61,6 +61,207 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-python的List与tuple操作方法详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/07/python的List与tuple操作方法详解/" class="article-date">
+  <time datetime="2017-05-07T01:40:40.000Z" itemprop="datePublished">2017-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/07/python的List与tuple操作方法详解/">python的List与tuple操作方法详解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&ensp;&ensp;列表是Python中最基本的数据结构，列表是最常用的Python数据类型，列表的数据项不需要具有相同的类型。列表中的每个元素都分配一个数字 - 它的位置，或索引，第一个索引是0，第二个索引是1，依此类推。<br>&ensp;&ensp;Python有6个序列的内置类型，但最常见的是列表和元组，因为列表和元组操作基本相似，只是tuple一旦初始化就不能修改，這里只介绍列表的。序列都可以进行的操作包括索引，切片，加，乘，检查成员。此外，Python已经内置确定序列的长度以及确定最大和最小的元素的方法。</p>
+<ol>
+<li>创建一个列表<br>&ensp;&ensp;只要把逗号分隔的不同的数据项使用方括号括起来即可。如下所示:<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">list1 = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</div><div class="line">list2 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> ];</div><div class="line">list3 = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>];</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;与字符串的索引一样，列表索引从0开始。列表可以进行截取、组合等。</p>
+<ol>
+<li>访问列表中的值<br>&ensp;&ensp;使用下标索引来访问列表中的值，同样你也可以使用方括号的形式截取字符， 如下所示:<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"></div><div class="line">list1 = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</div><div class="line">list2 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span> ];</div><div class="line"><span class="keyword">print</span> <span class="string">"list1[0]: "</span>, list1[<span class="number">0</span>]</div><div class="line"><span class="keyword">print</span> <span class="string">"list2[1:5]: "</span>, list2[<span class="number">1</span>:<span class="number">5</span>]</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上实例输出结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">list1[<span class="number">0</span>]:  physics</div><div class="line">list2[<span class="number">1</span>:<span class="number">5</span>]:  [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</div></pre></td></tr></table></figure></p>
+<ol>
+<li>更新列表<br>&ensp;&ensp;你可以对列表的数据项进行修改或更新，你也可以使用append()方法来添加列表项，如下所示：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line">list = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</div><div class="line"><span class="keyword">print</span> <span class="string">"Value available at index 2 : "</span></div><div class="line"><span class="keyword">print</span> list[<span class="number">2</span>];</div><div class="line">list[<span class="number">2</span>] = <span class="number">2001</span>;</div><div class="line"><span class="keyword">print</span> <span class="string">"New value available at index 2 : "</span></div><div class="line"><span class="keyword">print</span> list[<span class="number">2</span>];</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上实例输出结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Value available at index <span class="number">2</span> :</div><div class="line"><span class="number">1997</span></div><div class="line">New value available at index <span class="number">2</span> :</div><div class="line"><span class="number">2001</span></div></pre></td></tr></table></figure></p>
+<ol>
+<li>删除列表元素<br>&ensp;&ensp;可以使用 del 语句来删除列表的的元素，如下实例：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line">list1 = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</div><div class="line"><span class="keyword">print</span> list1;</div><div class="line"><span class="keyword">del</span> list1[<span class="number">2</span>];</div><div class="line"><span class="keyword">print</span> <span class="string">"After deleting value at index 2 : "</span></div><div class="line"><span class="keyword">print</span> list1;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上实例输出结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>]</div><div class="line">After deleting value at index <span class="number">2</span> :</div><div class="line">[<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">2000</span>]</div></pre></td></tr></table></figure></p>
+<ol>
+<li>Python列表脚本操作符<br>&ensp;&ensp;列表对 + 和 <em> 的操作符与字符串相似。+ 号用于组合列表，</em> 号用于重复列表。如下所示： </li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Python 表达式</th>
+<th style="text-align:left">结果</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">len([1, 2, 3])</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">长度</td>
+</tr>
+<tr>
+<td style="text-align:left">[1, 2, 3] + [4, 5, 6]</td>
+<td style="text-align:left">[1, 2, 3, 4, 5, 6]</td>
+<td style="text-align:left">组合</td>
+</tr>
+<tr>
+<td style="text-align:left">[‘Hi!’] * 4</td>
+<td style="text-align:left">[‘Hi!’, ‘Hi!’, ‘Hi!’, ‘Hi!’]</td>
+<td style="text-align:left">重复</td>
+</tr>
+<tr>
+<td style="text-align:left">3 in [1, 2, 3]</td>
+<td style="text-align:left">True</td>
+<td style="text-align:left">元素是否存在于列表中</td>
+</tr>
+<tr>
+<td style="text-align:left">for x in [1, 2, 3]: print x,</td>
+<td style="text-align:left">1 2 3</td>
+<td style="text-align:left">迭代</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Python列表截取或切片<br>Python的列表截取与字符串操作类型，如下所示：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">L = [<span class="string">'spam'</span>, <span class="string">'Spam'</span>, <span class="string">'SPAM!'</span>]</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>操作：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Python 表达式</th>
+<th style="text-align:left">结果</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">L[2]</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">‘SPAM!’</td>
+<td>读取列表中第三个元素</td>
+</tr>
+<tr>
+<td style="text-align:left">L[-2]</td>
+<td style="text-align:left">‘Spam’</td>
+<td style="text-align:left">读取列表中倒数第二个元素</td>
+</tr>
+<tr>
+<td style="text-align:left">L[1:]</td>
+<td style="text-align:left">[‘Spam’, ‘SPAM!’]</td>
+<td style="text-align:left">从第二个元素开始截取列表</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Python列表操作的函数和方法<br>列表操作包含以下函数:</li>
+</ol>
+<ul>
+<li>cmp(list1, list2)：比较两个列表的元素 </li>
+<li>len(list)：列表元素个数 </li>
+<li>max(list)：返回列表元素最大值 </li>
+<li>min(list)：返回列表元素最小值 </li>
+<li>list(seq)：将元组转换为列表<br>列表操作包含以下方法:</li>
+<li>list.append(obj)：在列表末尾添加新的对象</li>
+<li>list.count(obj)：统计某个元素在列表中出现的次数</li>
+<li>list.extend(seq)：在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表）</li>
+<li>list.index(obj)：从列表中找出某个值第一个匹配项的索引位置,<strong>注意</strong>这个有个前提，obj必须在list中不然会抛异常</li>
+<li>list.insert(index, obj)：将对象插入列表</li>
+<li>list.pop(obj=list[-1])：移除列表中的一个元素（默认最后一个元素），并且返回该元素的值</li>
+<li>list.remove(obj)：移除列表中某个值的第一个匹配项</li>
+<li>list.reverse()：反向列表中元素</li>
+<li>list.sort([func])：对原列表进行排序</li>
+</ul>
+<p>参考资料：</p>
+<ul>
+<li><a href="http://www.jb51.net/article/47978.htm" target="_blank" rel="external">http://www.jb51.net/article/47978.htm</a></li>
+<li><a href="http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819318453af120e8751ea4d2696d8a1ffa5ffdfd7000" target="_blank" rel="external">http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819318453af120e8751ea4d2696d8a1ffa5ffdfd7000</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/07/python的List与tuple操作方法详解/" data-id="cj4g84nn5000glcu3tgpldysv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-python编码中问题" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/06/python编码中问题/" class="article-date">
+  <time datetime="2017-05-06T13:02:51.000Z" itemprop="datePublished">2017-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/06/python编码中问题/">python编码中问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.mysql 模块集成：<br>&ensp;&ensp;通过pycharm IDE引入mysql模块时会报错<img src="/images/python_mysql_error.png" alt="mysql引入错误">，此时到<a href="https://dev.mysql.com/downloads/connector/python/" target="_blank" rel="external">mysql conenctor</a>下载对应系统的mysql 模块安装包即可。</p>
+<ol>
+<li>关于BeautifulSoup使用时引入问题：<br>&ensp;&ensp;网上普遍的引入方法是：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>最近在使用是发现此方法报错，因此尝试使用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;发下该方法才正确，My god。<br><strong>注意</strong>具体那个版本使用那种形式暂时不是很清楚，希望有人告知。</p>
+<ol>
+<li>python中import x和from x import y的区别<br>&ensp;&ensp;简单解释：<br>import x：把x给我；from x import y：从x里把y拿出来给我。<br>举例子：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line">print(datetime.datetime.now())</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;引入的是整个datetime包<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line">print(datetime.now())</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;只引入datetime包里的datetime类<br><strong>注意</strong>两者的意义何在？：主要是引入内存中的东西大小不一样。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cj4g84nn2000elcu3e79m4gu9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-python切片" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/05/06/python切片/" class="article-date">
@@ -106,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python切片/" data-id="cj4dif5uh0009iwu3jtkwb78m" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python切片/" data-id="cj4g84nn1000dlcu3samxi0g2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -156,7 +357,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cj4dif5up000ciwu3svcnn3ok" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cj4g84nmw000alcu3zbfyj4xk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -204,7 +405,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cj4dif5un000biwu3ehqgk3sw" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cj4g84nng000nlcu3rogpd3m5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -296,7 +497,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cj4dif5u80006iwu34c5mz6wu" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cj4g84nme0003lcu3gmoq1czy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -333,7 +534,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cj4dif5v3000oiwu3eevs67n9" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cj4g84nnb000ilcu3ufbwfy3k" class="article-share-link">Share</a>
       
       
     </footer>
@@ -490,7 +691,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj4dif5tu0002iwu31zpt2wee" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cj4g84nmn0007lcu3e9ootqlv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -622,7 +823,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cj4dif5u70005iwu34jubzuq7" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cj4g84nml0005lcu3lclb64uu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -700,7 +901,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cj4dif5v5000qiwu3vdkwcc62" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cj4g84nnk000slcu330sp45uv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -726,7 +927,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
     </div>
   </div>
 
@@ -736,7 +937,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 10px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a>
     </div>
   </div>
 
@@ -758,6 +959,14 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       <ul>
         
           <li>
+            <a href="/2017/06/28/插件化种种和思考/">插件化种种和思考</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/28/nestedscollin原理/">nestedscollin原理</a>
+          </li>
+        
+          <li>
             <a href="/2017/06/24/downloadManagerSupport7-0/">downloadManagerSupport7.0</a>
           </li>
         
@@ -767,14 +976,6 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
         
           <li>
             <a href="/2017/06/21/Bitmap压缩/">Bitmap压缩</a>
-          </li>
-        
-          <li>
-            <a href="/2017/06/19/android-download-manager使用/">android_download_manager使用</a>
-          </li>
-        
-          <li>
-            <a href="/2017/06/03/rxjava2基础/">rxjava2基础</a>
           </li>
         
       </ul>

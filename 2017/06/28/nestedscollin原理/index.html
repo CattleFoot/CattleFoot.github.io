@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>nestedscollin原理 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android在发布 5.0（Lollipop）版本之后，Google为我们提供了嵌套滑动（NestedScrolling） 的特性，接下来主要介绍嵌套滑动机制是怎样的原理？ 首先，NestedScrolling特性实现时使用到的4个类 NestedScrollingChild NestedScrollingChildHelper NestedScrollingParent NestedScrol">
+<meta name="keywords" content="Android,NestedScrolling">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nestedscollin原理">
+<meta property="og:url" content="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/index.html">
+<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:description" content="Android在发布 5.0（Lollipop）版本之后，Google为我们提供了嵌套滑动（NestedScrolling） 的特性，接下来主要介绍嵌套滑动机制是怎样的原理？ 首先，NestedScrolling特性实现时使用到的4个类 NestedScrollingChild NestedScrollingChildHelper NestedScrollingParent NestedScrol">
+<meta property="og:image" content="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/images/nestedScrolling流程图.jpg">
+<meta property="og:image" content="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/images/nestScrolling.gif">
+<meta property="og:updated_time" content="2017-06-28T23:49:08.944Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nestedscollin原理">
+<meta name="twitter:description" content="Android在发布 5.0（Lollipop）版本之后，Google为我们提供了嵌套滑动（NestedScrolling） 的特性，接下来主要介绍嵌套滑动机制是怎样的原理？ 首先，NestedScrolling特性实现时使用到的4个类 NestedScrollingChild NestedScrollingChildHelper NestedScrollingParent NestedScrol">
+<meta name="twitter:image" content="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/images/nestedScrolling流程图.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-nestedscollin原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/28/nestedscollin原理/" class="article-date">
+  <time datetime="2017-06-27T23:20:19.000Z" itemprop="datePublished">2017-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      nestedscollin原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Android在发布 5.0（Lollipop）版本之后，Google为我们提供了嵌套滑动（NestedScrolling） 的特性，接下来主要介绍嵌套滑动机制是怎样的原理？</p>
+<h3 id="首先，NestedScrolling特性实现时使用到的4个类"><a href="#首先，NestedScrolling特性实现时使用到的4个类" class="headerlink" title="首先，NestedScrolling特性实现时使用到的4个类"></a>首先，NestedScrolling特性实现时使用到的4个类</h3><ul>
+<li><a href="developer.android.com/reference/android/support/v4/view/NestedScrollingChild.html">NestedScrollingChild</a></li>
+<li><a href="developer.android.com/reference/android/support/v4/view/NestedScrollingChildHelper.html">NestedScrollingChildHelper</a></li>
+<li><a href="http://developer.android.com/reference/android/support/v4/view/NestedScrollingParent.html" target="_blank" rel="external">NestedScrollingParent</a></li>
+<li><a href="http://developer.android.com/reference/android/support/v4/view/NestedScrollingParentHelper.html" target="_blank" rel="external">NestedScrollingParentHelper</a></li>
+</ul>
+<p>&ensp;&ensp;接下来从这四个类分析看看具体做什么的：</p>
+<ol>
+<li>NestedScrollingChild<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">NestedScrollingChild</span> </span>&#123;  </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 设置嵌套滑动是否能用</div><div class="line">     * </div><div class="line">     *  <span class="doctag">@param</span> enabled true to enable nested scrolling, false to disable</div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNestedScrollingEnabled</span><span class="params">(<span class="keyword">boolean</span> enabled)</span></span>;  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 判断嵌套滑动是否可用 </div><div class="line">     * </div><div class="line">     * <span class="doctag">@return</span> true if nested scrolling is enabled</div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isNestedScrollingEnabled</span><span class="params">()</span></span>;  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 开始嵌套滑动</div><div class="line">     * </div><div class="line">     * <span class="doctag">@param</span> axes 表示方向轴，有横向和竖向</div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startNestedScroll</span><span class="params">(<span class="keyword">int</span> axes)</span></span>;  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 停止嵌套滑动 </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopNestedScroll</span><span class="params">()</span></span>;  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 判断是否有父View 支持嵌套滑动 </div><div class="line">     * <span class="doctag">@return</span> whether this view has a nested scrolling parent</div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNestedScrollingParent</span><span class="params">()</span></span>;  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 在子View的onInterceptTouchEvent或者onTouch中，调用该方法通知父View滑动的距离</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> dx  x轴上滑动的距离</div><div class="line">     * <span class="doctag">@param</span> dy  y轴上滑动的距离</div><div class="line">     * <span class="doctag">@param</span> consumed 父view消费掉的scroll长度</div><div class="line">     * <span class="doctag">@param</span> offsetInWindow   子View的窗体偏移量</div><div class="line">     * <span class="doctag">@return</span> 支持的嵌套的父View 是否处理了 滑动事件 </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreScroll</span><span class="params">(<span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed, <span class="keyword">int</span>[] offsetInWindow)</span></span>;  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 子view处理scroll后调用</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> dxConsumed x轴上被消费的距离（横向） </div><div class="line">     * <span class="doctag">@param</span> dyConsumed y轴上被消费的距离（竖向）</div><div class="line">     * <span class="doctag">@param</span> dxUnconsumed x轴上未被消费的距离 </div><div class="line">     * <span class="doctag">@param</span> dyUnconsumed y轴上未被消费的距离 </div><div class="line">     * <span class="doctag">@param</span> offsetInWindow 子View的窗体偏移量</div><div class="line">     * <span class="doctag">@return</span>  true if the event was dispatched, false if it could not be dispatched.</div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedScroll</span><span class="params">(<span class="keyword">int</span> dxConsumed, <span class="keyword">int</span> dyConsumed,  </span></span></div><div class="line">          <span class="keyword">int</span> dxUnconsumed, <span class="keyword">int</span> dyUnconsumed, <span class="keyword">int</span>[] offsetInWindow);  </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 滑行时调用 </div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> velocityX x 轴上的滑动速率</div><div class="line">     * <span class="doctag">@param</span> velocityY y 轴上的滑动速率</div><div class="line">     * <span class="doctag">@param</span> consumed 是否被消费 </div><div class="line">     * <span class="doctag">@return</span>  true if the nested scrolling parent consumed or otherwise reacted to the fling</div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedFling</span><span class="params">(<span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY, <span class="keyword">boolean</span> consumed)</span></span>;  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 进行滑行前调用</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> velocityX x 轴上的滑动速率</div><div class="line">     * <span class="doctag">@param</span> velocityY y 轴上的滑动速率 </div><div class="line">     * <span class="doctag">@return</span> true if a nested scrolling parent consumed the fling</div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreFling</span><span class="params">(<span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY)</span></span>;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;类的方法虽然不多，但主要还是他的作用？我们想想一种场景：CoordinatorLayout里嵌套着RecyclerView和Toolbar,我们上下滑动RecyclerView的时候，Toolbar会随之显现隐藏,这是典型的嵌套滑动机制情景。这里，RecyclerView作为嵌套的子View,我们猜测，它一定实现了NestedScrollingChild 接口，上代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RecyclerView</span> <span class="keyword">extends</span> <span class="title">ViewGroup</span> <span class="keyword">implements</span> <span class="title">ScrollingView</span>, <span class="title">NestedScrollingChild</span> </span>&#123;</div><div class="line">..................................................................................</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看出RecyclerView 实现了NestedScrollingChild 接口里的方法，我们在跟进去看看各个方法是怎么实现的？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNestedScrollingEnabled</span><span class="params">(<span class="keyword">boolean</span> enabled)</span> </span>&#123;</div><div class="line">        getScrollingChildHelper().setNestedScrollingEnabled(enabled);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isNestedScrollingEnabled</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getScrollingChildHelper().isNestedScrollingEnabled();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startNestedScroll</span><span class="params">(<span class="keyword">int</span> axes)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getScrollingChildHelper().startNestedScroll(axes);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopNestedScroll</span><span class="params">()</span> </span>&#123;</div><div class="line">        getScrollingChildHelper().stopNestedScroll();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNestedScrollingParent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getScrollingChildHelper().hasNestedScrollingParent();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedScroll</span><span class="params">(<span class="keyword">int</span> dxConsumed, <span class="keyword">int</span> dyConsumed, <span class="keyword">int</span> dxUnconsumed,</span></span></div><div class="line">            <span class="keyword">int</span> dyUnconsumed, <span class="keyword">int</span>[] offsetInWindow) &#123;</div><div class="line">        <span class="keyword">return</span> getScrollingChildHelper().dispatchNestedScroll(dxConsumed, dyConsumed,</div><div class="line">                dxUnconsumed, dyUnconsumed, offsetInWindow);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreScroll</span><span class="params">(<span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed, <span class="keyword">int</span>[] offsetInWindow)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getScrollingChildHelper().dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedFling</span><span class="params">(<span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY, <span class="keyword">boolean</span> consumed)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getScrollingChildHelper().dispatchNestedFling(velocityX, velocityY, consumed);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreFling</span><span class="params">(<span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getScrollingChildHelper().dispatchNestedPreFling(velocityX, velocityY);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;通过代码我们知道，全部都是由getScrollingChildHelper()这个方法的返回对象处理了，看看这个方法是怎么实现的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> NestedScrollingChildHelper <span class="title">getScrollingChildHelper</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mScrollingChildHelper == <span class="keyword">null</span>) &#123;</div><div class="line">            mScrollingChildHelper = <span class="keyword">new</span> NestedScrollingChildHelper(<span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> mScrollingChildHelper;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;NestedScrollingChild 接口的方法都交给NestedScrollingChildHelper这个代理对象处理了。现在我们继续深入，分析下NestedScrollingChildHelper中开始嵌套滑动startNestedScroll(int axes)方法是怎么实现的。<br> NestedScrollingChildHelper#startNestedScroll<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startNestedScroll</span><span class="params">(<span class="keyword">int</span> axes)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (hasNestedScrollingParent()) &#123;</div><div class="line">             <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (isNestedScrollingEnabled()) &#123;<span class="comment">//判断是否可以滑动</span></div><div class="line">            ViewParent p = mView.getParent();</div><div class="line">            View child = mView;</div><div class="line">            <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (ViewParentCompat.onStartNestedScroll(p, child, mView, axes)) &#123;<span class="comment">//回调了父View的onStartNestedScroll方法</span></div><div class="line">                    mNestedScrollingParent = p;</div><div class="line">                    ViewParentCompat.onNestedScrollAccepted(p, child, mView, axes);</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (p <span class="keyword">instanceof</span> View) &#123;</div><div class="line">                    child = (View) p;</div><div class="line">                &#125;</div><div class="line">                p = p.getParent();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>方法主要做了：</p>
+<ol>
+<li>判断是否有嵌套滑动的父View,返回值 true 表示找到了嵌套滑动的父View和同意一起处理 Scroll 事件。</li>
+<li>用While的方式寻找最近嵌套滑动的父View ，如果找到调用父view的onNestedScrollAccepted.</li>
+</ol>
+<p>从这里至少可以得出 子view在调用某个方法都会回调嵌套父view相应的方法，比如子view开始了startNestedScroll，如果嵌套父view存在，就会回调父view的onStartNestedScroll、onNestedScrollAccepted方法。</p>
+<p>接下来，在来看看嵌套滑动父view NestedScrollingParent，定义如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">NestedScrollingParent</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartNestedScroll</span><span class="params">(View child, View target, <span class="keyword">int</span> nestedScrollAxes)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNestedScrollAccepted</span><span class="params">(View child, View target, <span class="keyword">int</span> nestedScrollAxes)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStopNestedScroll</span><span class="params">(View target)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNestedScroll</span><span class="params">(View target, <span class="keyword">int</span> dxConsumed, <span class="keyword">int</span> dyConsumed,</span></span></div><div class="line">            <span class="keyword">int</span> dxUnconsumed, <span class="keyword">int</span> dyUnconsumed);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNestedPreScroll</span><span class="params">(View target, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onNestedFling</span><span class="params">(View target, <span class="keyword">float</span> velocityX, </span></span></div><div class="line">                                                      <span class="keyword">float</span> velocityY,<span class="keyword">boolean</span> consumed);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onNestedPreFling</span><span class="params">(View target, <span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNestedScrollAxes</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>仔细对比一下会发现，其实和子view差不多的方法，大致一一对应关系，而且它的具体实现也交给了NestedScrollingParentHelper这个代理类。</p>
+<h3 id="大致流程"><a href="#大致流程" class="headerlink" title="大致流程"></a>大致流程</h3><ol>
+<li>当 NestedScrollingChild(下文用Child代替) 要开始滑动的时候会调用 onStartNestedScroll ,然后交给代理类NestedScrollingChildHelper（下文ChildHelper代替）的onStartNestedScroll请求给最近的NestedScrollingParent(下文Parent代替).</li>
+<li>当ChildHelper的onStartNestedScroll方法 返回 true 表示同意一起处理 Scroll 事件的时候时候,ChildHelper会通知Parent回调onNestedScrollAccepted 做一些准备动作</li>
+<li>当Child 要开始滑动的时候,会先发送onNestedPreScroll,交给ChildHelper的onNestedPreScroll 请求给Parent ,告诉它我现在要滑动多少距离,你觉得行不行,这时候Parent 根据实际情况告诉Child 现在只允许你滑动多少距离.然后 ChildHelper根据 onNestedPreScroll 中回调回来的信息对滑动距离做相对应的调整.</li>
+<li>在滑动的过程中 Child 会发送onNestedScroll通知ChildeHelpaer的onNestedScroll告知Parent 当前 Child 的滑动情况.</li>
+<li>当要进行滑行的时候,会先发送onNestedFling 请求给Parent,告诉它 我现在要滑行了,你说行不行, 这时候Parent会根据情况告诉 Child 你是否可以滑行.</li>
+<li>Child 通过onNestedFling 返回的 Boolean 值来觉得是否进行滑行.如果要滑行的话,会在滑行的时候发送onNestedFling 通知告知 Parent 滑行情况.</li>
+<li>当滑动事件结束就会child发送onStopNestedScroll通知 Parent 去做相关操作.<br><img src="images/nestedScrolling流程图.jpg" alt="nestedScrolling流程图"></li>
+</ol>
+<p><strong>小结</strong><br>&ensp;&ensp;通过上面可以知道，要实现NestedScrolling特性，我们需要使用到开始提到四个的类，并在需要一个父view与子view（父view与子view也可能为同一个view）配合来实现。</p>
+<h4 id="实例演示"><a href="#实例演示" class="headerlink" title="实例演示"></a>实例演示</h4><p>&ensp;&ensp;5.0之前的ListView是没有实现NestedScrollingChild这个接口的，如果要实现CoordinatorLayout里嵌套着ListView和Toolbar，在上下滑动ListView的时候，Toolbar会随之显现隐藏，就必须重写ListView。show code<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.cjj.nestedlistview;</div><div class="line"></div><div class="line"><span class="keyword">import</span> android.content.Context;</div><div class="line"><span class="keyword">import</span> android.support.v4.view.MotionEventCompat;</div><div class="line"><span class="keyword">import</span> android.support.v4.view.NestedScrollingChild;</div><div class="line"><span class="keyword">import</span> android.support.v4.view.NestedScrollingChildHelper;</div><div class="line"><span class="keyword">import</span> android.support.v4.view.ViewCompat;</div><div class="line"><span class="keyword">import</span> android.util.AttributeSet;</div><div class="line"><span class="keyword">import</span> android.view.MotionEvent;</div><div class="line"><span class="keyword">import</span> android.widget.ListView;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NestedListView</span> <span class="keyword">extends</span> <span class="title">ListView</span> <span class="keyword">implements</span> <span class="title">NestedScrollingChild</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> NestedScrollingChildHelper mChildHelper;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mLastY;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] mScrollOffset = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] mScrollConsumed = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mNestedOffsetY;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NestedListView</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context);</div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NestedListView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs);</div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NestedListView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</div><div class="line">        mChildHelper = <span class="keyword">new</span> NestedScrollingChildHelper(<span class="keyword">this</span>);</div><div class="line">        setNestedScrollingEnabled(<span class="keyword">true</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNestedScrollingEnabled</span><span class="params">(<span class="keyword">boolean</span> enabled)</span> </span>&#123;</div><div class="line">        mChildHelper.setNestedScrollingEnabled(enabled);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startNestedScroll</span><span class="params">(<span class="keyword">int</span> axes)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mChildHelper.startNestedScroll(axes);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopNestedScroll</span><span class="params">()</span> </span>&#123;</div><div class="line">        mChildHelper.stopNestedScroll();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNestedScrollingParent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mChildHelper.hasNestedScrollingParent();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedScroll</span><span class="params">(<span class="keyword">int</span> dxConsumed, <span class="keyword">int</span> dyConsumed, <span class="keyword">int</span> dxUnconsumed, <span class="keyword">int</span> dyUnconsumed, <span class="keyword">int</span>[] offsetInWindow)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreScroll</span><span class="params">(<span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed, <span class="keyword">int</span>[] offsetInWindow)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedFling</span><span class="params">(<span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY, <span class="keyword">boolean</span> consumed)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreFling</span><span class="params">(<span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mChildHelper.dispatchNestedPreFling(velocityX, velocityY);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> action = MotionEventCompat.getActionMasked(event);</div><div class="line"></div><div class="line">        <span class="keyword">int</span> y = (<span class="keyword">int</span>) event.getY();</div><div class="line">        event.offsetLocation(<span class="number">0</span>, mNestedOffsetY);</div><div class="line">        <span class="keyword">switch</span> (action) &#123;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</div><div class="line">                mLastY = y;</div><div class="line">                mNestedOffsetY = <span class="number">0</span>;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</div><div class="line"></div><div class="line">                <span class="keyword">int</span> dy = mLastY - y;</div><div class="line">                <span class="keyword">int</span> oldY = getScrollY();</div><div class="line"></div><div class="line">                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);</div><div class="line">                <span class="keyword">if</span> (dispatchNestedPreScroll(<span class="number">0</span>, dy, mScrollConsumed, mScrollOffset)) &#123;</div><div class="line">                    dy -= mScrollConsumed[<span class="number">1</span>];</div><div class="line">                    event.offsetLocation(<span class="number">0</span>, -mScrollOffset[<span class="number">1</span>]);</div><div class="line">                    mNestedOffsetY += mScrollOffset[<span class="number">1</span>];</div><div class="line">                &#125;</div><div class="line">                mLastY = y - mScrollOffset[<span class="number">1</span>];</div><div class="line">                <span class="keyword">if</span> (dy &lt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">int</span> newScrollY = Math.max(<span class="number">0</span>, oldY + dy);</div><div class="line">                    dy -= newScrollY - oldY;</div><div class="line">                    <span class="keyword">if</span> (dispatchNestedScroll(<span class="number">0</span>, newScrollY - dy, <span class="number">0</span>, dy, mScrollOffset)) &#123;</div><div class="line">                        event.offsetLocation(<span class="number">0</span>, mScrollOffset[<span class="number">1</span>]);</div><div class="line">                        mNestedOffsetY += mScrollOffset[<span class="number">1</span>];</div><div class="line">                        mLastY -= mScrollOffset[<span class="number">1</span>];</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                stopNestedScroll();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_UP:</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</div><div class="line"></div><div class="line">                stopNestedScroll();</div><div class="line"></div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>效果：<br><img src="images/nestScrolling.gif" alt="嵌套滚动视图效果"></p>
+<p>来源：</p>
+<ul>
+<li><a href="http://www.jianshu.com/p/6547ec3202bd" target="_blank" rel="external">http://www.jianshu.com/p/6547ec3202bd</a></li>
+<li><a href="https://race604.com/android-nested-scrolling/" target="_blank" rel="external">https://race604.com/android-nested-scrolling/</a></li>
+<li><a href="http://blog.csdn.net/lmj623565791/article/details/52204039" target="_blank" rel="external">http://blog.csdn.net/lmj623565791/article/details/52204039</a></li>
+<li><a href="http://blog.csdn.net/zf6688/article/details/56677350" target="_blank" rel="external">http://blog.csdn.net/zf6688/article/details/56677350</a> ？？</li>
+<li><a href="http://blog.csdn.net/happy_horse/article/details/54631695" target="_blank" rel="external">http://blog.csdn.net/happy_horse/article/details/54631695</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/" data-id="cj4g84nm80001lcu3g3y54h3p" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/24/downloadManagerSupport7-0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          downloadManagerSupport7.0
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/28/插件化种种和思考/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">插件化种种和思考</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/28/插件化种种和思考/">插件化种种和思考</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/28/nestedscollin原理/">nestedscollin原理</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/24/downloadManagerSupport7-0/">downloadManagerSupport7.0</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/24/git命令和使用/">git命令和使用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/21/Bitmap压缩/">Bitmap压缩</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
