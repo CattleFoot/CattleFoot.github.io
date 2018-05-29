@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>mvc_mvp和mvvm理解 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MVC、MVP和MVVM是Android耳熟能详的三个模式，且应用广泛。对于三者的内容、区别、使用场景有时很能道出个123，而且这些框架思想在各个平台都有，但对于各个平台具体的实现有一定差异和限制。本文主要从Android方面来介绍它们。主要有：    了解并区分MVC、MVP和MVVM； 它们在Android中如何使用； 走出data bind">
+<meta name="keywords" content="MVC MVP MVVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mvc_mvp和mvvm理解">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/index.html">
+<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:description" content="前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MVC、MVP和MVVM是Android耳熟能详的三个模式，且应用广泛。对于三者的内容、区别、使用场景有时很能道出个123，而且这些框架思想在各个平台都有，但对于各个平台具体的实现有一定差异和限制。本文主要从Android方面来介绍它们。主要有：    了解并区分MVC、MVP和MVVM； 它们在Android中如何使用； 走出data bind">
+<meta property="og:image" content="https://cattlefoot.github.io/2018/04/15/images/mvc.png">
+<meta property="og:image" content="https://cattlefoot.github.io/2018/04/15/images/MVP.png">
+<meta property="og:image" content="https://cattlefoot.github.io/2018/04/15/images/MVVM.png">
+<meta property="og:updated_time" content="2018-04-15T05:23:23.373Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mvc_mvp和mvvm理解">
+<meta name="twitter:description" content="前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MVC、MVP和MVVM是Android耳熟能详的三个模式，且应用广泛。对于三者的内容、区别、使用场景有时很能道出个123，而且这些框架思想在各个平台都有，但对于各个平台具体的实现有一定差异和限制。本文主要从Android方面来介绍它们。主要有：    了解并区分MVC、MVP和MVVM； 它们在Android中如何使用； 走出data bind">
+<meta name="twitter:image" content="https://cattlefoot.github.io/2018/04/15/images/mvc.png">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-mvc-mvp和mvvm理解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/15/mvc-mvp和mvvm理解/" class="article-date">
+  <time datetime="2018-04-15T02:25:44.000Z" itemprop="datePublished">2018-04-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mvc_mvp和mvvm理解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;MVC、MVP和MVVM是Android耳熟能详的三个模式，且应用广泛。对于三者的内容、区别、使用场景有时很能道出个123，而且这些框架思想在各个平台都有，但对于各个平台具体的实现有一定差异和限制。本文主要从Android方面来介绍它们。主要有：  </p>
+<ul>
+<li>了解并区分MVC、MVP和MVVM；</li>
+<li>它们在Android中如何使用；</li>
+<li>走出data binding的误区；</li>
+<li>理解MVP+data binding开发模式；</li>
+</ul>
+<h2 id="MVC、MVP和MVVM基础介绍"><a href="#MVC、MVP和MVVM基础介绍" class="headerlink" title="MVC、MVP和MVVM基础介绍"></a>MVC、MVP和MVVM基础介绍</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;水之积也不厚，则其负大舟也无力：正如庄子逍遥游所说，水不深则没有能够担负大船的力量。在涉及代码前，我们需要对MVC、MVP和MVVM有足够的了解。</p>
+<h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;MVC：（Model View Controller）是软件架构中常见的一种模式，其通过controller层的控制去操作model层的数据，并且返回给view层展示，具体如下：<br><img src="../images/mvc.png" alt="MVC执行图"><br>&nbsp;&nbsp;&nbsp;&nbsp;其工作原理为：当用户触发事件的时候，view层会发送指令到controller层，接着controller去通知model层更新数据，model层更新晚数据以后直接显示在view层。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;那具体到android上又是如何？，我们知道android工程有java的class文件、有res文件夹、asset、还有manifest文案等等，对于原生的android项目来说，layout.xml里面的xml<br>文件就对应于MVC的view层，而各种java bean、还有类是repository类就是对应于model层，至于controller层，则是各种activity。当我们在页面触发一个按钮去加载网络资源时，加载网络资源xiangg代码和结果类，则是model层，view和model的关联则是通过按钮的点击事件，这个在activity中，也就是contrller层。android中完整的MVC流程就是这样。<br>&nbsp;&nbsp;&nbsp;&nbsp;Android这样处理有何问题？显然有的。问题在于xml作为view层，其控制<br>内里太弱，当要改变一个页面的背景或者动态控制按钮的隐藏或显示，这些都只能在activity中控制，这样<br>activity的cotroller职责就多了。不符合六大原子的 <strong>单一原则</strong>。<br>&nbsp;&nbsp;&nbsp;&nbsp; 通过以上我们知道MVC重要的缺陷是view层和model层是相互可知，意味着两层之间存在耦合。这是因为这个缺陷，才演化出MVP和MVVM两种框架。  </p>
+<h3 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;MVP（View、Presenter、model）作为MVC的演化，解决了MVC不少缺点。对于Android来说，MVP的model层相对于MVC是一样的，而activity和fragment不在是controller层，而是纯粹的view层，所有相关用户的事件的转发全部交由presenter处理，其原理图如下：<br><img src="../images/MVP.png" alt="MVP原理图"><br>&nbsp;&nbsp;&nbsp;&nbsp;由图我们可知，最明显的差别就是view层和model层不在相互告知，完全解耦，取而代之的是有presenter层充当桥梁作用，用于操作view层发出的事件传递到presenter层中，presenter层去操作model层，，并将数据返回给view层，整个过程中view层和model层完全没有关系。也许有人会问，虽然view层和model层解耦了，但是view层和presenter层不是耦合在一起吗？其实不是的，对于view层和presenter的通行是可以通过接口实现的，也就是说activity，fragment可以去实现定义好的接口，而在对应的presenter中通过接口调用方法。同时，我们还可以编写测试用的view，模拟用户操作，从而实现对presenter的测试，解决了MVC模式中测试，维护难问题。<br><strong>当然</strong>，其实最好的方式是使用fragment作为view层，而activity则是用于创建view层(fragment)和presenter层(presenter)的一个控制器。  </p>
+<h3 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;MVVM（View、ViewModel、Model）最早有微软提供的，其原理图如下：<br><img src="../images/MVVM.png" alt="MVVM原理图"><br>&nbsp;&nbsp;&nbsp;&nbsp;由图可知，其和MVP的区别不到，只不过是presenter层换成viewmodel层，还有就是view层和viewmodel层是相互绑定的关系，意味着当更新viewmodel层的数据的时候，view层会相应的变动ui。<br>&nbsp;&nbsp;&nbsp;&nbsp; 很难说MVP和MVVM这两个MVC的变种孰优孰劣，需要具体分析。</p>
+<h2 id="纸上得来终觉浅，绝知此事要躬行"><a href="#纸上得来终觉浅，绝知此事要躬行" class="headerlink" title="纸上得来终觉浅，绝知此事要躬行"></a>纸上得来终觉浅，绝知此事要躬行</h2><h2 id="路漫漫其修远兮，吾将上下而求索"><a href="#路漫漫其修远兮，吾将上下而求索" class="headerlink" title="路漫漫其修远兮，吾将上下而求索"></a>路漫漫其修远兮，吾将上下而求索</h2><p>参考地址：<br>[1].MVC、MVP、MVVM详解 <a href="https://blog.csdn.net/jdsjlzx/article/details/51174396" target="_blank" rel="external">https://blog.csdn.net/jdsjlzx/article/details/51174396</a><br>[2].MVC在Android中的使用 <a href="https://blog.csdn.net/feiduclear_up/article/details/46363207" target="_blank" rel="external">https://blog.csdn.net/feiduclear_up/article/details/46363207</a><br>[3].Android中常见的MVC模式 <a href="https://blog.csdn.net/sylcc_/article/details/7346149" target="_blank" rel="external">https://blog.csdn.net/sylcc_/article/details/7346149</a><br>[4].MVC,MVP,MVVM与架构经验谈 <a href="https://www.cnblogs.com/wytiger/p/5305087.html" target="_blank" rel="external">https://www.cnblogs.com/wytiger/p/5305087.html</a><br>[5].平台间的MVC、MVP、MVVM <a href="http://www.cnblogs.com/indream/p/3602348.html" target="_blank" rel="external">http://www.cnblogs.com/indream/p/3602348.html</a><br>[6].前端MVC、MVP、MVVM <a href="http://www.ruanyifeng.com/blog/2015/02/mvcmvp_mvvm.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2015/02/mvcmvp_mvvm.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/" data-id="cjhrczp3s000alvs6va9t15jg" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/28/插件化种种和思考/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          插件化种种和思考
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/04/15/mvc-mvp和mvvm理解/">mvc_mvp和mvvm理解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/28/插件化种种和思考/">插件化种种和思考</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/28/nestedscollin原理/">nestedscollin原理</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/24/downloadManagerSupport7-0/">downloadManagerSupport7.0</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/24/git命令和使用/">git命令和使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Propulsé by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
