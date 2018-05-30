@@ -6,12 +6,12 @@
   <title>python编码中问题 | CallteFoot&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="1.mysql 模块集成：&amp;ensp;&amp;ensp;通过pycharm IDE引入mysql模块时会报错，此时到mysql conenctor下载对应系统的mysql 模块安装包即可。  关于BeautifulSoup使用时引入问题：&amp;ensp;&amp;ensp;网上普遍的引入方法是：1from bs4 import BeautifulSoup   最近在使用是发现此方法报错，因此尝试使用：1from B">
-<meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python编码中问题">
 <meta property="og:url" content="https://cattlefoot.github.io/2017/05/06/python编码中问题/index.html">
-<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
 <meta property="og:description" content="1.mysql 模块集成：&amp;ensp;&amp;ensp;通过pycharm IDE引入mysql模块时会报错，此时到mysql conenctor下载对应系统的mysql 模块安装包即可。  关于BeautifulSoup使用时引入问题：&amp;ensp;&amp;ensp;网上普遍的引入方法是：1from bs4 import BeautifulSoup   最近在使用是发现此方法报错，因此尝试使用：1from B">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="https://cattlefoot.github.io/images/python_mysql_error.png">
 <meta property="og:updated_time" content="2017-05-06T13:36:01.517Z">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
@@ -88,24 +88,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.mysql 模块集成：<br>&ensp;&ensp;通过pycharm IDE引入mysql模块时会报错<img src="/images/python_mysql_error.png" alt="mysql引入错误">，此时到<a href="https://dev.mysql.com/downloads/connector/python/" target="_blank" rel="external">mysql conenctor</a>下载对应系统的mysql 模块安装包即可。</p>
+        <p>1.mysql 模块集成：<br>&ensp;&ensp;通过pycharm IDE引入mysql模块时会报错<img src="/images/python_mysql_error.png" alt="mysql引入错误">，此时到<a href="https://dev.mysql.com/downloads/connector/python/" target="_blank" rel="noopener">mysql conenctor</a>下载对应系统的mysql 模块安装包即可。</p>
 <ol>
-<li>关于BeautifulSoup使用时引入问题：<br>&ensp;&ensp;网上普遍的引入方法是：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div></pre></td></tr></table></figure>
+<li>关于BeautifulSoup使用时引入问题：<br>&ensp;&ensp;网上普遍的引入方法是：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>最近在使用是发现此方法报错，因此尝试使用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</div></pre></td></tr></table></figure></p>
+<p>最近在使用是发现此方法报错，因此尝试使用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</span><br></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp;发下该方法才正确，My god。<br><strong>注意</strong>具体那个版本使用那种形式暂时不是很清楚，希望有人告知。</p>
 <ol>
-<li>python中import x和from x import y的区别<br>&ensp;&ensp;简单解释：<br>import x：把x给我；from x import y：从x里把y拿出来给我。<br>举例子：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line">print(datetime.datetime.now())</div></pre></td></tr></table></figure>
+<li>python中import x和from x import y的区别<br>&ensp;&ensp;简单解释：<br>import x：把x给我；from x import y：从x里把y拿出来给我。<br>举例子：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line">print(datetime.datetime.now())</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>&ensp;&ensp;引入的是整个datetime包<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line">print(datetime.now())</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;引入的是整个datetime包<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line">print(datetime.now())</span><br></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp;只引入datetime包里的datetime类<br><strong>注意</strong>两者的意义何在？：主要是引入内存中的东西大小不一样。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cjhrd4oby000loes6xchifk5i" class="article-share-link">Delen</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cjhsfu27y000n2ds6gwajz6su" class="article-share-link">Share</a>
       
       
     </footer>
@@ -114,19 +114,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2017/05/06/python切片/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Nieuwer</strong>
+    <a href="/2017/05/07/python的List与tuple操作方法详解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          python切片
+          python的List与tuple操作方法详解
         
       </div>
     </a>
   
   
-    <a href="/2017/05/07/python的List与tuple操作方法详解/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ouder</strong>
-      <div class="article-nav-title">python的List与tuple操作方法详解</div>
+    <a href="/2017/05/06/python切片/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">python切片</div>
     </a>
   
 </nav>
@@ -143,7 +143,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Labels</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
     </div>
@@ -162,7 +162,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archieven</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
     </div>
@@ -172,7 +172,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recente berichten</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         

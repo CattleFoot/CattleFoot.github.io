@@ -6,12 +6,12 @@
   <title>linux系统磁盘挂载 | CallteFoot&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="linux系统挂载知识  linux的硬盘识别2.6 kernel以后，linux会将识别到的硬件设备在/dev下建立相应的设备文件，如：     设备前缀 描述     sda 表示SCSI类硬盘   hda 表示IDE类硬盘   scd 表示USB类设备    我们可以通过fdisk -l命令来查看设备信息：1234567891011121314xxxxxx:~ $ sudo fdisk -l">
-<meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux系统磁盘挂载">
 <meta property="og:url" content="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/index.html">
-<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
 <meta property="og:description" content="linux系统挂载知识  linux的硬盘识别2.6 kernel以后，linux会将识别到的硬件设备在/dev下建立相应的设备文件，如：     设备前缀 描述     sda 表示SCSI类硬盘   hda 表示IDE类硬盘   scd 表示USB类设备    我们可以通过fdisk -l命令来查看设备信息：1234567891011121314xxxxxx:~ $ sudo fdisk -l">
+<meta property="og:locale" content="default">
 <meta property="og:updated_time" content="2017-04-23T03:22:36.677Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux系统磁盘挂载">
@@ -55,7 +55,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
@@ -112,10 +112,10 @@
 </tr>
 </tbody>
 </table>
-<p>我们可以通过fdisk -l命令来查看设备信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">xxxxxx:~ $ sudo fdisk -l</div><div class="line">Device         Boot  Start      End  Sectors  Size Id Type</div><div class="line">/dev/mmcblk0p1        8192   137215   129024   63M  c W95 FAT32 (LBA)</div><div class="line">/dev/mmcblk0p2      137216 30367743 30230528 14.4G 83 Linux</div><div class="line"></div><div class="line">Disk /dev/sda: 74.5 GiB, 80026361856 bytes, 156301488 sectors</div><div class="line">Units: sectors of 1 * 512 = 512 bytes</div><div class="line">Sector size (logical/physical): 512 bytes / 512 bytes</div><div class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</div><div class="line">Disklabel type: dos</div><div class="line">Disk identifier: 0x7780b3c2</div><div class="line"></div><div class="line">Device     Boot Start       End   Sectors  Size Id Type</div><div class="line">/dev/sda1        2048 156301487 156299440 74.5G 83 Linux</div></pre></td></tr></table></figure></p>
-<p>通过命令我们可以看到/dev/sda1设备信息，这个设备标识已经分过区并且格式化过了，现在就可以挂载了，但在挂在前我们得设置一个挂载点啊，要不凭空怎么挂呢，是吧，一般可以选择/mnt目录下获知/media目录下，先在选定目录下创建一个文件夹，然后就可以挂载在文件夹上了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mount -t ext4 /dev/sda1 /media/disk1</div><div class="line">umount /dev/sda1</div></pre></td></tr></table></figure></p>
+<p>我们可以通过fdisk -l命令来查看设备信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">xxxxxx:~ $ sudo fdisk -l</span><br><span class="line">Device         Boot  Start      End  Sectors  Size Id Type</span><br><span class="line">/dev/mmcblk0p1        8192   137215   129024   63M  c W95 FAT32 (LBA)</span><br><span class="line">/dev/mmcblk0p2      137216 30367743 30230528 14.4G 83 Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/sda: 74.5 GiB, 80026361856 bytes, 156301488 sectors</span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disklabel type: dos</span><br><span class="line">Disk identifier: 0x7780b3c2</span><br><span class="line"></span><br><span class="line">Device     Boot Start       End   Sectors  Size Id Type</span><br><span class="line">/dev/sda1        2048 156301487 156299440 74.5G 83 Linux</span><br></pre></td></tr></table></figure></p>
+<p>通过命令我们可以看到/dev/sda1设备信息，这个设备标识已经分过区并且格式化过了，现在就可以挂载了，但在挂在前我们得设置一个挂载点啊，要不凭空怎么挂呢，是吧，一般可以选择/mnt目录下获知/media目录下，先在选定目录下创建一个文件夹，然后就可以挂载在文件夹上了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount -t ext4 /dev/sda1 /media/disk1</span><br><span class="line">umount /dev/sda1</span><br></pre></td></tr></table></figure></p>
 <p>其中第一句中的ext4 表示文件系统类型（可以通过parted程序查看）；iocharset=utf8文件读取格式，可选参数；umask表示让挂载的分区允许所有用户读取和修改，可选参数。第二句为卸载命令。<br>这个只是临时的挂在，如果要在开机的时候就挂载的话则需要修改/etc/fstab。</p>
-<p>下面详细来说下mount 命令和mount相关参数设定：<br>标准模式的mount命令使用是如下的形式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mount -t type device dir</div></pre></td></tr></table></figure></p>
+<p>下面详细来说下mount 命令和mount相关参数设定：<br>标准模式的mount命令使用是如下的形式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t type device dir</span><br></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp;其中type代表的是挂在文件的文件系统，device代表fdisk查找的块设备，dir代表的是需要挂在的路径；<br><strong>文件系统独立挂载选项</strong><br>&ensp;&ensp;这些参数只在/etc/fstab文件中用到，有些参数在系统内核已经给定了默认值来启用或关闭某些特性，如果要查看这些参数，可以查看/proc/mounts文件。<br>&ensp;&ensp;下面这些参数可以用在一些文件系统挂载时,但是不是每个文件系统都可以使用这些参数，比如sync目前只使用于 ext2、ext3、fat、vfat和ufs文件系统：</p>
 <table>
 <thead>
@@ -156,7 +156,7 @@
 jfs,  minix,  msdos,  ncpfs,  nfs,  ntfs,     proc, qnx4, reiserfs,
 romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如果要更详细的可以通过mount查看。
 </code></pre></li>
-<li>声明与文件系统相关的选项，选项列表是以逗号分割开来的，包含挂载类型以及任何适合于文件系统类型的附加选项。有关可用安装选项的文档，请参考<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount(8" target="_blank" rel="external">mount(8)</a>)，在可用的swap选项文件，请参考<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=swapon(8" target="_blank" rel="external">wapon(8)</a>)。<br>基础的一些参数选项有：</li>
+<li>声明与文件系统相关的选项，选项列表是以逗号分割开来的，包含挂载类型以及任何适合于文件系统类型的附加选项。有关可用安装选项的文档，请参考<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount(8" target="_blank" rel="noopener">mount(8)</a>)，在可用的swap选项文件，请参考<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=swapon(8" target="_blank" rel="noopener">wapon(8)</a>)。<br>基础的一些参数选项有：</li>
 </ol>
 <table>
 <thead>
@@ -193,25 +193,25 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
 </tbody>
 </table>
 <ol>
-<li>指定该文件系统是否需要备份，如果该字段没有指定，默认则是为0，也即该文件系统不需要备份，如果需要查看备份选项可以看<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=dump(8" target="_blank" rel="external">dump(8)</a>)。</li>
-<li>指定文件系统是否需要检查和检查顺序，具体选项意义可以查看<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=fsck(8" target="_blank" rel="external">fsck(8)</a>),对于root文件系统需要指定为1，其他文件系统指定为2，如果字段没有指定，默认值为0，也即表明文件系统不需要检查。</li>
+<li>指定该文件系统是否需要备份，如果该字段没有指定，默认则是为0，也即该文件系统不需要备份，如果需要查看备份选项可以看<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=dump(8" target="_blank" rel="noopener">dump(8)</a>)。</li>
+<li>指定文件系统是否需要检查和检查顺序，具体选项意义可以查看<a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=fsck(8" target="_blank" rel="noopener">fsck(8)</a>),对于root文件系统需要指定为1，其他文件系统指定为2，如果字段没有指定，默认值为0，也即表明文件系统不需要检查。</li>
 </ol>
 <p>参考资料：</p>
 <ul>
-<li><a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount" target="_blank" rel="external">http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount</a></li>
-<li><a href="http://blog.chinaunix.net/uid-7411781-id-2056205.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-7411781-id-2056205.html</a></li>
-<li><a href="http://www.jb51.net/os/RedHat/1117.html" target="_blank" rel="external">http://www.jb51.net/os/RedHat/1117.html</a></li>
-<li><a href="http://qq85609655.iteye.com/blog/1449899" target="_blank" rel="external">http://qq85609655.iteye.com/blog/1449899</a></li>
-<li><a href="http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html" target="_blank" rel="external">http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html</a></li>
-<li><a href="http://blog.csdn.net/jiyuanyi1992/article/details/43866273" target="_blank" rel="external">http://blog.csdn.net/jiyuanyi1992/article/details/43866273</a></li>
-<li>/etc/fstab文件解析：<a href="http://blog.csdn.net/richerg85/article/details/17917129" target="_blank" rel="external">http://blog.csdn.net/richerg85/article/details/17917129</a></li>
-<li><a href="http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/" target="_blank" rel="external">http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/</a>    </li>
+<li><a href="http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount" target="_blank" rel="noopener">http://man.yolinux.com/cgi-bin/man2html?cgi_command=mount</a></li>
+<li><a href="http://blog.chinaunix.net/uid-7411781-id-2056205.html" target="_blank" rel="noopener">http://blog.chinaunix.net/uid-7411781-id-2056205.html</a></li>
+<li><a href="http://www.jb51.net/os/RedHat/1117.html" target="_blank" rel="noopener">http://www.jb51.net/os/RedHat/1117.html</a></li>
+<li><a href="http://qq85609655.iteye.com/blog/1449899" target="_blank" rel="noopener">http://qq85609655.iteye.com/blog/1449899</a></li>
+<li><a href="http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html" target="_blank" rel="noopener">http://freearth.blog.chinaunix.net/uid-20769015-id-3478861.html</a></li>
+<li><a href="http://blog.csdn.net/jiyuanyi1992/article/details/43866273" target="_blank" rel="noopener">http://blog.csdn.net/jiyuanyi1992/article/details/43866273</a></li>
+<li>/etc/fstab文件解析：<a href="http://blog.csdn.net/richerg85/article/details/17917129" target="_blank" rel="noopener">http://blog.csdn.net/richerg85/article/details/17917129</a></li>
+<li><a href="http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/" target="_blank" rel="noopener">http://blog.163.com/fan_yishan/blog/static/47692213200951343813425/</a>    </li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cjhrd4obp000aoes6496vz2k1" class="article-share-link">Delen</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cjhsfu27e00092ds619ypsu7e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -220,19 +220,19 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
     
 <nav id="article-nav">
   
-    <a href="/2017/04/22/hexo写blog/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Nieuwer</strong>
+    <a href="/2017/04/22/reactNative/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          hexo写blog
+          关于react native页面全屏设置
         
       </div>
     </a>
   
   
-    <a href="/2017/04/22/reactNative/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ouder</strong>
-      <div class="article-nav-title">关于react native页面全屏设置</div>
+    <a href="/2017/04/22/hexo写blog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hexo写blog</div>
     </a>
   
 </nav>
@@ -249,7 +249,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Labels</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
     </div>
@@ -268,7 +268,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archieven</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
     </div>
@@ -278,7 +278,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recente berichten</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         

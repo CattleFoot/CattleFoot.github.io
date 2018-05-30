@@ -6,12 +6,12 @@
   <title>hexo写blog | CallteFoot&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="&amp;ensp;&amp;ensp;上一篇我们讲了怎么使用hexo向guthub发布自己的blog，这篇我们讲讲怎么通过hexo写blog。&amp;ensp;&amp;ensp;在我们开始写blog之前，我们先了解下hexo的blog目录结构：  deploy_git一看名称我们就知道大概作何用的，是的，最终发布到github的所有东西都在这个目录下，hexo自动生成的； node_modules是node执行的资源文件；">
-<meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hexo写blog">
 <meta property="og:url" content="https://cattlefoot.github.io/2017/04/22/hexo写blog/index.html">
-<meta property="og:site_name" content="CallteFoot's blog">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
 <meta property="og:description" content="&amp;ensp;&amp;ensp;上一篇我们讲了怎么使用hexo向guthub发布自己的blog，这篇我们讲讲怎么通过hexo写blog。&amp;ensp;&amp;ensp;在我们开始写blog之前，我们先了解下hexo的blog目录结构：  deploy_git一看名称我们就知道大概作何用的，是的，最终发布到github的所有东西都在这个目录下，hexo自动生成的； node_modules是node执行的资源文件；">
+<meta property="og:locale" content="default">
 <meta property="og:image" content="https://cattlefoot.github.io/images/1492826647877.png">
 <meta property="og:updated_time" content="2017-04-22T03:22:30.556Z">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
@@ -97,7 +97,7 @@
 <li>themes主题存放的地方；</li>
 <li>_config.yml我们的blog配置文件,在上篇中也提到过的;<br>暂时理解到这里，以后发现不对会及时补充。</li>
 </ol>
-<p><strong>生成一篇新博客</strong><br>&ensp;&ensp;好了现在可以开始准备写自己的blog啦<br>hexo通过下面的命令来创建一片新的文章：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new [layout] &lt;title&gt;</div></pre></td></tr></table></figure></p>
+<p><strong>生成一篇新博客</strong><br>&ensp;&ensp;好了现在可以开始准备写自己的blog啦<br>hexo通过下面的命令来创建一片新的文章：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure></p>
 <p>其中[]表示可选填的参数，&lt;&gt;表示必填的参数，(layout)为制定了文章的布局，默认为post，这个默认值可以通过 _config.yml 中的 default_layout 参数来修改，其他还有page和draft两种布局，它们也代表了文章最终放在哪里：</p>
 <table>
 <thead>
@@ -121,7 +121,7 @@
 </tr>
 </tbody>
 </table>
-<p><em>！注意！</em>  如果我们自定义了布局，并且和post相同，也是会放到source/_posts下。<br>&ensp;&ensp;有生成bolg那也有移除（删除）blog，只要删除需要删除的blog的.md文件并运行以下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo clean</div></pre></td></tr></table></figure></p>
+<p><em>！注意！</em>  如果我们自定义了布局，并且和post相同，也是会放到source/_posts下。<br>&ensp;&ensp;有生成bolg那也有移除（删除）blog，只要删除需要删除的blog的.md文件并运行以下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp; 该命令会删除node的数据库并重新生成。</p>
 <p><strong>文件名称</strong><br>&ensp;&ensp;Hexo默认是以标题作为文件名称，可以通过new_post_name参数修改默认的文件名称，如:year-:month-:day-:title.md 可让您更方便的通过日期来管理文章，且最终文件的后缀是.md。</p>
 <table>
@@ -158,8 +158,8 @@
 </tr>
 </tbody>
 </table>
-<p><strong>草稿</strong><br>&ensp;&ensp;如上提到的三种布局中的draft，其代表为文件为草稿，存放在source/_drafts 文件夹，在默认发布blog时是不会将草稿发布到github，需要通过publish命令将草稿移动到source/_posts 文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo publish [layout] &lt;title&gt;</div></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp; 草稿默认不会显示在页面中，可在执行时加上 –draft 参数，或是把 render_drafts 参数设为 true 来预览草稿。<br><strong>模板</strong><br>&ensp;&ensp;在新建文章时，Hexo 会根据 scaffolds 文件夹内相对应的文件来建立文件，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new photo &quot;My Gallery&quot;</div></pre></td></tr></table></figure></p>
+<p><strong>草稿</strong><br>&ensp;&ensp;如上提到的三种布局中的draft，其代表为文件为草稿，存放在source/_drafts 文件夹，在默认发布blog时是不会将草稿发布到github，需要通过publish命令将草稿移动到source/_posts 文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp; 草稿默认不会显示在页面中，可在执行时加上 –draft 参数，或是把 render_drafts 参数设为 true 来预览草稿。<br><strong>模板</strong><br>&ensp;&ensp;在新建文章时，Hexo 会根据 scaffolds 文件夹内相对应的文件来建立文件，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new photo &quot;My Gallery&quot;</span><br></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp;在执行这行指令时，Hexo 会尝试在 scaffolds 文件夹中寻找 photo.md，并根据其内容建立文章，以下是您可以在模版中使用的变量：</p>
 <table>
 <thead>
@@ -188,7 +188,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cjhrd4obb0002oes6qnc03ud4" class="article-share-link">Delen</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cjhsfu27c00082ds65nc4vnmd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -197,19 +197,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2017/04/22/使用hexo向github发布自己的blog/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Nieuwer</strong>
+    <a href="/2017/04/22/linux系统磁盘挂载/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          使用hexo向github发布自己的blog
+          linux系统磁盘挂载
         
       </div>
     </a>
   
   
-    <a href="/2017/04/22/linux系统磁盘挂载/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ouder</strong>
-      <div class="article-nav-title">linux系统磁盘挂载</div>
+    <a href="/2017/04/22/使用hexo向github发布自己的blog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用hexo向github发布自己的blog</div>
     </a>
   
 </nav>
@@ -226,7 +226,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Labels</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
     </div>
@@ -245,7 +245,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archieven</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
     </div>
@@ -255,7 +255,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recente berichten</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
