@@ -48,9 +48,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
@@ -60,6 +60,57 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-raspberryWithPython" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/10/raspberryWithPython/" class="article-date">
+  <time datetime="2017-05-10T15:31:45.000Z" itemprop="datePublished">2017-05-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/10/raspberryWithPython/">raspberryWithPython</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="树莓派gpio接口操作"><a href="#树莓派gpio接口操作" class="headerlink" title="树莓派gpio接口操作"></a>树莓派gpio接口操作</h1><ol>
+<li>基础知识介绍</li>
+</ol>
+<p>&ensp;&ensp;General Purpose Input Output （通用输入/输出）简称为GPIO，或总线扩展器，人们利用工业标准I2C、SMBus或SPI接口简化了I/O口的扩展。当微控制器或芯片组没有足够的I/O端口，或当系统需要采用远端串行通信或控制时，GPIO产品能够提供额外的控制和监视功能。(摘自百度)<br>&ensp;&ensp;树莓派gpio接口示意图<img src="/images/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png" alt="树莓派针脚图">，<a href="http://www.raspberrypi-spy.co.uk/2014/07/raspberry-pi-b-gpio-header-details-and-pinout/" target="_blank" rel="external">图片来源</a>。</p>
+<ol>
+<li>使用python操作gpio接口<br>##安装python gpio库<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mkdir gpio</div><div class="line">cd gpio</div><div class="line">wget https://pypi.python.org/packages/source/R/RPi.GPIO/RPi.GPIO-0.5.7.tar.gz</div><div class="line">#或者到这里下载最新版本：https://pypi.python.org/pypi/RPi.GPIO</div><div class="line">tar xvzf RPi.GPIO-*.tar.gz</div><div class="line">cd RPi.GPIO-*/</div><div class="line">sudo python setup.py install</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>安装的时候出现错误:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">source/py_gpio.c:23:20: fatal error: Python.h: No such file or directory</div></pre></td></tr></table></figure></p>
+<p>缺少Python.h文件,没安装python编译环境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install python-dev</div></pre></td></tr></table></figure></p>
+<p>再次安装:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo python setup.py install</div></pre></td></tr></table></figure></p>
+<h2 id="点亮led灯"><a href="#点亮led灯" class="headerlink" title="点亮led灯"></a>点亮led灯</h2><p>先测试下输出,新建个led.py文件:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"> </div><div class="line"><span class="keyword">import</span> RPi.GPIO <span class="keyword">as</span> GPIO</div><div class="line"><span class="keyword">import</span> time</div><div class="line">GPIO.setmode(GPIO.BOARD)</div><div class="line">GPIO.setup(<span class="number">11</span>,GPIO.OUT)</div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">     GPIO.output(<span class="number">11</span>,<span class="keyword">True</span>)</div><div class="line">     time.sleep(<span class="number">1</span>)</div><div class="line">     GPIO.output(<span class="number">11</span>,<span class="keyword">False</span>)</div><div class="line">     time.sleep(<span class="number">1</span>)</div></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;注意: 这里使用GPIO.BOARD模式,所以对于引脚号的排序,是按26个pin的顺序,不是gpio1这样的.也就是说pin1就是板子上的3V3.   把led的负极接到板子上的pin11.正极接一个3K3的电阻,在接到3V3上,防止烧坏. 特别注意python的缩进.</p>
+<p>终端下运行:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo python led.py</div></pre></td></tr></table></figure></p>
+<p>如果LED出现一闪一闪就表示成功了.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/10/raspberryWithPython/" data-id="cjhrd4obx000joes6qj04ewue" class="article-share-link">Delen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-python第三方库beatifulSoup使用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -610,7 +661,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/08/python第三方库beatifulSoup使用/" data-id="cjhrczp4p001hlvs65i8jbuyr" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/08/python第三方库beatifulSoup使用/" data-id="cjhrd4ocm001koes622zavd73" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -762,7 +813,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/07/python的List与tuple操作方法详解/" data-id="cjhrczp3y000ilvs6d6i45and" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/07/python的List与tuple操作方法详解/" data-id="cjhrd4obv000goes698bxteoc" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -811,7 +862,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cjhrczp43000plvs64xayh01y" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cjhrd4oby000loes6xchifk5i" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -866,7 +917,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python切片/" data-id="cjhrczp3v000elvs6n7bhv8k1" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python切片/" data-id="cjhrd4obs000eoes6prxgxnya" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -916,7 +967,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cjhrczp40000klvs6s9ds773v" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cjhrd4obr000does6e8g73njq" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -964,7 +1015,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cjhrczp3u000dlvs6rufbx9ie" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cjhrd4obn0008oes6q0bbqmq0" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -1056,7 +1107,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cjhrczp3f0001lvs6d8ouioqy" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cjhrd4ob80001oes62q9kdm26" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -1093,7 +1144,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cjhrczp42000nlvs6b776dh3b" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cjhrd4obz000ooes60okd12tt" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -1250,139 +1301,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cjhrczp3q0008lvs60g9ogwlt" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hexo写blog" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/22/hexo写blog/" class="article-date">
-  <time datetime="2017-04-22T02:00:19.000Z" itemprop="datePublished">2017-04-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/hexo写blog/">hexo写blog</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&ensp;&ensp;上一篇我们讲了怎么使用hexo向guthub发布自己的blog，这篇我们讲讲怎么通过hexo写blog。<br>&ensp;&ensp;在我们开始写blog之前，我们先了解下hexo的blog目录结构：<br><img src="/images/1492826647877.png" alt="hexo的blog目录"></p>
-<ol>
-<li>deploy_git一看名称我们就知道大概作何用的，是的，最终发布到github的所有东西都在这个目录下，hexo自动生成的；</li>
-<li>node_modules是node执行的资源文件；</li>
-<li>scaffolds模板文件存放的地方；</li>
-<li>source文章资源存放的地方；</li>
-<li>themes主题存放的地方；</li>
-<li>_config.yml我们的blog配置文件,在上篇中也提到过的;<br>暂时理解到这里，以后发现不对会及时补充。</li>
-</ol>
-<p><strong>生成一篇新博客</strong><br>&ensp;&ensp;好了现在可以开始准备写自己的blog啦<br>hexo通过下面的命令来创建一片新的文章：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new [layout] &lt;title&gt;</div></pre></td></tr></table></figure></p>
-<p>其中[]表示可选填的参数，&lt;&gt;表示必填的参数，(layout)为制定了文章的布局，默认为post，这个默认值可以通过 _config.yml 中的 default_layout 参数来修改，其他还有page和draft两种布局，它们也代表了文章最终放在哪里：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">布局</th>
-<th style="text-align:left">路径</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">post</td>
-<td style="text-align:left">source/_posts</td>
-</tr>
-<tr>
-<td style="text-align:left">page</td>
-<td style="text-align:left">source</td>
-</tr>
-<tr>
-<td style="text-align:left">draft</td>
-<td style="text-align:left">source/_drafts</td>
-</tr>
-</tbody>
-</table>
-<p><em>！注意！</em>  如果我们自定义了布局，并且和post相同，也是会放到source/_posts下。<br>&ensp;&ensp;有生成bolg那也有移除（删除）blog，只要删除需要删除的blog的.md文件并运行以下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo clean</div></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp; 该命令会删除node的数据库并重新生成。</p>
-<p><strong>文件名称</strong><br>&ensp;&ensp;Hexo默认是以标题作为文件名称，可以通过new_post_name参数修改默认的文件名称，如:year-:month-:day-:title.md 可让您更方便的通过日期来管理文章，且最终文件的后缀是.md。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">变量</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">:title</td>
-<td style="text-align:left">标题（小写，空格将会被替换为短杠）</td>
-</tr>
-<tr>
-<td style="text-align:left">:year</td>
-<td style="text-align:left">建立的年份，比如， 2015</td>
-</tr>
-<tr>
-<td style="text-align:left">:month</td>
-<td style="text-align:left">建立的月份（有前导零），比如， 04</td>
-</tr>
-<tr>
-<td style="text-align:left">:i_month</td>
-<td style="text-align:left">建立的月份（无前导零），比如， 4</td>
-</tr>
-<tr>
-<td style="text-align:left">:day</td>
-<td style="text-align:left">建立的日期（有前导零），比如， 07</td>
-</tr>
-<tr>
-<td style="text-align:left">:i_day</td>
-<td style="text-align:left">建立的日期（无前导零），比如， 7</td>
-</tr>
-</tbody>
-</table>
-<p><strong>草稿</strong><br>&ensp;&ensp;如上提到的三种布局中的draft，其代表为文件为草稿，存放在source/_drafts 文件夹，在默认发布blog时是不会将草稿发布到github，需要通过publish命令将草稿移动到source/_posts 文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo publish [layout] &lt;title&gt;</div></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp; 草稿默认不会显示在页面中，可在执行时加上 –draft 参数，或是把 render_drafts 参数设为 true 来预览草稿。<br><strong>模板</strong><br>&ensp;&ensp;在新建文章时，Hexo 会根据 scaffolds 文件夹内相对应的文件来建立文件，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new photo &quot;My Gallery&quot;</div></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;在执行这行指令时，Hexo 会尝试在 scaffolds 文件夹中寻找 photo.md，并根据其内容建立文章，以下是您可以在模版中使用的变量：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">变量</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">layout</td>
-<td style="text-align:left">布局</td>
-</tr>
-<tr>
-<td style="text-align:left">title</td>
-<td style="text-align:left">标题</td>
-</tr>
-<tr>
-<td style="text-align:left">draft</td>
-<td style="text-align:left">文件建立日期</td>
-</tr>
-</tbody>
-</table>
-<p><strong>注意</strong>在做表格的时候，一定要<strong>回车换行</strong>、<strong>回车换行</strong>、<strong>回车换行</strong>后做表格，要不不会被解析。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cjhrczp3j0003lvs6o1jdy40u" class="article-share-link">Partager</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cjhrd4obp000aoes6496vz2k1" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -1406,9 +1325,9 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Mot-clés</h3>
+    <h3 class="widget-title">Labels</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
     </div>
   </div>
 
@@ -1416,18 +1335,18 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 10px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archieven</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
     </div>
   </div>
 
@@ -1435,9 +1354,13 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recente berichten</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/05/29/Android自定义注解处理器/">Android自定义注解处理器</a>
+          </li>
         
           <li>
             <a href="/2018/04/15/mvc-mvp和mvvm理解/">mvc_mvp和mvvm理解</a>
@@ -1455,10 +1378,6 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
             <a href="/2017/06/24/downloadManagerSupport7-0/">downloadManagerSupport7.0</a>
           </li>
         
-          <li>
-            <a href="/2017/06/24/git命令和使用/">git命令和使用</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1472,7 +1391,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 CallteFoot<br>
-      Propulsé by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
     </div>
   </div>
 </footer>
