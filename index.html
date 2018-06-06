@@ -62,6 +62,90 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DDComponent原理剖析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/06/DDComponent原理剖析/" class="article-date">
+  <time datetime="2018-06-06T03:11:27.000Z" itemprop="datePublished">2018-06-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/06/DDComponent原理剖析/">DDComponentForAndroid原理剖析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>DDComponentForAndroid组件化实现原理主要基于两点：  </p>
+<ol>
+<li>静态注解：作用是实现路由的扫描、路由注册接口实现、路由表生成、路由参数的传递；  </li>
+<li>gladle plugin：作用是动态调整编译脚本、资源管理和类修改；</li>
+</ol>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>注解知识点和自定义注解请参考：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DDComponentForAndroid中定义了两个注解：RouteNode（路由节点）和Autowired（参数装配），这个两个注解分别用于标记那些页面（DD中指的时activity）可以作为一个路由节点和这个页面需要那些参数。再看看DDComponentForAndroid中怎么根据这个两个注解去实现路由的扫描、路由注册接口的实现、路由表的生成、路由参数注入。</p>
+<ol>
+<li>RouteNode注解的注解处理器为RouterProcessor，该注解处理器主要做以下几件事情：  <ul>
+<li>解析注解：查找所有activity上标注了RouteNode注解元素，并记录路由节点同时扫描Autowired注解同样记录注解标记的参数和参数类型；</li>
+<li>路由注册接口的实现，根据gradle脚本下host属性并结合RouteNode中的path值生成一个java类该类通过继承BaseCompRouter然后实现getHost和initMap分别返回host标志和向父类登记路由（path）；</li>
+<li>生成路由表：依照解析注解时记录的路由节点生成一个txt文件，文件写明了host名称，path路径和每个节点需要的参数；</li>
+</ul>
+</li>
+<li>Autowired注解的注解处理器为AutowiredProcessor，该注解处理器主要做以下几件事情：  <ul>
+<li>解析注解：查找所有activity中属性标注了Autowired注解元素，并根据activity名称进行分类记录下标记的属性；</li>
+<li>生成参数注入的辅助类：依照解析注解记录的参数分类记录为每个activity生成一个注入辅助类（类名后缀为：$$Router$$Autowired，这个可以根据自己喜好来的），这个辅助类是类ISyringe接口的实现；   </li>
+</ul>
+</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上静态注解处理器生成的java类都在[module名称]/build/generated/source/apt下的debug或release下。而路由表的生成路径就看源码里面设置的在哪里，主要还是<strong>注解处理器生成的java类</strong>。</p>
+<p>通过以上分析，静态注解部分工作已经完成，也可以看到所有的结果还是在具体module下，各个module还是对非自身内的路由不可见的，结下就是让各个module的路由对其他module可见，这个呢则是通过gladle plugin来达到这个目的。接下来分析gladle plugin如何去实现各个module的路由可见。</p>
+<p>gladle plugin主要工作是动态调整编译脚本、资源管理和类修改，进一步看下其是如何实现的；</p>
+<ol>
+<li><p>动态调整编译脚本：</p>
+<ul>
+<li>记录当前assemble的module的名称，也就是点击AS的右三角运行的module；</li>
+<li>查找module下gradle配置文件中的isRunAlone属性，同时查找根项目下的gradle配置文件中的mainModuleName属性；</li>
+<li>根据上面两步的结果，判定当前module是主项目还是依赖的项目，如果是主项目则动态设置编译脚本应用的插件为application，<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">project.apply plugin: <span class="string">'com.android.application'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果是依赖的项目则动态设置编译脚本应用的插件为library，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">project.apply plugin: <span class="string">'com.android.library'</span></span><br></pre></td></tr></table></figure>
+<p>通过动态调整编译脚本，现在已经实现了各个module的class文件对其他module是可见的了，但是目前还是不能实现路由间的跳转，继续分析。</p>
+</li>
+<li>资源文件管理：  <ul>
+<li>在第1步中前两步知道当前那些module是依赖的项目，注意！！android中application和library的AndroidManifest，因此对于依赖的项目中的AndroidManifest文件进行管理或者修改，DDComponentForAndroid通过指定另外的路径来加载library的AndroidManifest文件。</li>
+</ul>
+</li>
+<li><p>类修改：</p>
+<ul>
+<li>扫描所有项目的directory文件，扫描出application文件并记录；</li>
+<li>扫描所有项目的directory文件，扫描出实现了接口IApplicationLike的文件并记录，应为在IApplicationLike实现类中会去注册路由实现类；</li>
+</ul>
+<p>通过类修改，这个样就达到了路由间的跳转。自此组件化就达到了，而且各个组件间可以独立调试无需手动再次设置。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cji2u6fpr00015ys6lxrq62kh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Android自定义注解处理器" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/05/29/Android自定义注解处理器/" class="article-date">
@@ -162,7 +246,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/05/29/Android自定义注解处理器/" data-id="cjhsfvi0k00013ps6k7vrrgte" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/05/29/Android自定义注解处理器/" data-id="cji2u6fpv00035ys6eqim2pan" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li></ul>
@@ -213,7 +297,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/" data-id="cjhsfvi1a000a3ps6ocplaply" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/" data-id="cji2u6fq9000a5ys65zzkgjyi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li></ul>
@@ -375,7 +459,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/28/插件化种种和思考/" data-id="cjhsfvi2c000x3ps6c6e9wwz0" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/28/插件化种种和思考/" data-id="cji2u6fqy000x5ys6mouostr8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Small/">Small</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tool/">Tool</a></li></ul>
@@ -457,7 +541,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/" data-id="cjhsfvi1b000b3ps6dl63arq2" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/" data-id="cji2u6fqn000i5ys6u3gyeh4a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li></ul>
@@ -588,7 +672,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/24/downloadManagerSupport7-0/" data-id="cjhsfvi0t00043ps6jat02ud9" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/24/downloadManagerSupport7-0/" data-id="cji2u6fpz00055ys61vhk6ec9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/7/">7</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Support/">Support</a></li></ul>
@@ -1207,7 +1291,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/24/git命令和使用/" data-id="cjhsfvi35001m3ps6gi53yiun" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/24/git命令和使用/" data-id="cji2u6fri001s5ys68pja5mex" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tool/">Tool</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -1309,7 +1393,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/21/Bitmap压缩/" data-id="cjhsfvi0e00003ps6k6zer6e0" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/21/Bitmap压缩/" data-id="cji2u6fpm00005ys6m913hbz4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Options/">Options</a></li></ul>
@@ -1422,7 +1506,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/19/android-download-manager使用/" data-id="cjhsfvi1000073ps6vixpdr4z" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/19/android-download-manager使用/" data-id="cji2u6fqi000d5ys6lqh0mzkt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li></ul>
@@ -1723,78 +1807,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/03/rxjava2基础/" data-id="cjhsfvi26000u3ps6qqfkuvzu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-python爬虫" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/05/20/python爬虫/" class="article-date">
-  <time datetime="2017-05-20T04:15:28.000Z" itemprop="datePublished">2017-05-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/20/python爬虫/">python爬虫</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>urllib2的运用</li>
-</ol>
-<p>&ensp;&ensp;urllib2获取网页内容时可以设定超时时间，防止运行过程中假死；在获取网页时需要做异常处理，防止部分网页访问不到程序终止。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    url = <span class="string">"http://www.baidu.com"</span></span><br><span class="line">    f = urllib2.urlopen(url, timeout=<span class="number">0</span>) <span class="comment">#timeout设置超时的时间</span></span><br><span class="line">    result = f.read()</span><br><span class="line">    <span class="keyword">print</span> result</span><br><span class="line"><span class="keyword">except</span> Exception,e:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'a'</span>,str(e)</span><br></pre></td></tr></table></figure></p>
-<p>结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a &lt;urlopen error timed out&gt;</span><br></pre></td></tr></table></figure></p>
-<p><strong>异常处理</strong><br>&ensp;&ensp;如果想在代码中处理URLError和HTTPError有两种方法，代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! /usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line">url=<span class="string">"xxxxxx"</span>  <span class="comment">#需要访问的URL</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    response=urllib2.urlopen(url)</span><br><span class="line"><span class="keyword">except</span> urllib2.HTTPError,e:    <span class="comment">#HTTPError必须排在URLError的前面</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"The server couldn't fulfill the request"</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Error code:"</span>,e.code</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Return content:"</span>,e.read()</span><br><span class="line"><span class="keyword">except</span> urllib2.URLError,e:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Failed to reach the server"</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"The reason:"</span>,e.reason</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="comment">#something you should do</span></span><br><span class="line">    <span class="keyword">pass</span>  <span class="comment">#其他异常的处理</span></span><br></pre></td></tr></table></figure></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! /usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line">url=<span class="string">"http://xxx"</span>  <span class="comment">#需要访问的URL</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    response=urllib2.urlopen(url)</span><br><span class="line"><span class="keyword">except</span> urllib2.URLError,e:</span><br><span class="line">    <span class="keyword">if</span> hasattr(e,<span class="string">"reason"</span>):</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"Failed to reach the server"</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"The reason:"</span>,e.reason</span><br><span class="line">    <span class="keyword">elif</span> hasattr(e,<span class="string">"code"</span>):</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"The server couldn't fulfill the request"</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"Error code:"</span>,e.code</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"Return content:"</span>,e.read()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">pass</span>  <span class="comment">#其他异常的处理</span></span><br></pre></td></tr></table></figure>
-<p>&ensp;&ensp;相比较而言，第二种异常处理方法更优。</p>
-<ol>
-<li>re正则的运用</li>
-</ol>
-<p>字符匹配过成功中，re匹配模式很难定义，主要还是不熟；主要用到以下几种：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p = re.compile(<span class="string">r'''&lt;a href="http://wiki.jikexueyuan.com/project/start-learning-python/(.+?).html" &gt;.+?&lt;/a&gt;'''</span>)</span><br><span class="line">matchs = p.findall(contents)</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;这个主要匹配出所有的网页名称出来，结果是得到一个包含list的tuple列表；<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">linkpatten = re.compile(<span class="string">r'''href="/.+?/css'''</span>)</span><br><span class="line">contents = re.sub(linkpatten, <span class="string">r'href="./css'</span>, contents)</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;这个主要是将contents中的href=”/.+?/css字符串替换成./css形式，所有的哦。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">linkpatten = re.compile(<span class="string">r'''href="/assets/(.+?)\.ico"'''</span>)</span><br><span class="line">contents = re.sub(linkpatten, <span class="string">r'href="./images/\g&lt;1&gt;.ico"'</span>, contents)</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;这个主要是将contents中的href=”/assets/(.+?).ico”字符串并提取ico的名称用来后台替换，替换成href=”./images/\g<1>.ico”形式，其中\g<1>部分或用提取出来的名称替换，同样是所有的哦.</1></1></p>
-<p><strong>小结</strong><br>&ensp;&ensp;正则中（）代表需要提取出来的内容；re.sub(linkpatten, r’href=”./images/\g<1>.ico”‘, contents)解析；反斜杠加g以及中括号内一个名字，即：\g<name>，对应着命了名的组，named group；文件保存推荐使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</span><br><span class="line">                       cssfile.write(req.read())</span><br></pre></td></tr></table></figure></name></1></p>
-<p>&ensp;&ensp;同样需要注意的是在保存图片文件(png或jpg)时，写入模式是“w+b”（以二进制形式保存），但是有的网站图片可能是压缩过的，保存下来是看不了的，可以通过如下格式保存：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(filename,<span class="string">"wb"</span>) <span class="keyword">as</span> code:</span><br><span class="line">  decompresser = zlib.decompressobj(<span class="number">16</span>+zlib.MAX_WBITS)</span><br><span class="line">  data = decompresser.decompress(f.read())</span><br><span class="line">  code.write(data)</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;目前不知道如何判断图片是否压缩及压缩格式，有知道的可以交流下。</p>
-<ol>
-<li>贪婪 vs 不贪婪<br>&ensp;&ensp;当重复一个正则表达式时，如用 a*，操作结果是尽可能多地匹配模式。当你试着匹配一对对称的定界符，如 HTML 标志中的尖括号时这个事实经常困扰你。匹配单个 HTML 标志的模式不能正常工作，因为 .* 的本质是“贪婪”的</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!python</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s = <span class="string">'&lt;html&gt;&lt;head&gt;&lt;title&gt;Title&lt;/title&gt;'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>len(s)</span><br><span class="line"><span class="number">32</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> re.match(<span class="string">'&lt;.*&gt;'</span>, s).span()</span><br><span class="line">(<span class="number">0</span>, <span class="number">32</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> re.match(<span class="string">'&lt;.*&gt;'</span>, s).group()</span><br><span class="line">&lt;html&gt;&lt;head&gt;&lt;title&gt;Title&lt;/title&gt;</span><br></pre></td></tr></table></figure>
-<p>&ensp;&ensp;RE 匹配 在 “<html>“ 中的 “&lt;”，.* 消耗掉字符串的剩余部分。在 RE 中保持更多的左，虽然 &gt; 不能匹配在字符串结尾，因此正则表达式必须一个字符一个字符地回溯，直到它找到 &gt; 的匹配。最终的匹配从 “<html" 中的="" "<"="" 到="" "<="" title="">“ 中的 “&gt;”,这并不是你所想要的结果。</html"></html></p>
-<p>&ensp;&ensp;在这种情况下，解决方案是使用不贪婪的限定符 *?、+?、?? 或 {m,n}?，尽可能匹配小的文本。在上面的例子里， “&gt;” 在第一个 “&lt;” 之后被立即尝试，当它失败时，引擎一次增加一个字符，并在每步重试 “&gt;”。这个处理将得到正确的结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!python</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> re.match(<span class="string">'&lt;.*?&gt;'</span>, s).group()</span><br><span class="line">&lt;html&gt;</span><br></pre></td></tr></table></figure></p>
-<p>###最后附上最近写的原始版的极客python教程内容爬取的代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> zlib</span><br><span class="line"></span><br><span class="line">logging.basicConfig(level=logging.INFO)</span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">main_dir = <span class="string">r'D:\mugwort\book\python\base_python'</span></span><br><span class="line">main_url = <span class="string">r'http://wiki.jikexueyuan.com/project/start-learning-python/'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sava_css</span><span class="params">(contents)</span>:</span></span><br><span class="line">    p = re.compile(<span class="string">r'''&lt;link rel="stylesheet" type="text/css" href="(.+?)"&gt;'''</span>)</span><br><span class="line">    matchs = p.findall(contents)</span><br><span class="line">    <span class="keyword">for</span> match <span class="keyword">in</span> matchs:</span><br><span class="line">        logging.info(match)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match.startswith(<span class="string">"//"</span>):</span><br><span class="line">            match = <span class="string">"http://wiki.jikexueyuan.com"</span> + match</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            match = <span class="string">"http:"</span> + match</span><br><span class="line">        logging.info(<span class="string">"format:"</span> + match)</span><br><span class="line">        req = urllib2.urlopen(match)</span><br><span class="line">        contents = req.read()</span><br><span class="line">        names = re.compile(<span class="string">r'''.+?/(.*?)\.css'''</span>).findall(match)</span><br><span class="line">        name = names.pop(len(names) - <span class="number">1</span>)</span><br><span class="line">        logging.info(name)</span><br><span class="line">        logging.info(<span class="string">"rindex %d  length %d "</span> % (name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>, len(name)))</span><br><span class="line">        logging.info(<span class="string">"name format:"</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)])</span><br><span class="line">        filename = main_dir + <span class="string">'\\css\\'</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)] + <span class="string">".css"</span></span><br><span class="line">        <span class="keyword">if</span> filename:</span><br><span class="line">            logging.info(filename)</span><br><span class="line">            <span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</span><br><span class="line">                cssfile.write(contents)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sava_js</span><span class="params">(contents)</span>:</span></span><br><span class="line">    p = re.compile(<span class="string">r'''&lt;script type="text/javascript" src="(.+?)"&gt;'''</span>)</span><br><span class="line">    matchs = p.findall(contents)</span><br><span class="line">    <span class="keyword">for</span> match <span class="keyword">in</span> matchs:</span><br><span class="line">        logging.info(match)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match.startswith(<span class="string">"//"</span>):</span><br><span class="line">            match = <span class="string">"http://wiki.jikexueyuan.com"</span> + match</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            match = <span class="string">"http:"</span> + match</span><br><span class="line">        logging.info(<span class="string">"format:"</span> + match)</span><br><span class="line">        req = urllib2.urlopen(match)</span><br><span class="line">        contents = req.read()</span><br><span class="line">        names = re.compile(<span class="string">r'''.+?/(.*?)\.js'''</span>).findall(match)</span><br><span class="line">        logging.info(names)</span><br><span class="line">        name = names.pop(len(names) - <span class="number">1</span>)</span><br><span class="line">        logging.info(name)</span><br><span class="line">        logging.info(<span class="string">"rindex %d  length %d "</span> % (name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>, len(name)))</span><br><span class="line">        logging.info(<span class="string">"name format:"</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)])</span><br><span class="line">        filename = main_dir + <span class="string">'\\js\\'</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)] + <span class="string">".js"</span></span><br><span class="line">        <span class="keyword">if</span> filename:</span><br><span class="line">            logging.info(filename)</span><br><span class="line">            <span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</span><br><span class="line">                cssfile.write(contents)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sava_img</span><span class="params">(contents)</span>:</span></span><br><span class="line">    p = re.compile(<span class="string">r'''&lt;img src="(.+?)".+?&gt;|&lt;link.+?href="(.+?)".+?type="image/x-icon".+?&gt;'''</span>)</span><br><span class="line">    matchs = p.findall(contents)</span><br><span class="line">    <span class="keyword">for</span> matchT <span class="keyword">in</span> matchs:</span><br><span class="line">        logging.info(matchT)</span><br><span class="line">        match = matchT[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match:</span><br><span class="line">            match = matchT[<span class="number">1</span>]</span><br><span class="line">        logging.info(match)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> match.startswith(<span class="string">"//"</span>):</span><br><span class="line">            match = <span class="string">"http://wiki.jikexueyuan.com"</span> + match</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            match = <span class="string">"http:"</span> + match</span><br><span class="line">        logging.info(<span class="string">"format:"</span> + match)</span><br><span class="line">        logging.info(<span class="string">"rindex %d  length %d "</span> % (match.rindex(<span class="string">r"."</span>), len(match)))</span><br><span class="line">        subfix = match[match.rindex(<span class="string">"."</span>):len(match)]</span><br><span class="line">        logging.info(<span class="string">"subfix:"</span> + subfix)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            req = urllib2.urlopen(match)</span><br><span class="line">            names = re.compile(<span class="string">r'''.+?/(.*?)\.png|.+?/(.*?)\.jpg|.+?/(.*?)\.ico'''</span>).findall(match)</span><br><span class="line">            logging.info(names)</span><br><span class="line">            nameT = names.pop(<span class="number">0</span>)</span><br><span class="line">            name = nameT[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> name:</span><br><span class="line">                name = nameT[<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> name:</span><br><span class="line">                name = nameT[<span class="number">2</span>]</span><br><span class="line">            logging.info(name)</span><br><span class="line">            logging.info(<span class="string">"rindex %d  length %d "</span> % (name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>, len(name)))</span><br><span class="line">            logging.info(<span class="string">"name format:"</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)])</span><br><span class="line">            filename = main_dir + <span class="string">'\\images\\'</span> + name[name.rindex(<span class="string">"/"</span>) + <span class="number">1</span>:len(name)] + subfix</span><br><span class="line">            <span class="keyword">if</span> filename:</span><br><span class="line">                logging.info(filename)</span><br><span class="line">                <span class="comment"># 对于png文件需要解压且以二进制保存</span></span><br><span class="line">                <span class="keyword">if</span> <span class="string">".png"</span> == subfix:</span><br><span class="line">                    <span class="keyword">with</span> open(filename, <span class="string">'w+b'</span>) <span class="keyword">as</span> cssfile:</span><br><span class="line">                        cssfile.write(req.read())</span><br><span class="line">                <span class="comment"># 对于jpg文件需要以二进制写入</span></span><br><span class="line">                <span class="keyword">elif</span> <span class="string">".jpg"</span> == subfix:</span><br><span class="line">                    <span class="keyword">with</span> open(filename, <span class="string">'w+b'</span>) <span class="keyword">as</span> cssfile:</span><br><span class="line">                        cssfile.write(req.read())</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">with</span> open(filename, <span class="string">'w'</span>) <span class="keyword">as</span> cssfile:</span><br><span class="line">                        cssfile.write(req.read())</span><br><span class="line">        <span class="keyword">except</span> urllib2.URLError, e:</span><br><span class="line">            <span class="keyword">if</span> hasattr(e, <span class="string">"reason"</span>):</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"The reason:"</span>, e.reason</span><br><span class="line">            <span class="keyword">elif</span> hasattr(e, <span class="string">"code"</span>):</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"Error code:"</span>, e.code</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"Return content:"</span>, e.read()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">pass</span>  <span class="comment"># 其他异常处理</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_html</span><span class="params">(urlname)</span>:</span></span><br><span class="line">    <span class="comment"># 打开并保存hmtl</span></span><br><span class="line">    url = main_url + urlname + <span class="string">'.html'</span></span><br><span class="line">    file_name = main_dir + <span class="string">'\\'</span> + urlname + <span class="string">'.html'</span></span><br><span class="line">    req = urllib2.urlopen(url)</span><br><span class="line">    contents = req.read()</span><br><span class="line">    sava_css(contents)</span><br><span class="line">    sava_js(contents)</span><br><span class="line">    sava_img(contents)</span><br><span class="line">    <span class="comment"># 替换掉地址信息，让其变为本地</span></span><br><span class="line">    <span class="comment"># 规范css文件保存</span></span><br><span class="line">    contents = re.sub(main_url, <span class="string">r""</span>, contents)</span><br><span class="line">    linkpatten = re.compile(<span class="string">r'''href="/.+?/css'''</span>)</span><br><span class="line">    contents = re.sub(linkpatten, <span class="string">r'href="./css'</span>, contents)</span><br><span class="line">    <span class="comment"># 规范js文件保存</span></span><br><span class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/js/(.+?)\.js.*?"'''</span>)</span><br><span class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./js/\g&lt;1&gt;.js"'</span>, contents)</span><br><span class="line">    linkpatten = re.compile(<span class="string">r"src='.*?/js/(.+?)\.js.*?'"</span>)</span><br><span class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./js/\g&lt;1&gt;.js"'</span>, contents)</span><br><span class="line">    <span class="comment"># 规范js文件保存</span></span><br><span class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/src/(.+?)\.js.*?"'''</span>)</span><br><span class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./js/\g&lt;1&gt;.js"'</span>, contents)</span><br><span class="line">    <span class="comment"># 规范img文件保存</span></span><br><span class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/images/(.+?)\.png"'''</span>)</span><br><span class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./images/\g&lt;1&gt;.png"'</span>, contents)</span><br><span class="line">    linkpatten = re.compile(<span class="string">r'''src=".*?/images/(.+?)\.jpg"'''</span>)</span><br><span class="line">    contents = re.sub(linkpatten, <span class="string">r'src="./images/\g&lt;1&gt;.jpg"'</span>, contents)</span><br><span class="line">    linkpatten = re.compile(<span class="string">r'''href="/assets/(.+?)\.ico"'''</span>)</span><br><span class="line">    contents = re.sub(linkpatten, <span class="string">r'href="./images/\g&lt;1&gt;.ico"'</span>, contents)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(file_name, <span class="string">'w'</span>) <span class="keyword">as</span> urlfile:</span><br><span class="line">        urlfile.write(contents)</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">req = urllib2.urlopen(<span class="string">r'http://wiki.jikexueyuan.com/project/start-learning-python/'</span>)</span><br><span class="line">p = re.compile(<span class="string">r'''&lt;a href="http://wiki.jikexueyuan.com/project/start-learning-python/(.+?).html" &gt;.+?&lt;/a&gt;'''</span>)</span><br><span class="line">contents = req.read().decode(<span class="string">"utf-8"</span>)</span><br><span class="line">matchs = p.findall(contents)</span><br><span class="line">logging.info(len(matchs))</span><br><span class="line">logging.info(time.time())</span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> matchs:</span><br><span class="line">    save_html(row)</span><br><span class="line">logging.info(time.time())</span><br></pre></td></tr></table></figure></p>
-<p>参考地址：</p>
-<ul>
-<li>正则速查表 <a href="http://www.jb51.net/shouce/jquery1.82/regexp.html" target="_blank" rel="noopener">http://www.jb51.net/shouce/jquery1.82/regexp.html</a></li>
-<li>urllib2异常处理 <a href="http://wangxiaoxu.iteye.com/blog/1844989" target="_blank" rel="noopener">http://wangxiaoxu.iteye.com/blog/1844989</a></li>
-<li>Python正则表达式操作指南 <a href="http://wiki.ubuntu.org.cn/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97" target="_blank" rel="noopener">http://wiki.ubuntu.org.cn/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97</a></li>
-<li>re.sub使用示例 <a href="http://www.programcreek.com/python/example/21/re.sub" target="_blank" rel="noopener">http://www.programcreek.com/python/example/21/re.sub</a></li>
-<li>python替换函数  <a href="http://blog.csdn.net/zcmlimi/article/details/47709049" target="_blank" rel="noopener">http://blog.csdn.net/zcmlimi/article/details/47709049</a></li>
-<li>re.sub 五个参数解析 <a href="http://www.crifan.com/python_re_sub_detailed_introduction/" target="_blank" rel="noopener">http://www.crifan.com/python_re_sub_detailed_introduction/</a></li>
-<li>压缩问题 <a href="http://stackoverflow.com/questions/3122145/zlib-error-error-3-while-decompressing-incorrect-header-check" target="_blank" rel="noopener">http://stackoverflow.com/questions/3122145/zlib-error-error-3-while-decompressing-incorrect-header-check</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/20/python爬虫/" data-id="cjhsfvi1m000i3ps68cplf0bh" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/03/rxjava2基础/" data-id="cji2u6fqx000w5ys69xos3tzd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1820,7 +1833,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
     </div>
   </div>
 
@@ -1830,7 +1843,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 10px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 15px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a>
     </div>
   </div>
 
@@ -1839,7 +1852,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
     </div>
   </div>
 
@@ -1850,6 +1863,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/06/06/DDComponent原理剖析/">DDComponentForAndroid原理剖析</a>
+          </li>
         
           <li>
             <a href="/2018/05/29/Android自定义注解处理器/">Android自定义注解处理器</a>
@@ -1865,10 +1882,6 @@
         
           <li>
             <a href="/2017/06/28/nestedscollin原理/">nestedscollin原理</a>
-          </li>
-        
-          <li>
-            <a href="/2017/06/24/downloadManagerSupport7-0/">downloadManagerSupport7.0</a>
           </li>
         
       </ul>

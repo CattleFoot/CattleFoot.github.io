@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>DDComponentForAndroid原理剖析 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="原理DDComponentForAndroid组件化实现原理主要基于两点：    静态注解：作用是实现路由的扫描、路由注册接口实现、路由表生成、路由参数的传递；   gladle plugin：作用是动态调整编译脚本、资源管理和类修改；  实现注解知识点和自定义注解请参考：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DDComponentForAndroid中定义了两个">
+<meta name="keywords" content="Annotation,gradle plugin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DDComponentForAndroid原理剖析">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="原理DDComponentForAndroid组件化实现原理主要基于两点：    静态注解：作用是实现路由的扫描、路由注册接口实现、路由表生成、路由参数的传递；   gladle plugin：作用是动态调整编译脚本、资源管理和类修改；  实现注解知识点和自定义注解请参考：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DDComponentForAndroid中定义了两个">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-06T07:33:15.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DDComponentForAndroid原理剖析">
+<meta name="twitter:description" content="原理DDComponentForAndroid组件化实现原理主要基于两点：    静态注解：作用是实现路由的扫描、路由注册接口实现、路由表生成、路由参数的传递；   gladle plugin：作用是动态调整编译脚本、资源管理和类修改；  实现注解知识点和自定义注解请参考：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DDComponentForAndroid中定义了两个">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-DDComponent原理剖析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/06/DDComponent原理剖析/" class="article-date">
+  <time datetime="2018-06-06T03:11:27.000Z" itemprop="datePublished">2018-06-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DDComponentForAndroid原理剖析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>DDComponentForAndroid组件化实现原理主要基于两点：  </p>
+<ol>
+<li>静态注解：作用是实现路由的扫描、路由注册接口实现、路由表生成、路由参数的传递；  </li>
+<li>gladle plugin：作用是动态调整编译脚本、资源管理和类修改；</li>
+</ol>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>注解知识点和自定义注解请参考：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DDComponentForAndroid中定义了两个注解：RouteNode（路由节点）和Autowired（参数装配），这个两个注解分别用于标记那些页面（DD中指的时activity）可以作为一个路由节点和这个页面需要那些参数。再看看DDComponentForAndroid中怎么根据这个两个注解去实现路由的扫描、路由注册接口的实现、路由表的生成、路由参数注入。</p>
+<ol>
+<li>RouteNode注解的注解处理器为RouterProcessor，该注解处理器主要做以下几件事情：  <ul>
+<li>解析注解：查找所有activity上标注了RouteNode注解元素，并记录路由节点同时扫描Autowired注解同样记录注解标记的参数和参数类型；</li>
+<li>路由注册接口的实现，根据gradle脚本下host属性并结合RouteNode中的path值生成一个java类该类通过继承BaseCompRouter然后实现getHost和initMap分别返回host标志和向父类登记路由（path）；</li>
+<li>生成路由表：依照解析注解时记录的路由节点生成一个txt文件，文件写明了host名称，path路径和每个节点需要的参数；</li>
+</ul>
+</li>
+<li>Autowired注解的注解处理器为AutowiredProcessor，该注解处理器主要做以下几件事情：  <ul>
+<li>解析注解：查找所有activity中属性标注了Autowired注解元素，并根据activity名称进行分类记录下标记的属性；</li>
+<li>生成参数注入的辅助类：依照解析注解记录的参数分类记录为每个activity生成一个注入辅助类（类名后缀为：$$Router$$Autowired，这个可以根据自己喜好来的），这个辅助类是类ISyringe接口的实现；   </li>
+</ul>
+</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上静态注解处理器生成的java类都在[module名称]/build/generated/source/apt下的debug或release下。而路由表的生成路径就看源码里面设置的在哪里，主要还是<strong>注解处理器生成的java类</strong>。</p>
+<p>通过以上分析，静态注解部分工作已经完成，也可以看到所有的结果还是在具体module下，各个module还是对非自身内的路由不可见的，结下就是让各个module的路由对其他module可见，这个呢则是通过gladle plugin来达到这个目的。接下来分析gladle plugin如何去实现各个module的路由可见。</p>
+<p>gladle plugin主要工作是动态调整编译脚本、资源管理和类修改，进一步看下其是如何实现的；</p>
+<ol>
+<li><p>动态调整编译脚本：</p>
+<ul>
+<li>记录当前assemble的module的名称，也就是点击AS的右三角运行的module；</li>
+<li>查找module下gradle配置文件中的isRunAlone属性，同时查找根项目下的gradle配置文件中的mainModuleName属性；</li>
+<li>根据上面两步的结果，判定当前module是主项目还是依赖的项目，如果是主项目则动态设置编译脚本应用的插件为application，<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">project.apply plugin: <span class="string">'com.android.application'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果是依赖的项目则动态设置编译脚本应用的插件为library，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">project.apply plugin: <span class="string">'com.android.library'</span></span><br></pre></td></tr></table></figure>
+<p>通过动态调整编译脚本，现在已经实现了各个module的class文件对其他module是可见的了，但是目前还是不能实现路由间的跳转，继续分析。</p>
+</li>
+<li>资源文件管理：  <ul>
+<li>在第1步中前两步知道当前那些module是依赖的项目，注意！！android中application和library的AndroidManifest，因此对于依赖的项目中的AndroidManifest文件进行管理或者修改，DDComponentForAndroid通过指定另外的路径来加载library的AndroidManifest文件。</li>
+</ul>
+</li>
+<li><p>类修改：</p>
+<ul>
+<li>扫描所有项目的directory文件，扫描出application文件并记录；</li>
+<li>扫描所有项目的directory文件，扫描出实现了接口IApplicationLike的文件并记录，应为在IApplicationLike实现类中会去注册路由实现类；</li>
+</ul>
+<p>通过类修改，这个样就达到了路由间的跳转。自此组件化就达到了，而且各个组件间可以独立调试无需手动再次设置。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cji2u6fpr00015ys6lxrq62kh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/29/Android自定义注解处理器/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android自定义注解处理器</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 15px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/06/06/DDComponent原理剖析/">DDComponentForAndroid原理剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/29/Android自定义注解处理器/">Android自定义注解处理器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/15/mvc-mvp和mvvm理解/">mvc_mvp和mvvm理解</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/28/插件化种种和思考/">插件化种种和思考</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/28/nestedscollin原理/">nestedscollin原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
