@@ -62,6 +62,122 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-java单例模式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/13/java单例模式/" class="article-date">
+  <time datetime="2018-06-13T08:42:17.000Z" itemprop="datePublished">2018-06-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/13/java单例模式/">java单例模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><ol>
+<li><p>什么是Singleton类？你之前用过Singleton吗？<br>Singleton是一个类，在整个应用程序中只有一个实例，并提供一个getInstance（）方法来访问单例实例。在JDK中有许多类是使用Singleton模式实现的，如java.lang.Runtime，它提供了getRuntime（）方法来访问它并用于获得Java中的可用内存和总内存。</p>
+</li>
+<li><p>单例模式优缺点：</p>
+<ul>
+<li>优点：  <ul>
+<li>提供了对唯一实例的受控访问；</li>
+<li>由于在系统内存中只存在一个对象，因此可以节约系统资源，对于一些需要频繁创建和销毁的对象单例模式无疑可以提高系统的性能；</li>
+<li>允许可变数目的实例；</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>由于单利模式中没有抽象层，因此单例类的扩展有很大的困难；</li>
+<li>单例类的职责过重，在一定程度上违背了“单一职责原则”；</li>
+<li>滥用单例将带来一些负面问题，如为了节省资源将数据库连接池对象设计为的单例类，可能会导致共享连接池对象的程序过多而出现连接池溢出；如果实例化的对象长时间不被利用，系统会认为是垃圾而被回收，这将导致对象状态的丢失。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="单例模式的五种实现"><a href="#单例模式的五种实现" class="headerlink" title="单例模式的五种实现"></a>单例模式的五种实现</h4><ol>
+<li><p>懒汉</p>
+<ul>
+<li>1.1 懒汉，线程不安全<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;  </span><br><span class="line">        instance = <span class="keyword">new</span> Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这种写法lazy loading很明显，但是致命的是在多线程不能正常工作。</p>
+<ul>
+<li>1.2 懒汉，线程安全  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;  </span><br><span class="line">        instance = <span class="keyword">new</span> Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这种写法能够在多线程中很好的工作，而且看起来它也具备很好的lazy loading，但是，遗憾的是，效率很低，99%情况下不需要同步。  </p>
+</li>
+<li><p>饿汉</p>
+<ul>
+<li>2.1 饿汉，基本型<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"> 这种方式基于classloder机制避免了多线程的同步问题，不过，instance在类装载时就实例化，虽然导致类装载的原因有很多种，在单例模式中大多数都是调用getInstance方法， 但是也不能确定有其他的方式（或者其他的静态方法）导致类装载，这时候初始化instance显然没有达到lazy loading的效果。</span><br><span class="line"></span><br><span class="line"> - <span class="number">2.2</span> 饿汉，变种   </span><br><span class="line"> ```Java</span><br><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> Singleton instance = <span class="keyword">null</span>;  </span><br><span class="line">    <span class="keyword">static</span> &#123;  </span><br><span class="line">    instance = <span class="keyword">new</span> Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>表面上看起来差别挺大，其实跟2.1方式差不多，都是在类初始化即实例化instance。  </p>
+</li>
+<li><p>静态内部类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> SingletonHolder.INSTANCE;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式同样利用了classloder的机制来保证初始化instance时只有一个线程，它跟2.1和2.2方式不同的是（很细微的差别）：2.1和2.2方式是只要Singleton类被装载了，那么instance就会被实例化（没有达到lazy loading效果），而这种方式是Singleton类被装载了，instance不一定被初始化。因为SingletonHolder类没有被主动使用，只有显示通过调用getInstance方法时，才会显示装载SingletonHolder类，从而实例化instance。想象一下，如果实例化instance很消耗资源，我想让他延迟加载，另外一方面，我不希望在Singleton类加载时就实例化，因为我不能确保Singleton类还可能在其他的地方被主动使用从而被加载，那么这个时候实例化instance显然是不合适的。这个时候，这种方式相比2.1和2.2种方式就显得很合理。  </p>
+</li>
+<li>双重校验锁<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton singleton;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">if</span> (singleton == <span class="keyword">null</span>) &#123;  </span><br><span class="line">        <span class="keyword">synchronized</span> (Singleton.class) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (singleton == <span class="keyword">null</span>) &#123;  </span><br><span class="line">            singleton = <span class="keyword">new</span> Singleton();  </span><br><span class="line">        &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> singleton;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这个是1.2方式的升级版，俗称双重检查锁定，详细介绍请查看：<a href="http://www.ibm.com/developerworks/cn/java/j-dcl.html" target="_blank" rel="noopener">http://www.ibm.com/developerworks/cn/java/j-dcl.html</a><br>在JDK1.5之后，双重检查锁定才能够正常达到单例效果。  </p>
+<ol>
+<li>枚举<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton &#123;  </span><br><span class="line">    INSTANCE;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">whateverMethod</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这种方式是Effective Java作者Josh Bloch 提倡的方式，它不仅能避免多线程同步问题，而且还能防止反序列化和通过反射重新创建新的对象，可谓是很坚强的壁垒啊，这种方式在1.5中才加入的enum特性。</p>
+<h4 id="单例模式的安全性问题"><a href="#单例模式的安全性问题" class="headerlink" title="单例模式的安全性问题"></a>单例模式的安全性问题</h4><p>懒汉式、饿汉式、内部类、双重锁、枚举这5种单例模式中，枚举最为特殊，由于是官方提供的一种模式，所以不能被破解，是十分安全的。其他四种在一定程度上会有一定安全问题。</p>
+<p>关于懒汉式的单利破解：</p>
+<ol>
+<li>用反射破解单例模式：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;  </span><br><span class="line">        Singleton s011 = Singleton.getInstance();  </span><br><span class="line">        Singleton s012 = Singleton.getInstance();  </span><br><span class="line"></span><br><span class="line">        <span class="comment">//利用反射创建新对象  </span></span><br><span class="line">        Class&lt;Singleton&gt; h1 = (Class&lt;Singleton&gt;) Class.forName(<span class="string">"Singleton"</span>);<span class="comment">//反射获取H1对象  </span></span><br><span class="line">        Constructor c = h1.getDeclaredConstructor(<span class="keyword">null</span>);<span class="comment">//获取无参构造函数  </span></span><br><span class="line">        c.setAccessible(<span class="keyword">true</span>);<span class="comment">//更改无参构造函数权限为公开  </span></span><br><span class="line">        Singleton s013 = (Singleton) c.newInstance(<span class="keyword">null</span>);<span class="comment">//创建新对象  </span></span><br><span class="line"></span><br><span class="line">        System.out.println(s011);  </span><br><span class="line">        System.out.println(s012);  </span><br><span class="line">        System.out.println(s013);  </span><br><span class="line">        System.out.println(s011 == s012);  </span><br><span class="line">        System.out.println(s011 == s013);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>输出的结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Singleton@<span class="number">1</span>bc4459  </span><br><span class="line">Singleton@<span class="number">1</span>bc4459  </span><br><span class="line">Singleton@<span class="number">12</span>b6651  </span><br><span class="line"><span class="keyword">true</span>  </span><br><span class="line"><span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>用反序列化（需要实现Serializable）单例模式：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.FileInputStream;  </span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;  </span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;  </span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;  </span><br><span class="line">        Singleton s011 = Singleton.getInstance();  </span><br><span class="line">        Singleton s012 = Singleton.getInstance();  </span><br><span class="line"></span><br><span class="line">        <span class="comment">//利用反序列化创建新对象  </span></span><br><span class="line">        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"d:/a.txt"</span>);  </span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(fos);  </span><br><span class="line">        oos.writeObject(s011);  </span><br><span class="line">        fos.close();  </span><br><span class="line">        oos.close();  </span><br><span class="line"></span><br><span class="line">        FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="string">"d:/a.txt"</span>);  </span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(fis);  </span><br><span class="line">        Singleton s013 = (Singleton) ois.readObject();  </span><br><span class="line">        fis.close();  </span><br><span class="line">        ois.close();  </span><br><span class="line"></span><br><span class="line">        System.out.println(s011);  </span><br><span class="line">        System.out.println(s012);  </span><br><span class="line">        System.out.println(s013);  </span><br><span class="line">        System.out.println(s011 == s012);  </span><br><span class="line">        System.out.println(s011 == s013);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>输出的结果是：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Singleton@<span class="number">13</span>bad12  </span><br><span class="line">Singleton@<span class="number">13</span>bad12  </span><br><span class="line">Singleton@<span class="number">1</span>a626f  </span><br><span class="line"><span class="keyword">true</span>  </span><br><span class="line"><span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<p>以上知道了如果破解,那么如果避免,代码应该这样写:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ObjectStreamException;  </span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;  </span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 懒汉式模式：在类加载时不初始化，当需要时再反馈（延迟加载）</span></span><br><span class="line"><span class="comment"> */</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> <span class="keyword">implements</span> <span class="title">Serializable</span></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;  </span><br><span class="line">    <span class="comment">//私有化构造函数  </span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        <span class="keyword">if</span>(instance != <span class="keyword">null</span>)&#123;<span class="comment">//防止反射破解  </span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="comment">//添加synchronized防止多线程插入问题  </span></span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;  </span><br><span class="line">            instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">return</span> instance;  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 防止反序列化破解  </span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Object <span class="title">readResolve</span><span class="params">()</span> <span class="keyword">throws</span> ObjectStreamException </span>&#123;      </span><br><span class="line">        <span class="keyword">return</span> wife;    </span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>总结</strong>   </p>
+<p>有两个问题需要注意：</p>
+<ol>
+<li><p>如果单例由不同的类装载器装入，那便有可能存在多个单例类的实例。假定不是远端存取，例如一些servlet容器对每 个servlet使用完全不同的类装载器，这样的话如果有两个servlet访问一个单例类，它们就都会有各自的实例。<br>该问题修复的办法是:  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Class <span class="title">getClass</span><span class="params">(String classname)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;     </span><br><span class="line">     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();     </span><br><span class="line">     <span class="keyword">if</span>(classLoader == <span class="keyword">null</span>)     </span><br><span class="line">        classLoader = Singleton.class.getClassLoader();     </span><br><span class="line">     <span class="keyword">return</span> (classLoader.loadClass(classname));     </span><br><span class="line">  &#125;     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果Singleton实现了java.io.Serializable接口，那么这个类的实例就可能被序列化和复原。不管怎样，如果你序列化一个单例类的对象，接下来复原多个那个对象，那你就会有多个单例类的实例。<br>该问题修复的办法是：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;     </span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();     </span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;     </span><br><span class="line">   &#125;     </span><br><span class="line">   <span class="function"><span class="keyword">private</span> Object <span class="title">readResolve</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">     <span class="comment">//主要在这里！！！   </span></span><br><span class="line">            <span class="keyword">return</span> INSTANCE;     </span><br><span class="line">      &#125;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>参考：<br>[1]. 单例模式的实现 <a href="https://blog.csdn.net/liangxw1/article/details/51353654" target="_blank" rel="noopener">https://blog.csdn.net/liangxw1/article/details/51353654</a><br>[2]. 单例模式面试问题 <a href="https://blog.csdn.net/u012613251/article/details/79477525" target="_blank" rel="noopener">https://blog.csdn.net/u012613251/article/details/79477525</a><br>[3]. 单例模式的破解 <a href="https://blog.csdn.net/a445849497/article/details/57531266" target="_blank" rel="noopener">https://blog.csdn.net/a445849497/article/details/57531266</a><br>[4]. 单例模式的优缺点 <a href="https://blog.csdn.net/tayanxunhua/article/details/8250329" target="_blank" rel="noopener">https://blog.csdn.net/tayanxunhua/article/details/8250329</a><br>[5]. 枚举实现单例模式更好 <a href="https://blog.csdn.net/normallife/article/details/51152246" target="_blank" rel="noopener">https://blog.csdn.net/normallife/article/details/51152246</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/13/java单例模式/" data-id="cjicvd90m0006wqs670uzl4b2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Singleton/">Singleton</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-DDComponent原理剖析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/06/06/DDComponent原理剖析/" class="article-date">
@@ -99,11 +215,10 @@
 </li>
 <li>Autowired注解的注解处理器为AutowiredProcessor，该注解处理器主要做以下几件事情：  <ul>
 <li>解析注解：查找所有activity中属性标注了Autowired注解元素，并根据activity名称进行分类记录下标记的属性；</li>
-<li>生成参数注入的辅助类：依照解析注解记录的参数分类记录为每个activity生成一个注入辅助类（类名后缀为：$$Router$$Autowired，这个可以根据自己喜好来的），这个辅助类是类ISyringe接口的实现；   </li>
+<li>生成参数注入的辅助类：依照解析注解记录的参数分类记录为每个activity生成一个注入辅助类（类名后缀为：$$Router$$Autowired，这个可以根据自己喜好来的），这个辅助类是类ISyringe接口的实现；<br>sign<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上静态注解处理器生成的java类都在[module名称]/build/generated/source/apt下的debug或release下。而路由表的生成路径就看源码里面设置的在哪里，主要还是<strong>注解处理器生成的java类</strong>。</li>
 </ul>
 </li>
 </ol>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上静态注解处理器生成的java类都在[module名称]/build/generated/source/apt下的debug或release下。而路由表的生成路径就看源码里面设置的在哪里，主要还是<strong>注解处理器生成的java类</strong>。</p>
 <p>通过以上分析，静态注解部分工作已经完成，也可以看到所有的结果还是在具体module下，各个module还是对非自身内的路由不可见的，结下就是让各个module的路由对其他module可见，这个呢则是通过gladle plugin来达到这个目的。接下来分析gladle plugin如何去实现各个module的路由可见。</p>
 <p>gladle plugin主要工作是动态调整编译脚本、资源管理和类修改，进一步看下其是如何实现的；</p>
 <ol>
@@ -134,7 +249,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cji2u6fpr00015ys6lxrq62kh" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cjicvd90i0004wqs6pxni6fgc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
@@ -246,7 +361,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/05/29/Android自定义注解处理器/" data-id="cji2u6fpv00035ys6eqim2pan" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/05/29/Android自定义注解处理器/" data-id="cjicvd90e0002wqs6iwgekk78" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li></ul>
@@ -297,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/" data-id="cji2u6fq9000a5ys65zzkgjyi" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/" data-id="cjicvd90x000ewqs65bh5m8fb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li></ul>
@@ -459,7 +574,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/28/插件化种种和思考/" data-id="cji2u6fqy000x5ys6mouostr8" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/28/插件化种种和思考/" data-id="cjicvd923001jwqs6wsn9no6y" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Small/">Small</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tool/">Tool</a></li></ul>
@@ -541,7 +656,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/" data-id="cji2u6fqn000i5ys6u3gyeh4a" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/" data-id="cjicvd90z000fwqs6y3ycgn9p" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li></ul>
@@ -672,7 +787,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/24/downloadManagerSupport7-0/" data-id="cji2u6fpz00055ys61vhk6ec9" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/24/downloadManagerSupport7-0/" data-id="cjicvd90v000bwqs66h5ukxga" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/7/">7</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Support/">Support</a></li></ul>
@@ -1291,7 +1406,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/24/git命令和使用/" data-id="cji2u6fri001s5ys68pja5mex" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/24/git命令和使用/" data-id="cjicvd92e001uwqs62n20egkh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tool/">Tool</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -1393,7 +1508,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/21/Bitmap压缩/" data-id="cji2u6fpm00005ys6m913hbz4" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/21/Bitmap压缩/" data-id="cjicvd90c0001wqs67lhfroq6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Options/">Options</a></li></ul>
@@ -1506,310 +1621,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/19/android-download-manager使用/" data-id="cji2u6fqi000d5ys6lqh0mzkt" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/19/android-download-manager使用/" data-id="cjicvd90s0009wqs6kj9xilqa" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-rxjava2基础" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/06/03/rxjava2基础/" class="article-date">
-  <time datetime="2017-06-03T00:21:13.000Z" itemprop="datePublished">2017-06-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/03/rxjava2基础/">rxjava2基础</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="RxJava2基础"><a href="#RxJava2基础" class="headerlink" title="RxJava2基础"></a>RxJava2基础</h3><p>&ensp;&ensp;RxJava核心思想是观察者模式和响应式编程，因此其核心的东西主要有两个：Observable（被观察者） 和 Observer（观察者），Observable可以发出一系列的 事件（例如网络请求、复杂计算、数据库操作、文件读取等），事件执行结束后交给Observer的回调处理。</p>
-<ol>
-<li>RxJava2 的观察者模式</li>
-</ol>
-<p>&ensp;&ensp;观察者模式是对象的行为模式，也叫做发布-订阅(Publish/Subscribe)模式、模型-视图(Model/View)模式、源-监听器(Source/Listener)模式或从属者(Dependents)模式。</p>
-<ol>
-<li>RxJava2 响应式编程结构</li>
-</ol>
-<p>&ensp;&ensp;什么是响应式编程？举个栗子，a = b + c; 这句代码将b+c的值赋给a，而之后如果b和c的值改变了不会影响到a，然而，对于响应式编程，之后b和c的值的改变也动态影响着a，意味着a会随着b和c的变化而变化。<br>响应式编程的组成为Observable/Operator/Subscriber，RxJava在响应式编程中的基本流程如下：</p>
-<ul>
-<li>Observable发出一系列事件，他是事件的产生者；</li>
-<li>Subscriber负责处理事件，他是事件的消费者；</li>
-<li>Operator是对Observable发出的事件进行修改和变换；</li>
-<li>若事件从产生到消费不需要其他处理，则可以省略掉中间的Operator，从而流程变为Obsevable -&gt; Subscriber；</li>
-<li>Subscriber通常在主线程执行，所以原则上不要去处理太多的事务，而这些复杂的处理则交给Operator；</li>
-</ul>
-<p>&ensp;&ensp;这个流程，可以简单的理解为：Observable -&gt; Operator1 -&gt; …….-&gt; OperatorN -&gt; Subscriber。</p>
-<ol>
-<li>背压 </li>
-</ol>
-<p>&ensp;&ensp;背压简单理解即生产者的生产速度大于消费者的消费速度带来的问题，这个并非新概念，只是在RxJava2中新增了新的实现者Flowable及其子类：</p>
-<h3 id="初步体验"><a href="#初步体验" class="headerlink" title="初步体验"></a>初步体验</h3><p>&ensp;&ensp;使用前需要添加相应的依赖：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">compile <span class="string">'io.reactivex.rxjava2:rxjava:2.0.7'</span></span><br><span class="line">compile <span class="string">'org.reactivestreams:reactive-streams:1.0.0'</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>注意</strong>：不同的版本在使用上可能略微有差异。</p>
-<p>RxJava2的使用主要有三个步骤：</p>
-<ol>
-<li>创建一个Observable</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//被观察者</span></span><br><span class="line">        Observable&lt;Integer&gt; observable = Observable.create(<span class="keyword">new</span> ObservableOnSubscribe&lt;Integer&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(ObservableEmitter&lt;Integer&gt; e)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                e.onNext(<span class="number">1</span>);</span><br><span class="line">                e.onNext(<span class="number">2</span>);</span><br><span class="line">                e.onComplete();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-<ol>
-<li>创建一个Observer</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//观察者，观察者中onError和onComplete两个方法是互斥的，只有其中一个会执行。</span></span><br><span class="line">        Observer&lt;Integer&gt; observer = <span class="keyword">new</span> Observer&lt;Integer&gt;() &#123;</span><br><span class="line">            <span class="comment">//该实例用于解除订阅关系</span></span><br><span class="line">            <span class="keyword">private</span> Disposable disposable;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(Disposable d)</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"subscribe"</span>);</span><br><span class="line">                disposable = d;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Integer value)</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"next"</span> + value);</span><br><span class="line">                <span class="keyword">if</span> (value &gt; <span class="number">3</span>) &#123;</span><br><span class="line">                    <span class="comment">// &gt;3 时为异常数据，解除订阅</span></span><br><span class="line">                    disposable.dispose();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"error:"</span> + e.getMessage());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"onComplete"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>建立订阅关系</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">observable.subscribe(observer);</span><br></pre></td></tr></table></figure>
-<p>&ensp;&ensp;通过以上可以看出，首先，创建Observable时，回调的是ObservableEmitter，字面意思即发射器，用于发射数据（onNext）和通知（onError/onComplete）；其次，创建的Observer中多了一个回调方法onSubscrible，传递参数为Disposable，Disposable用于解除订阅关系。</p>
-<h3 id="包解析和类说明"><a href="#包解析和类说明" class="headerlink" title="包解析和类说明"></a>包解析和类说明</h3><h3 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h3><p>&ensp;&ensp;目前只解析标准包中的操作符。对于扩展包，待查阅相应资料再补上。</p>
-<h4 id="创建操作符：用于创建Observable"><a href="#创建操作符：用于创建Observable" class="headerlink" title="创建操作符：用于创建Observable"></a>创建操作符：用于创建Observable</h4><ol>
-<li><p>create：使用OnSubscribe从头创建一个Observable。需要注意的是，使用该方法创建时，建议在ObservableOnSubscribe#subscribe方法中检查订阅状态，以便及时停止发射数据或者运算。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Observable.create(<span class="keyword">new</span> ObservableOnSubscribe&lt;String &gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(ObservableEmitter&lt;String&gt; observableEmitter)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>from*： 将一个Iterable, 一个Future, 或者一个数组，内部通过代理的方式转换成一个Observable。Future转换为OnSubscribe是通过OnSubscribeToObservableFuture进行的，Iterable转换通过OnSubscribeFromIterable进行。数组通过OnSubscribeFromArray转换。 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String &gt; list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">"abc"</span>);</span><br><span class="line">        Observable.fromArray(list).subscribe(<span class="keyword">new</span> Observer&lt;List&lt;String&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(Disposable disposable)</span> </span>&#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(List&lt;String&gt; strings)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable throwable)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">  Future&lt;String&gt; future = Executors.newSingleThreadExecutor().submit(<span class="keyword">new</span> Callable&lt;String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"abc"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        Observable.fromFuture(future).subscribe(<span class="keyword">new</span> Observer&lt;String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(Disposable disposable)</span> </span>&#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable throwable)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>just： 将一个或多个对象转换成发射这个或这些对象的一个Observable。如果是单个对象，内部创建的是ScalarSynchronousObservable对象。如果是多个对象，则是调用了from方法创建。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; strings = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        Observable.just(strings).subscribe(<span class="keyword">new</span> Observer&lt;List&lt;String&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(Disposable disposable)</span> </span>&#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(List&lt;String&gt; strings)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable throwable)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>empty： 创建一个什么都不做直接通知完成的Observable。</p>
-</li>
-<li>error： 创建一个什么都不做直接通知错误的Observable。</li>
-<li><p>never： 创建一个什么都不做的Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.empty();  <span class="comment">//直接调用onCompleted。</span></span><br><span class="line">Observable.error(<span class="keyword">new</span> Throwable(<span class="string">"adb"</span>));<span class="comment">//直接调用onError。这里可以自定义异常</span></span><br><span class="line">Observable.never();<span class="comment">//啥都不做</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>timer： 创建一个在给定的延时之后发射数据项为0的Observable,内部通过OnSubscribeTimerOnce工作。</p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Observable.timer(<span class="number">1000</span>, TimeUnit.MILLISECONDS).subscribe(<span class="keyword">new</span> Consumer&lt;Long&gt;() &#123;</span><br><span class="line">         <span class="meta">@Override</span></span><br><span class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Long aLong)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">             </span><br><span class="line">         &#125;</span><br><span class="line">     &#125;);</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>interval：创建一个按照给定时间间隔发射从0开始的整数序列的Observable，内部通过ObservableInterval工作。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Observable.interval(<span class="number">2</span>,TimeUnit.MILLISECONDS).subscribe(<span class="keyword">new</span> Consumer&lt;Long&gt;() &#123;</span><br><span class="line">          <span class="meta">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Long aLong)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">              </span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>range：创建一个发射指定范围的整数序列的Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Observable.range(<span class="number">3</span>,<span class="number">9</span>).subscribe(<span class="keyword">new</span> Consumer&lt;Integer&gt;() &#123;</span><br><span class="line">          <span class="meta">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Integer integer)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">              </span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>defer：只有当订阅者订阅才创建Observable，为每个订阅者创建一个新的Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Observable.defer(<span class="keyword">new</span> Callable&lt;ObservableSource&lt;String &gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> ObservableSource&lt;String &gt; call() <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribe(<span class="keyword">new</span> Consumer&lt;String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(String s)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="合并操作"><a href="#合并操作" class="headerlink" title="合并操作"></a>合并操作</h4><p>&ensp;&ensp;用户组合多个Observable。<br><strong>注意</strong> 为了使结构更加清晰以及缩小代码量，之后例子都使用Lamdda表达式。</p>
-<ol>
-<li><p>concat：按顺序链接多个Observable，需要注意的是Observable。concat(a,b)等价与a.concatWith(b)，内部调用的是concatArray。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable&lt;Integer&gt; observable1=Observable.just(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>);</span><br><span class="line">        Observable&lt;Integer&gt; observable2=Observable.just(<span class="number">2</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">8</span>);</span><br><span class="line">        Observable.concat(observable1,observable2).subscribe(item -&gt; System.out.println(item));</span><br><span class="line">        observable1.concatWith(observable2);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>startWith：在数据序列的开头增加一个数据项，其内部也是调用concatArray。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">                .startWith(<span class="number">1</span>)</span><br><span class="line">                .subscribe(integer -&gt; System.out.print(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>merge：将多个Observable合并为一个，不同于concat，merge不是按照添加顺序链接，而是按照时间线来链接。其中mergeDelayError将异常延迟到其它没有错误的Observable发送完毕后才发射。而merge则是一遇到异常将停止发射数据，发送onError通知。<br><img src="./merge.png" alt="Alt text"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable&lt;String &gt; observable1=Observable.just(<span class="string">"4"</span>,<span class="string">"3"</span>,<span class="string">"1"</span>);</span><br><span class="line">        Observable&lt;String &gt; observable2=Observable.just(<span class="string">"4"</span>,<span class="string">"3"</span>,<span class="string">"1"</span>);</span><br><span class="line">        Observable.merge(observable1,observable2).subscribe(s -&gt; System.out.println(s));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>zip：使用一个函数组合多个Observab发射的数据集合，然后发射这个结果。然后再发射这个结果。如果多个Observable发射的数据量不一样，则以最少的Observable为标准进行压合。内部通过OperatorZip进行压合。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Observable&lt;String &gt; observable1=Observable.just(<span class="string">"4"</span>,<span class="string">"3"</span>,<span class="string">"1"</span>);</span><br><span class="line">        Observable&lt;String &gt; observable2=Observable.just(<span class="string">"4"</span>,<span class="string">"3"</span>,<span class="string">"1"</span>);</span><br><span class="line">        Observable.zip(observable1, observable2, <span class="keyword">new</span> BiFunction&lt;String, String, String &gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">apply</span><span class="params">(String s, String s2)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> s+<span class="string">" and "</span>+s2;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribe(item -&gt; System.out.println(item));</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p><img src="./zip.png" alt="Alt text"></p>
-<h4 id="过滤操作"><a href="#过滤操作" class="headerlink" title="过滤操作"></a>过滤操作</h4><ol>
-<li><p>filter：过滤数据，内部通过ObservableFilter所虑数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>)</span><br><span class="line">                .filter(integer -&gt; integer &gt; <span class="number">3</span>)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>ofType：过滤制定的类型。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="string">"aad"</span>)</span><br><span class="line">                .ofType(Integer.class)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>take：只发射开始的N想数据或者一定时间内的数据，内部通过ObservableTake和ObservableTakeUntil过滤数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="string">"aad"</span>)</span><br><span class="line">                .take(<span class="number">3</span>)</span><br><span class="line">                .take(<span class="number">100</span>,TimeUnit.MILLISECONDS)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>takeLast：只发射最后的N项数据或者一定时间内的数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">               .takeLast(<span class="number">2</span>)</span><br><span class="line">               .take(<span class="number">100</span>,TimeUnit.MILLISECONDS)</span><br><span class="line">               .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>last/lastOrError：只发射最后一项数据。</p>
-</li>
-<li>first/firstOrError：只发射第一项数据。</li>
-<li>skip：跳过开始的N项数据或者一定时间内的数据。</li>
-<li>skiplast：跳过最后的N想数据或者一定时间内的数据。</li>
-<li>elementAt/elementAtOrError：发射某项数据，如果超过了范围可以指定默认值。</li>
-<li>ignoreElements：丢弃所有数据，只发射错误或者正确终止的通知。</li>
-<li>distinct：过滤重复数据。</li>
-<li>distinctUntilChanged：过滤掉连续重复的数据。</li>
-<li>throttleFirst：定期发射Observable发射的第一项数据。</li>
-<li>throttleWithTimeout/debounce：发射数据时，如果两次数据的发射间隔小于指定时间，就会丢弃前一次的数据,直到指定时间内都没有新数据发射时才进行发射。</li>
-<li>sample/throttleLast：定期发射Observable最近的数据。</li>
-<li>timeout：如果原始Observable过了指定的一段时长没有发射数据，就发射一个异常或者使用备用的Observable。</li>
-</ol>
-<h4 id="条件或者布尔操作"><a href="#条件或者布尔操作" class="headerlink" title="条件或者布尔操作"></a>条件或者布尔操作</h4><ol>
-<li><p>all ：判断<strong>所有</strong>的数据项是否满足某个条件，内部通过ObservableAllSingle实现。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">                .all(integer -&gt; integer&gt;<span class="number">3</span>)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));<span class="comment">//得到boolean值</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>contains：判断在发射的所有数据项中是否包含指定的数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">                .contains(<span class="number">3</span>)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到boolean值</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>sequenceEqual：用于判断两个Observable发射的数据是否相同（数据，发射顺序，终止状态）。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable&lt;String&gt; observable1 = Observable.just(<span class="string">"4"</span>, <span class="string">"3"</span>, <span class="string">"1"</span>);</span><br><span class="line">        Observable&lt;String&gt; observable2 = Observable.just(<span class="string">"4"</span>, <span class="string">"3"</span>, <span class="string">"1"</span>);</span><br><span class="line">        Observable.sequenceEqual(observable1,observable2)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到boolean值</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>isEmpty：用于判断Observable发射完毕时，有没有发射数据。有数据false，如果只收到了onComplete通知则为true。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">3</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">4</span>)</span><br><span class="line">                .isEmpty()</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));  <span class="comment">//得到boolean值</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>amb：给定多个Observable，只让第一个发射数据的Observable发射全部数据，其他的Observable将会被忽略。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>ambArray：给定多个Observable，只让第一个发射数据的Observable发射全部数据，其他的Observable将会被忽略。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable&lt;Integer&gt; observable1 = Observable.just(<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>);</span><br><span class="line">       Observable&lt;Integer&gt; observable2 = Observable.just(<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>);</span><br><span class="line">       Observable.ambArray(observable1,observable2)</span><br><span class="line">               .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>switchIfEmpty：如果原始Observable正常终止后仍然没有发射任何的数据，就使用备用的Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.empty()</span><br><span class="line">                .switchIfEmpty(Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>))</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>defaultIfEmpty：如果原始Observable正常终止后仍然没有发射任何数据，就发射一个默认值,内部调用的switchIfEmpty。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.empty()</span><br><span class="line">               .defaultIfEmpty(Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>))</span><br><span class="line">               .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>takeUtil：当发射的数据满足某个条件后（包含该数据），或者第二个Observable发送完毕，终止第一个Observable发送数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">                .takeUntil(integer -&gt; integer==<span class="number">4</span>)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到2，3，4</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>takeWhile：当发射的数据满足某个条件时（不包含该数据），Observab终止发射数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">               .takeWhile(integer -&gt; integer==<span class="number">4</span>)</span><br><span class="line">               .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>skipUntil：丢弃Observable发射的数据，直到第二个Observable发送数据。（丢弃条件数据）</p>
-</li>
-<li>skipWhile：丢弃Observable发射的数据，直到一个指定的条件不成立（不丢弃条件数据）。</li>
-</ol>
-<h4 id="聚合操作"><a href="#聚合操作" class="headerlink" title="聚合操作"></a>聚合操作</h4><ol>
-<li><p>reduce/reduceInto：对序列使用reduce()函数并发射最终的结果。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">               .reduce((integer, integer2) -&gt; integer+integer2)</span><br><span class="line">               .subscribe(integer -&gt; System.out.println(integer));  <span class="comment">//得到14</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>collect：使用collect收集数据到一个可变的数据结构。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">               .collect((Callable&lt;List&lt;Integer&gt;&gt;) () -&gt; <span class="keyword">new</span> ArrayList&lt;&gt;(),</span><br><span class="line">                       (s, integer) -&gt; s.add(integer))</span><br><span class="line">               .subscribe(integer -&gt; System.out.println(integer));  <span class="comment">//得到列表[2, 3, 4, 5]</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>count：计算发射的数量。</p>
-</li>
-</ol>
-<h4 id="转换操作"><a href="#转换操作" class="headerlink" title="转换操作"></a>转换操作</h4><ol>
-<li><p>toList：收集原始Observable发射的所有数据到一个列表，然后返回列表。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">                .toList()</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到列表[2, 3, 4, 5]</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>toSortedList：收集原始Observable发射的所有数据到一个有序的列表，然后返回这个列表。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">8</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line">                .toSortedList((o1, o2) -&gt; o1-o2)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>toMap：将序列数据转换为一个Map，可以根据数据项生成key和生成value。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">8</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line"><span class="comment">//根据数据项生成map的key，//根据数据项生成map的kvalue</span></span><br><span class="line">                .toMap(integer -&gt; integer+<span class="string">"-"</span>, integer -&gt; integer+<span class="string">"+"</span>)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到&#123;8-=8+, 6-=6+, 5-=5+, 3-=3+&#125;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>toMultiMap：类似toMap，不同的地方在于map的value是一个集合。</p>
-</li>
-</ol>
-<h4 id="变换操作"><a href="#变换操作" class="headerlink" title="变换操作"></a>变换操作</h4><ol>
-<li><p>map：对Observable发射的每一项数据都应用一个函数来变换。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">8</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line">                .map(integer -&gt; <span class="string">"item"</span>+integer)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到item8，item3，item6，item5</span></span><br><span class="line">``` </span><br><span class="line"><span class="number">2</span>. cast：在发射之前将Observable发射的所有数据转换为指定类型。</span><br><span class="line"><span class="number">3</span>. flatMap：将Observable发射的数据变换为Observable集合，然后将这些Observable发射的数据平坦化的放进一个单独的Observable，内部采用merge合并。</span><br><span class="line">```java</span><br><span class="line">Observable.just(<span class="number">8</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line">                .flatMap((Function&lt;Integer, ObservableSource&lt;?&gt;&gt;) integer -&gt; Observable.create((ObservableOnSubscribe&lt;String&gt;) observableEmitter -&gt; &#123;</span><br><span class="line">                    observableEmitter.onNext(integer+<span class="string">""</span>);</span><br><span class="line">                    observableEmitter.onComplete();</span><br><span class="line">                &#125;))</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到8，3，6，5</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>flatMapIterable：和flatMap的作用一样，只不过生产的是Iterable而不是Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Observable.just(<span class="number">8</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line">                .flatMapIterable(integer -&gt; Arrays.asList(<span class="string">"item"</span>+integer))</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>concatMap：类似于flatMap，由于内部使用concat合并，所以是按照顺序连接发射。</p>
-</li>
-<li><p>SwitchMap：和flatMap很像，将Observable发射的数据变换为Observable集合，将原始Observable发射一个新的数据（Observable）时，它将取消订阅前一个Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Observable.create((ObservableOnSubscribe&lt;Integer&gt;) observableEmitter -&gt; &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">7</span>;i++)&#123;</span><br><span class="line">                observableEmitter.onNext(i);</span><br><span class="line">                Thread.sleep(<span class="number">500</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            observableEmitter.onComplete();</span><br><span class="line">        &#125;)</span><br><span class="line">                .switchMap((Function&lt;Integer, ObservableSource&lt;?&gt;&gt;) integer -&gt; Observable.create(<span class="keyword">new</span> ObservableOnSubscribe&lt;Integer&gt;() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(ObservableEmitter&lt;Integer&gt; observableEmitter)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                        observableEmitter.onNext(integer*<span class="number">10</span>);</span><br><span class="line">                        Thread.sleep(<span class="number">500</span>);</span><br><span class="line">                        observableEmitter.onComplete();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;))</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));  <span class="comment">//得到 0 10 20</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>scan：与reduce很像，对Observable发射的每一项数据应用一个函数，然后按顺序一次发射每个值。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">            .scan((integer, integer2) -&gt; integer+integer2)</span><br><span class="line">            .subscribe(integer -&gt; System.out.println(integer));  <span class="comment">//得到 2 5 9</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>groupBy：将Observab分拆为Observable集合，将原始Observable发射的数据按key分组，每一个Observable发射一组不同的数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">            .groupBy(integer -&gt; integer%<span class="number">2</span>==<span class="number">0</span>?<span class="string">"偶数"</span>:<span class="string">"奇数"</span>)</span><br><span class="line">            .subscribe(stringIntegerGroupedObservable -&gt; stringIntegerGroupedObservable.subscribe(integer -&gt;</span><br><span class="line">                    System.out.println(stringIntegerGroupedObservable.getKey()+<span class="string">":"</span>+integer)));<span class="comment">//得到</span></span><br><span class="line"><span class="comment">//偶数:2</span></span><br><span class="line"><span class="comment">//奇数:3</span></span><br><span class="line"><span class="comment">//偶数:4</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>buffer：定期从Observable收集数据到一个集合，然后把这些数据集合打包发射，而不是一次发射一个。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">            .buffer(<span class="number">2</span>)</span><br><span class="line">            .subscribe(integers -&gt; System.out.println(integers)); <span class="comment">//得到 [2, 3]  [4]</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>window：定期将来自Observable的数据分拆成一些Observable窗口，饭后发射这些窗口数据，而不是每次发射一项。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">           .window(<span class="number">2</span>)</span><br><span class="line">           .subscribe(integerObservable -&gt; integerObservable.subscribe(integer -&gt; System.out.println(integer)));</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="错误处理-重试机制"><a href="#错误处理-重试机制" class="headerlink" title="错误处理/重试机制"></a>错误处理/重试机制</h4><ol>
-<li><p>onErrorResumeNext：当原始Observable在遇到错误时，使用备用的Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="string">"3"</span>,<span class="number">4</span>)</span><br><span class="line">            .cast(Integer.class)</span><br><span class="line">            .onErrorResumeNext(Observable.just(<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>))</span><br><span class="line">            .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到 2，5，6，7</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>onErrorReturn：当原始Observable在遇到错误时发射一个特定的数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="string">"3"</span>,<span class="number">4</span>)</span><br><span class="line">            .cast(Integer.class)</span><br><span class="line">            .onErrorReturn(throwable -&gt; <span class="number">0</span>)</span><br><span class="line">            .subscribe(integer -&gt; System.out.println(integer)); <span class="comment">//得到2，0</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>retry：当原始Observable在遇到错误时进行重试。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="string">"3"</span>,<span class="number">4</span>)</span><br><span class="line">            .cast(Integer.class)</span><br><span class="line">            .retry(<span class="number">3</span>)</span><br><span class="line">            .subscribe(integer -&gt; System.out.println(integer),throwable -&gt;System.out.println(<span class="string">"error"</span>));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>retryWhen：当原始Observable在遇到错误时，将错误传递给另一个Observable类决定是否要重新订阅这个Observable。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>,<span class="string">"3"</span>,<span class="number">4</span>)</span><br><span class="line">            .cast(Integer.class)</span><br><span class="line">            .retryWhen(throwableObservable -&gt; throwableObservable.retry(<span class="number">1</span>))</span><br><span class="line">            .subscribe(integer -&gt; System.out.println(integer),throwable -&gt;System.out.println(<span class="string">"error"</span>));</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="链接操作"><a href="#链接操作" class="headerlink" title="链接操作"></a>链接操作</h4><p>&ensp;&ensp;ConnectableObservable与普通的Observable差不多，但是可连接的Observable在被订阅时并不开始发射数据，只有在它的connect()被调用时才开始。用这种方法，你可以等所有的潜在订阅者都订阅了这个Observable之后才开始发射数据。<br> &ensp;&ensp;ConnectableObservable.connect()指示一个可连接的Observable开始发射数据。<br>&ensp;&ensp;Observable.publish()将一个Observable转换为一个可连接的Observable 。<br>&ensp;&ensp;Observable.replay()确保所有的订阅者看到相同的数据序列的ConnectableObservable，即使它们在Observable开始发射数据之后才订阅。<br>&ensp;&ensp;ConnectableObservable.refCount()让一个可连接的Observable表现得像一个普通的Observable。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ConnectableObservable co=  ConnectableObservable.just(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">                .publish();</span><br><span class="line">                 co.subscribe(integer -&gt; System.out.println(integer));</span><br><span class="line">                co.connect();</span><br></pre></td></tr></table></figure></p>
-<h4 id="阻塞操作"><a href="#阻塞操作" class="headerlink" title="阻塞操作"></a>阻塞操作</h4><p>&ensp;&ensp;BlockingObservable是一个阻塞的Observable。普通的Observable 转换为 BlockingObservable，可以使用 Observable.blocking<em>( )方法。内部通过CountDownLatch实现了阻塞操作。<br>&ensp;&ensp;以下的操作符可以用于BlockingObservable，如果是普通的Observable，务必使用Observable.blocking</em>()转为阻塞Observable后使用，否则达不到预期的效果。</p>
-<ol>
-<li>blockingForEach：对BlockingObservable发射的每一项数据调用一个方法，会阻塞到Observable完成。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">                .observeOn(Schedulers.newThread())</span><br><span class="line">                .blockingForEach(integer -&gt;System.out.println(integer) );</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="工具集"><a href="#工具集" class="headerlink" title="工具集"></a>工具集</h4><ol>
-<li><p>materialize：将Observable转换成一个通知列表。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">               .materialize()</span><br><span class="line">               .subscribe(integerNotification -&gt;System.out.println(integerNotification.isOnNext()) );</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>dematerialize：与上面的作用相反，将通知逆转回一个Observable。？</p>
-</li>
-<li><p>timestamp：给Observable发射的每个数据项添加一个时间戳。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">                .timestamp()</span><br><span class="line">                .subscribe(integerTimed -&gt;System.out.println( integerTimed.time()+<span class="string">" "</span>+integerTimed.value()));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>timeInterval：给Observable发射的两个数据项间添加一个时间差，实现在OperatorTimeInterval中。？</p>
-</li>
-<li>serialize：强制Observable按次序发射数据并且要求功能是完好的。</li>
-<li>cache： 缓存Observable发射的数据序列并发射相同的数据序列给后续的订阅者。</li>
-<li>observeOn： 指定观察者观察Observable的调度器。</li>
-<li>subscribeOn： 指定Observable执行任务的调度器。</li>
-<li><p>doOnEach： 注册一个动作，对Observable发射的每个数据项使用</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">               .doOnEach(integerNotification -&gt; integerNotification.getValue())</span><br><span class="line">               .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>doOnCompleted： 注册一个动作，对正常完成的Observable使用。</p>
-</li>
-<li>doOnError： 注册一个动作，对发生错误的Observable使用。</li>
-<li><p>doOnTerminate：注册一个动作，对完成的Observable使用，无论是否发生错误。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">                .doOnTerminate(() -&gt; System.out.println(<span class="string">"do torminate"</span>))</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>doOnSubscribe： 注册一个动作，在观察者订阅时使用。内部由OperatorDoOnSubscribe实现。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">                .doOnSubscribe(disposable -&gt; disposable.isDisposed())</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>doOnUnsubscribe： 注册一个动作，在观察者取消订阅时使用。内部由OperatorDoOnUnsubscribe实现，在call中加入一个解绑动作。 </p>
-</li>
-<li><p>doFinally： 注册一个动作，在Observable完成时使用。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">                .doFinally(() -&gt; &#123;&#125;)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>delay： 延时发射Observable的结果。即让原始Observable在发射每项数据之前都暂停一段指定的时间段。效果是Observable发射的数据项在时间上向前整体平移了一个增量（除了onError，它会即时通知）。</p>
-</li>
-<li><p>delaySubscription： 延时处理订阅请求。实现在OnSubscribeDelaySubscription中 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">                .delaySubscription(<span class="number">200</span>,TimeUnit.MILLISECONDS)</span><br><span class="line">                .subscribe(integer -&gt; System.out.println(integer));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>single/singleOrError： 强制返回单个数据，否则抛出异常或默认数据。</p>
-</li>
-</ol>
-<p>参考：</p>
-<ul>
-<li><strong><a href="https://mcxiaoke.gitbooks.io/rxdocs/" target="_blank" rel="noopener">https://mcxiaoke.gitbooks.io/rxdocs/</a></strong></li>
-<li><a href="http://www.sohu.com/a/138462889_468731" target="_blank" rel="noopener">http://www.sohu.com/a/138462889_468731</a></li>
-<li><a href="http://blog.csdn.net/maplejaw_/article/details/52442065" target="_blank" rel="noopener">http://blog.csdn.net/maplejaw_/article/details/52442065</a></li>
-<li><a href="http://blog.csdn.net/maplejaw_/article/details/52396175" target="_blank" rel="noopener">http://blog.csdn.net/maplejaw_/article/details/52396175</a></li>
-<li><a href="http://www.cnblogs.com/dragonfei/p/6263253.html" target="_blank" rel="noopener">http://www.cnblogs.com/dragonfei/p/6263253.html</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/03/rxjava2基础/" data-id="cji2u6fqx000w5ys69xos3tzd" class="article-share-link">Share</a>
-      
-      
     </footer>
   </div>
   
@@ -1833,7 +1649,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
     </div>
   </div>
 
@@ -1843,7 +1659,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 15px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 15px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a>
     </div>
   </div>
 
@@ -1865,6 +1681,10 @@
       <ul>
         
           <li>
+            <a href="/2018/06/13/java单例模式/">java单例模式</a>
+          </li>
+        
+          <li>
             <a href="/2018/06/06/DDComponent原理剖析/">DDComponentForAndroid原理剖析</a>
           </li>
         
@@ -1878,10 +1698,6 @@
         
           <li>
             <a href="/2017/06/28/插件化种种和思考/">插件化种种和思考</a>
-          </li>
-        
-          <li>
-            <a href="/2017/06/28/nestedscollin原理/">nestedscollin原理</a>
           </li>
         
       </ul>

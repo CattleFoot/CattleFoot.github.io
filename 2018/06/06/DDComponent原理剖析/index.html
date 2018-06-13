@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="CallteFoot&#39;s blog">
 <meta property="og:description" content="原理DDComponentForAndroid组件化实现原理主要基于两点：    静态注解：作用是实现路由的扫描、路由注册接口实现、路由表生成、路由参数的传递；   gladle plugin：作用是动态调整编译脚本、资源管理和类修改；  实现注解知识点和自定义注解请参考：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DDComponentForAndroid中定义了两个">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-06T07:33:15.390Z">
+<meta property="og:updated_time" content="2018-06-06T08:15:53.369Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DDComponentForAndroid原理剖析">
 <meta name="twitter:description" content="原理DDComponentForAndroid组件化实现原理主要基于两点：    静态注解：作用是实现路由的扫描、路由注册接口实现、路由表生成、路由参数的传递；   gladle plugin：作用是动态调整编译脚本、资源管理和类修改；  实现注解知识点和自定义注解请参考：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DDComponentForAndroid中定义了两个">
@@ -102,11 +102,10 @@
 </li>
 <li>Autowired注解的注解处理器为AutowiredProcessor，该注解处理器主要做以下几件事情：  <ul>
 <li>解析注解：查找所有activity中属性标注了Autowired注解元素，并根据activity名称进行分类记录下标记的属性；</li>
-<li>生成参数注入的辅助类：依照解析注解记录的参数分类记录为每个activity生成一个注入辅助类（类名后缀为：$$Router$$Autowired，这个可以根据自己喜好来的），这个辅助类是类ISyringe接口的实现；   </li>
+<li>生成参数注入的辅助类：依照解析注解记录的参数分类记录为每个activity生成一个注入辅助类（类名后缀为：$$Router$$Autowired，这个可以根据自己喜好来的），这个辅助类是类ISyringe接口的实现；<br>sign<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上静态注解处理器生成的java类都在[module名称]/build/generated/source/apt下的debug或release下。而路由表的生成路径就看源码里面设置的在哪里，主要还是<strong>注解处理器生成的java类</strong>。</li>
 </ul>
 </li>
 </ol>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上静态注解处理器生成的java类都在[module名称]/build/generated/source/apt下的debug或release下。而路由表的生成路径就看源码里面设置的在哪里，主要还是<strong>注解处理器生成的java类</strong>。</p>
 <p>通过以上分析，静态注解部分工作已经完成，也可以看到所有的结果还是在具体module下，各个module还是对非自身内的路由不可见的，结下就是让各个module的路由对其他module可见，这个呢则是通过gladle plugin来达到这个目的。接下来分析gladle plugin如何去实现各个module的路由可见。</p>
 <p>gladle plugin主要工作是动态调整编译脚本、资源管理和类修改，进一步看下其是如何实现的；</p>
 <ol>
@@ -137,7 +136,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cji2u6fpr00015ys6lxrq62kh" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cjicvd90i0004wqs6pxni6fgc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
@@ -147,6 +146,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2018/06/13/java单例模式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          java单例模式
+        
+      </div>
+    </a>
   
   
     <a href="/2018/05/29/Android自定义注解处理器/" id="article-nav-older" class="article-nav-link-wrap">
@@ -170,7 +178,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
     </div>
   </div>
 
@@ -180,7 +188,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 15px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 15px;">Annotation</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a>
     </div>
   </div>
 
@@ -202,6 +210,10 @@
       <ul>
         
           <li>
+            <a href="/2018/06/13/java单例模式/">java单例模式</a>
+          </li>
+        
+          <li>
             <a href="/2018/06/06/DDComponent原理剖析/">DDComponentForAndroid原理剖析</a>
           </li>
         
@@ -215,10 +227,6 @@
         
           <li>
             <a href="/2017/06/28/插件化种种和思考/">插件化种种和思考</a>
-          </li>
-        
-          <li>
-            <a href="/2017/06/28/nestedscollin原理/">nestedscollin原理</a>
           </li>
         
       </ul>
