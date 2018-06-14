@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android Support库:AsynListUtil | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在介绍完 Android Support 库发展历程（http://blog.chengyunfeng.com/?p=1047）后， 再分别介绍下 Android Support 库中有用但是被忽略的一些功能。了解这些功能，在需要的时候可以避免在引入其他类似的第三方库或者避免自己重复制造轮子，提高开发效率。   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;">
+<meta name="keywords" content="Android Support,AsynListUtil,AsyncListUtil.DataCallback,AsyncListUtil.ViewCallback">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Support库:AsynListUtil">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/06/14/AndroidSupport库-AsynListUtil/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在介绍完 Android Support 库发展历程（http://blog.chengyunfeng.com/?p=1047）后， 再分别介绍下 Android Support 库中有用但是被忽略的一些功能。了解这些功能，在需要的时候可以避免在引入其他类似的第三方库或者避免自己重复制造轮子，提高开发效率。   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-14T02:04:49.307Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Support库:AsynListUtil">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在介绍完 Android Support 库发展历程（http://blog.chengyunfeng.com/?p=1047）后， 再分别介绍下 Android Support 库中有用但是被忽略的一些功能。了解这些功能，在需要的时候可以避免在引入其他类似的第三方库或者避免自己重复制造轮子，提高开发效率。   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-AndroidSupport库-AsynListUtil" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/14/AndroidSupport库-AsynListUtil/" class="article-date">
+  <time datetime="2018-06-14T01:21:13.000Z" itemprop="datePublished">2018-06-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android Support库:AsynListUtil
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;在介绍完 Android Support 库发展历程（<a href="http://blog.chengyunfeng.com/?p=1047）后，" target="_blank" rel="noopener">http://blog.chengyunfeng.com/?p=1047）后，</a> 再分别介绍下 Android Support 库中有用但是被忽略的一些功能。了解这些功能，在需要的时候可以避免在引入其他类似的第三方库或者避免自己重复制造轮子，提高开发效率。  </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;这是一系列的介绍文章，每次介绍 Support 库中的一个功能，篇幅尽可能的短，方便大家利用碎片时间阅读。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;这次介绍来自 recyclerview-v7 中的 AsyncListUtil 类。</p>
+<h4 id="RecyclerView"><a href="#RecyclerView" class="headerlink" title="RecyclerView"></a>RecyclerView</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;RecyclerView 发布后大家应该都放弃使用 ListView 了。使用 RecyclerView 需要对数据控制的更精细，比如如果删除了某个位置的数据，则需要使用 RecyclerView.Adapter 的 notifyItemRemoved(int position) 函数来通知 RecyclerView 被删除的数据，这样 RecyclerView 就可以实现一个删除该条数据的动画，而 ListView 只要数据变化了，都只需要调用 notifyDataSetChanged() 即可。  </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;而在使用 RecyclerView 过程中数据来源是各种各样的，数据可以来自于网络、也可以是数据库、还可以是读取文件，不同的数据来源对 Adapter 的处理也是有差别的。本次介绍的 AsyncListUtil <strong>适用于数据来源数据库或者本地磁盘的情况</strong>。</p>
+<h4 id="AsyncListUtil"><a href="#AsyncListUtil" class="headerlink" title="AsyncListUtil"></a>AsyncListUtil</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 是一个用来异步加载数据的类。例如，如果你的数据是来至于数据库的，则可以使用 AsyncListUtil 在后台批量加载 Cursor 中的数据，当数据加载完成后在通知 UI 线程使用，并且 AsyncListUtil 支持数据缓存，这样可以实现非常流畅的滚动性能。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 在后台线程加载数据，每次加载一批数据，数据的个数是可以配置的，并且在内存中缓存了一些数据来提高效率。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 使用一个后台线程来加载数据，所以 AsyncListUtil 适合用来从磁盘加载数据的情况（比如，读取数据库、读取文件等），而不适合从网络获取数据的情况。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 有如下四个函数可以使用：</p>
+<ul>
+<li>T getItem (int position)： 返回 position 位置的数据，如果数据尚未加载完成，则返回 null;</li>
+<li>int getItemCount () 返回数据集的个数，该数值为 DataCallback.refreshData() 函数返回的值</li>
+<li>void onRangeChanged () 更新当前数据可见范围，当 RecyclerView 滚动的时候，需要回调这个函数来告诉 AsyncListUtil 可见数据范围发生变化，需要根据当前新的可见数据范围来加载所需数据，在 RecyclerView 的 <a href="https://developer.android.google.cn/reference/android/support/v7/widget/RecyclerView.OnScrollListener.html#onScrolled(android.support.v7.widget.RecyclerView, int, int" target="_blank" rel="noopener">onScrolled(RecyclerView, int, int)</a>) 中调用该函数即可。</li>
+<li>void refresh () ： 如果数据发生了变化， 调用该函数来强制重新加载数据，丢弃之前缓存的数据。<br>AsyncListUtil 有两个回调函数分别处理数据加载和 UI 通知事件：AsyncListUtil.DataCallback 和 AsyncListUtil.ViewCallback。</li>
+</ul>
+<h4 id="AsyncListUtil-DataCallback"><a href="#AsyncListUtil-DataCallback" class="headerlink" title="AsyncListUtil.DataCallback"></a>AsyncListUtil.DataCallback</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;DataCallback 类提供了在后台加载数据的功能，里面定义了如下四个函数，这些函数都是在后台线程中执行的:</p>
+<ul>
+<li>int refreshData () ： 刷新数据，返回新的数据个数，如果你所加载的数据来自于 Cursor，则当数据发生变化的时候，在这里从新生成一个 Cursor 并返回 Cursor 的数目。</li>
+<li>void fillData (T[] data, int startPosition, int itemCount) ：加载数据，其中 data 数组是加载后的数据，而 startPosition 是数据开始的位置，而 itemCount 是加载数据的 个数。 data 数组中的对象是可以重复利用的，如果 data[i] 的数据不为 null，则可以重复利用而无需重新创建数据对象。</li>
+<li>int getMaxCachedTiles () ： 返回缓存数量的限制，一般不用实现这个函数，默认实现即可。</li>
+<li>void recycleData (T[] data, int itemCount) ： 回收 fillData 中所创建的数据，如果你的数据包含需要回收的资源，则可以在这里处理。  </li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;一般只需要实现 refreshData 和 fillData 函数即可。</p>
+<h4 id="AsyncListUtil-ViewCallback"><a href="#AsyncListUtil-ViewCallback" class="headerlink" title="AsyncListUtil.ViewCallback"></a>AsyncListUtil.ViewCallback</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;ViewCallback 类提供了和 RecyclerView 关联的接口，里面的函数都是在 UI 线程中调用的，该类同样定义了四个函数：</p>
+<ul>
+<li>void onItemLoaded (int position) ： 当 position 位置的数据加载完后会调用该函数；</li>
+<li>void onDataRefresh () ： 当数据集发生变化的时候调用；</li>
+<li>void getItemRangeInto (int[] outRange) ： 返回当前可见的数据范围，参数 outRange 数组长度为2， outRange[0] 为第一个可见数据的位置，outRange[1] 为 最后一个可见数据的位置；</li>
+<li>void extendRangeInto (int[] range, int[] outRange, int scrollHint) 用来计算平滑滚动所需要加载的额外数据，一般不用实现这个函数，默认实现即可；</li>
+</ul>
+<p> 参考：<br> [1]. 示例代码 <a href="https://github.com/CattleFoot/RecyclerViewUtils" target="_blank" rel="noopener">https://github.com/CattleFoot/RecyclerViewUtils</a><br> [2]. 官网文档 <a href="https://developer.android.google.cn/reference/android/support/v7/util/AsyncListUtil" target="_blank" rel="noopener">https://developer.android.google.cn/reference/android/support/v7/util/AsyncListUtil</a><br> [3]. 译文 <a href="http://blog.chengyunfeng.com/?p=1057" target="_blank" rel="noopener">http://blog.chengyunfeng.com/?p=1057</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/14/AndroidSupport库-AsynListUtil/" data-id="cjidwjfnv000075s6ae85s0zf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/06/13/java单例模式/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">java单例模式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 15px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Download-Manager/" style="font-size: 15px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 15px;">Tool</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/06/14/AndroidSupport库-AsynListUtil/">Android Support库:AsynListUtil</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/13/java单例模式/">java单例模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/06/DDComponent原理剖析/">DDComponentForAndroid原理剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/29/Android自定义注解处理器/">Android自定义注解处理器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/15/mvc-mvp和mvvm理解/">mvc_mvp和mvvm理解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
