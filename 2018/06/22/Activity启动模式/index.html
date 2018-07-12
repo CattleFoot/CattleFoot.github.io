@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>android启动模式 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="任务任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 任务栈（task stack） 的概念，用于记录activity开启的先后顺序，帮助维护好的用户体验。栈的特性是：先进后出。 如何查看当前系统的任务栈   手机中，长按 home或者多任务键 会进入到概览屏幕">
+<meta name="keywords" content="andrid,Camera2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android启动模式">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/06/22/Activity启动模式/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="任务任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 任务栈（task stack） 的概念，用于记录activity开启的先后顺序，帮助维护好的用户体验。栈的特性是：先进后出。 如何查看当前系统的任务栈   手机中，长按 home或者多任务键 会进入到概览屏幕">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://cattlefoot.github.io/images/ActivityStandard.jpg">
+<meta property="og:image" content="https://cattlefoot.github.io/images/ActivitySingleTop.jpg">
+<meta property="og:image" content="https://cattlefoot.github.io/images/ActivitySingleTask.jpg">
+<meta property="og:image" content="https://cattlefoot.github.io/images/ActivitySingleInstance.png">
+<meta property="og:updated_time" content="2018-06-28T02:29:43.806Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android启动模式">
+<meta name="twitter:description" content="任务任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 任务栈（task stack） 的概念，用于记录activity开启的先后顺序，帮助维护好的用户体验。栈的特性是：先进后出。 如何查看当前系统的任务栈   手机中，长按 home或者多任务键 会进入到概览屏幕">
+<meta name="twitter:image" content="https://cattlefoot.github.io/images/ActivityStandard.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Activity启动模式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/22/Activity启动模式/" class="article-date">
+  <time datetime="2018-06-22T05:39:38.000Z" itemprop="datePublished">2018-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      android启动模式
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>任务<br>任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈<br>（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 <strong>任务栈（task stack）</strong> 的概念，<br>用于记录activity开启的先后顺序，帮助维护好的用户体验。<strong>栈的特性是：先进后出</strong>。</li>
+<li>如何查看当前系统的任务栈  <ul>
+<li>手机中，长按 <strong>home或者多任务键</strong> 会进入到概览屏幕的一个界面；</li>
+<li>命令行中，adb shell dumpsys activity；</li>
+</ul>
+</li>
+<li><p>Activity启动模式<br>Activity启动模式在AndroidMainifest.xml文件里面的activity标签设置，属性名为android:launchMode，示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    android:name=&quot;.FirstActivity&quot;</span><br><span class="line">    android:launchMode=&quot;singleTop&quot;</span><br><span class="line">    android:label=&quot;This is FirstActivity&quot; &gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>standard:标准模式，也是系统默认的，每次都会创建新的Activity覆盖在原Activity上。<br><img src="/images/ActivityStandard.jpg" alt="标准模式示意图">    </li>
+<li>singleTop：栈顶复用模式，首先判断栈顶Activity是否是要启动的Activity，如果是则不创建新的<br>Activity而直接引用这个Activity；如果不是则创建新的Activity。<br><img src="/images/ActivitySingleTop.jpg" alt="栈顶复用模式示意图">  </li>
+<li>singleTask：栈内复用模式，检测整个Activity栈中是否存在当前需要启动的Activity，如果存在<br>则将该Activity置于栈顶，并销毁其上所有Activity，如果不存在则创建新的Activity置于栈顶。<br><img src="/images/ActivitySingleTask.jpg" alt="栈内复用模式示意图">   </li>
+<li>singleInstance：单实例模式，创建新的任务栈，且该任务栈仅有一个Activity。<br><img src="/images/ActivitySingleInstance.png" alt="单实例模式示意图">     </li>
+</ul>
+</li>
+<li><p>其他   </p>
+<ul>
+<li>为Activity设置新的任务栈<br>taskAffinity，任务相关性。xml中的一个属性，标识了一个Activity所需要的任务栈的名字。默认是包名。如果设置了其他的名字如com.test.task1，那启动它的时候就会新建一个名为com.test.task1的任务栈。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">"com.test.task0.MainActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"standard"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">andorid:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.SecondActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.ThirdActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"> ```  </span><br><span class="line"> 如果从MainActivity启动SecondActivity，然后再启动ThirdActivity，那么任务栈如下：</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Blockquotes com.test.task0 MainActivity<br>Blockquotes com.test.task1 SecondActivity ThirdActivity<br>若再从ThirdActivity启动MainActivity，那么任务栈如下：<br>com.test.task0 MainActivity<br>com.test.task1 SecondActivity ThirdActivity MainActivit<br>总结：通过设置 TaskAffinity 属性更改任务栈属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 回退栈和通知  </span><br><span class="line">通过通知进入Activity存在的问题，默认情况下，从通知启动一个Activity，按返回键会回到主屏幕。但某些时候有按返回键仍然留在当前应用的需求。从通知打开的某个深层次Activity。在此Acitivity中点回退，若不做处理，将会直接返回到AndroidLaunch界面。这是因为在Notification中的PendingIntent会默认开启新的任务栈。当回退的时候此任务栈没有其他新的Activity，默认在PendingIntent 的Activity是任务栈中唯一的 Activity.</span><br></pre></td></tr></table></figure>
+<p>举例： HomeActiy=&gt;Step1Activity=&gt;Step2Acitity<br>某个通知 默认在PendingIntent 指定了Step2Acitity。通过通知栏进入到Step2Acitity。点回退。正常的顺序为：<br>Step2Activity=&gt;Step1Acitivity=&gt;HomeActivity但是如果通过通知栏这样进入Step2Activity 点回退 会直接退回到Android 桌面。就是因为 PendingIntent会默认开启新的任务栈</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">解决方法：通过TaskStackBuilder设置具体的回退路径,在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Android 4.0.3 及更早版本</p>
+<p><activity android:name=".ResultActivity"><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"><br></meta-data></activity><br>Android 4.1 及更高版本</p>
+<p><activity android:name=".ResultActivity" android:parentactivityname=".MainActivity"><br></activity><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中做如下处理：</span><br></pre></td></tr></table></figure></p>
+<p>Intent intent = new Intent(MainActivity.this, ResultActivity.class);<br>TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);<br>taskStackBuilder.addParentStack(ResultActivity.class);<br>taskStackBuilder.addNextIntent(intent);<br>PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);<br>NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);<br>notificationBuilder.setContentIntent(pendingIntent);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这样从Notification进入到指定的ResultActivity中。回退到正常的MainActivity中。   </span><br><span class="line">**TaskStackBuilder 扩展应用**  </span><br><span class="line">也可以单独使用TaskStackBuilder，让某个二级Acitivity启动的时候启动它的一级Acitity.</span><br><span class="line">在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure></p>
+<p>&lt;activity<br>    android:name=”com.example.app.ChildActivity<br>    android:parentActivityName=”com.example.app.ParentActivity” &gt;<br>    <!-- 下面这段用来兼容API 16之前的版本 --><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.app.MainActivity"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中申明：</span><br></pre></td></tr></table></figure></meta-data></p>
+<p>Intent intent = new Intent(this, ChildActivity.class);<br>TaskStackBuilder.create(this)<br>                .addNextIntentWithParentStack(intent)<br>                .startActivities();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过启动一个无任何层级关系的Acitity 激活应用（目前Lianlian3.0应用采用此方法）</span><br></pre></td></tr></table></figure></p>
+<p>public class SimpleLaunchAppActivity extends Activity {<br>    @Override<br>    protected void onCreate(Bundle savedInstanceState) {<br>        super.onCreate(savedInstanceState);<br>        // Now finish, which will drop the user in to the activity that was at the top<br>        //  of the task stack<br>        finish();<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原理：若通过Notification打开Acitivity后此Acitivy会位于要启动的App的栈顶。自动finish()后，app恢复到切换到后台之前的状态。SimpleLaunchAppActivity不得设置android:taskAffinity。taskAffinity和默认App的包名一致就不会新建任务栈。若设置了taskAffinity为新的任务栈，点回退后 将会回到android launch页面。  </span><br><span class="line">联连wifi的解决方案:</span><br></pre></td></tr></table></figure></p>
+<p>过启动一个无任何层级关系的TransparentSwitchActivity 激活应用**<br>目前存在的问题是TransparentSwitchActivity里面会根据参数判断 通过通知进入后还有部分逻辑不太人性化和完善。需要提高用户体验。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 关于系统默认的清空返回栈  </span><br><span class="line">如何用户将任务切换到后台之后过了很长一段时间，系统会将这个任务中除了最底层的那个Activity之外的其它所有Activity全部清除掉。当用户重新回到这个任务的时候，最底层的那个Activity将得到恢复。这个是系统默认的行为，因为既然过了这么长的一段时间，用户很有可能早就忘记了当时正在做什么，那么重新回到这个任务的时候，基本上应该是要去做点新的事情了。当然，既然说是默认的行为，那就说明我们肯定是有办法来改变的，在Manifest中 元素中设置以下几种属性就可以改变系统这一默认行为：</span><br></pre></td></tr></table></figure></p>
+<p>alwaysRetainTaskState<br>如果将最底层的那个Activity的这个属性设置为true，那么上面所描述的默认行为就将不会发生，任务中所有的Activity即使过了很长一段时间之后仍然会被继续保留。<br>clearTaskOnLaunch<br>如果将最底层的那个Activity的这个属性设置为true，那么只要用户离开了当前任务，再次返回的时候就会将最底层Activity之上的所有其它Activity全部清除掉。简单来讲，就是一种和alwaysRetainTaskState完全相反的工作模式，它保证每次返回任务的时候都会是一种初始化状态，即使用户仅仅离开了很短的一段时间。<br>finishOnTaskLaunch<br>这个属性和clearTaskOnLaunch是比较类似的，不过它不是作用于整个任务上的，而是作用于单个Activity上。如果某个Activity将这个属性设置成true，那么用户一旦离开了当前任务，再次返回时这个Activity就会被清除掉。<br> ```</p>
+<p>参考：<br>[1]. Activity启动模式 <a href="https://blog.csdn.net/lixiaodaoaaa/article/details/51700981" target="_blank" rel="noopener">https://blog.csdn.net/lixiaodaoaaa/article/details/51700981</a>  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/22/Activity启动模式/" data-id="cjjiiscck0002x6s6pkt711j1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/06/22/androidCamera2使用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          androidCamera2使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/15/webpack4安装使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">webpack4安装使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 13.33px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 13.33px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 13.33px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 20px;">Flutter</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 16.67px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 13.33px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 13.33px;">Tool</a> <a href="/tags/andrid/" style="font-size: 16.67px;">andrid</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 13.33px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/12/编写第一个Flutter应用/">编写第一个Flutter应用</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter初体验/">flutter初体验</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-错误记录/">flutter-开发记录（错误或技巧）</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-配置编辑器/">flutter-配置编辑器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-install/">Flutter_install</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

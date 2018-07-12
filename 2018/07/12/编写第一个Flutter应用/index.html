@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>编写第一个Flutter应用 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Animated GIF of the app that you will be building.这篇教程将指导你创建第一个 Flutter 应用程序。如果你熟悉面向对象程序设计和基本的编程概念（如变量，循环和条件），即可完成本教程。无需具有使用 Dart 语言或移动编程的相关经验。  第1步：创建初始Flutter应用 第2步：使用外部 package 第3步：添加有状态的widget 第4步">
+<meta name="keywords" content="Flutter,First App">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编写第一个Flutter应用">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/07/12/编写第一个Flutter应用/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="Animated GIF of the app that you will be building.这篇教程将指导你创建第一个 Flutter 应用程序。如果你熟悉面向对象程序设计和基本的编程概念（如变量，循环和条件），即可完成本教程。无需具有使用 Dart 语言或移动编程的相关经验。  第1步：创建初始Flutter应用 第2步：使用外部 package 第3步：添加有状态的widget 第4步">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-12T12:17:56.816Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编写第一个Flutter应用">
+<meta name="twitter:description" content="Animated GIF of the app that you will be building.这篇教程将指导你创建第一个 Flutter 应用程序。如果你熟悉面向对象程序设计和基本的编程概念（如变量，循环和条件），即可完成本教程。无需具有使用 Dart 语言或移动编程的相关经验。  第1步：创建初始Flutter应用 第2步：使用外部 package 第3步：添加有状态的widget 第4步">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-编写第一个Flutter应用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/12/编写第一个Flutter应用/" class="article-date">
+  <time datetime="2018-07-12T11:07:44.000Z" itemprop="datePublished">2018-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      编写第一个Flutter应用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="&quot;images/startup-namer-app.gif&quot;">Animated GIF of the app that you will be building.</a><br>这篇教程将指导你创建第一个 Flutter 应用程序。如果你熟悉面向对象程序设计和基本的编程概念（如变量，循环和条件），即可完成本教程。无需具有使用 Dart 语言或移动编程的相关经验。</p>
+<ul>
+<li>第1步：创建初始Flutter应用</li>
+<li>第2步：使用外部 package</li>
+<li>第3步：添加有状态的widget</li>
+<li>第4步：创建一个无限滚动的 ListView</li>
+<li>第5步：添加可交互性</li>
+<li>第6步：导航到新页面</li>
+<li>第7步：使用主题更改UI</li>
+<li>干得漂亮！<h3 id="你需要做什么"><a href="#你需要做什么" class="headerlink" title="你需要做什么"></a>你需要做什么</h3></li>
+</ul>
+<p>完成一个简单的移动应用程序，为一家创业公司进行命名推荐。用户可以选择和取消选择名称，并保存最好的一个。代码一次生成十个名称。当用户滚动时，会新生成一批名称。用户可以点击应用栏右上方的列表图标，跳转到仅显示已被收藏的名称的列表页面。</p>
+<p>这个GIF动画可以显示出该应用是如何工作的。</p>
+<table><tr><td bgcolor="#f0f0f0"><br><strong>你将会学到</strong>:<br>- Flutter 应用程序的基本结构 。<br>- 查找和使用 package 来扩展功能。<br>- 使用热加载加快开发效率。<br>- 如何实现一个有状态的 widget 。<br>- 如何创建一个无限长度的延迟加载列表。<br>- 如何创建并导航到第二个页面。<br>- 如何使用主题更改应用程序的外观。<br></td></tr></table>
+
+<table><tr><td bgcolor="#f0f0f0"><br><strong>你将会用到</strong>:<br><br>需要安装以下工具:<br><br>- Flutter SDK<br>Flutter SDK 包括 Flutter 的引擎，框架，控件，工具和 Dart SDK 。这个 codelab 需要 v0.1.4 或更高版本。<br><br>-  Android Studio IDE<br>这个 codelab 基于 Android Studio IDE 构建，但也可以使用其他 IDE ，或者从命令行运行。<br><br>- 安装 IDE 插件<br>插件必须为您的编译器单独安装 Flutter 和 Dart 插件。除了Android Studio，Flutter和Dart插件也可用于 <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener">VS Code</a> 和 <a href="https://www.jetbrains.com/idea/download/#section=mac" target="_blank" rel="noopener">IntelliJ IDE</a>。<br><br>有关如何设置环境的信息，<a href="http://doc.flutter-dev.cn/get-started/install/" target="_blank" rel="noopener">请参阅 Flutter安装和配置</a>。<br></td></tr></table>
+
+<h3 id="第1步：创建初始Flutter应用"><a href="#第1步：创建初始Flutter应用" class="headerlink" title="第1步：创建初始Flutter应用"></a>第1步：创建初始Flutter应用</h3><p>使用<a href="http://doc.flutter-dev.cn/get-started/test-drive/#create-app" target="_blank" rel="noopener">第一个入门 Flutter 应用</a>中的说明创建一个简单的模板化 Flutter 应用。将项目命名为 <strong>startup_namer</strong>（而不是myapp）。你将修改这个应用并最终完成它。</p>
+<p>在这个 codelab 中，将主要编辑 Dart 代码所在的 lib / main.dart。</p>
+<table><tr><td bgcolor="#f0f0f0"><br> 小贴士： 将代码粘贴到应用程序中时，缩进可能会错位。你可以使用 Flutter 工具自动修复此问题：<br><br>1. Android Studio / IntelliJ IDEA: 右键单击 dart 代码，然后选择 <strong>Reformat Code with dartfmt</strong>。<br>2. VS Code: 单击右键，选择 <strong>Format Document</strong>.<br>3. 命令行: 运行 flutter format <filename>.<br></filename></td></tr></table>
+
+<ol>
+<li><p>替换 lib / main.dart 。<br>删除 lib / main.dart 中的所有代码。替换为下面的代码，它在屏幕中心显示 “Hello World” 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line"></span><br><span class="line">void main() =&gt; runApp(new MyApp());</span><br><span class="line"></span><br><span class="line">class MyApp extends StatelessWidget &#123;</span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return new MaterialApp(</span><br><span class="line">      title: &apos;Welcome to Flutter&apos;,</span><br><span class="line">      home: new Scaffold(</span><br><span class="line">        appBar: new AppBar(</span><br><span class="line">          title: new Text(&apos;Welcome to Flutter&apos;),</span><br><span class="line">        ),</span><br><span class="line">        body: new Center(</span><br><span class="line">          child: new Text(&apos;Hello World&apos;),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>运行应用程序。现在应该可以看到下面的页面。<br><a href="hello-world-screenshot.png">screenshot of hello world app</a></p>
+<p>小结</p>
+<ul>
+<li><p>本示例创建了一个 Material app 。 <a href="https://material.io/guidelines/" target="_blank" rel="noopener">Material</a> 设计语言是一套移动设备和网页上的视觉设计标准。Flutter 提供了一套丰富的 Material Widgets 。</p>
+</li>
+<li><p>main 方法采用了 fat arrow (=&gt;) 表示法，这是一种用于单行函数或方法的简写。</p>
+</li>
+<li><p>该 app 继承了使它本身成为一个 widget 的 StatelessWidget 类。在 Flutter 中，大多数时候一切都可以看作 widget , 包括 alignment，padding 和 layout 。</p>
+</li>
+<li><p>Material 库中的 Scaffold widget 提供了默认的应用栏 (app bar)，标题和构成主页面 widget 树结构的 body 属性。 widget 的子树可以非常复杂。</p>
+</li>
+<li><p>widget 的主要工作是提供一个build()方法，描述如何根据其他更低层级的 widget，来对这个 widget 进行展示。</p>
+</li>
+<li><p>本示例的 widget 树由包含了 Text child widget 的 Center widget 组成。Center widget 可将它的所有子树对齐到屏幕中心。</p>
+</li>
+</ul>
+<h3 id="第2步：使用外部-package"><a href="#第2步：使用外部-package" class="headerlink" title="第2步：使用外部 package"></a>第2步：使用外部 package</h3><p>在这一步，将开始使用名为 <strong>english_words</strong> 的开源软件包 ，其中包含数千个最常用的英文单词以及一些实用功能。</p>
+<p>可以在 <a href="https://pub.dartlang.org/flutter/" target="_blank" rel="noopener">pub.dartlang.org</a> 上找到 <a href="https://pub.dartlang.org/packages/english_words" target="_blank" rel="noopener">english_words</a> 软件包以及其他许多开源软件包。</p>
+<ol>
+<li><p>pubspec 文件管理着 Flutter 应用程序的静态资源文件(assets)。 在 <strong>pubspec.yaml</strong> 文件中， 将 <strong>english_words</strong>（3.1.0或更高版本）添加到依赖列表。新的一行高亮如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies:</span><br><span class="line">  flutter:</span><br><span class="line">    sdk: flutter</span><br><span class="line"></span><br><span class="line">  cupertino_icons: ^0.1.0</span><br><span class="line">  english_words: ^3.1.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 Android Studio 的 editor 视图中查看 pubspec 时, 点击右上角的 <strong>Packages get</strong> ，将把 package 拉取到项目中。现在应该可以在控制台中看到以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">flutter packages get</span><br><span class="line">Running &quot;flutter packages get&quot; in startup_namer...</span><br><span class="line">Process finished with exit code 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 <strong>lib/main.dart</strong> 中，为 english_words 添加导入，如高亮的行所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line">import &apos;package:english_words/english_words.dart&apos;;</span><br></pre></td></tr></table></figure>
+<p>在键入该行时， Android Studio 会提供有关库导入的建议。然后将导入字符串显示为灰色，让你知道导入的库尚未使用（到目前为止）。</p>
+</li>
+<li><p>改用英文单词的 package 来生成文本，而不是字符串 “Hello World” 。</p>
+<table><tr><td bgcolor="#f0f0f0"><br>小贴士： “Pascal case”（也被称为“大骆驼拼写法”），意味着字符串中的每个单词（包括第一个单词）都以大写字母开头。所以，“uppercamelcase” 变成 “UpperCamelCase” 。<br></td></tr></table>
+
+</li>
+</ol>
+<p>对代码进行以下更改，如!!!所示：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line">import &apos;package:english_words/english_words.dart&apos;;</span><br><span class="line"></span><br><span class="line">void main() =&gt; runApp(new MyApp());</span><br><span class="line"></span><br><span class="line">class MyApp extends StatelessWidget &#123;</span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    final wordPair = new WordPair.random();   //!!!!</span><br><span class="line">    return new MaterialApp(</span><br><span class="line">      title: &apos;Welcome to Flutter&apos;,</span><br><span class="line">      home: new Scaffold(</span><br><span class="line">        appBar: new AppBar(</span><br><span class="line">          title: new Text(&apos;Welcome to Flutter&apos;),</span><br><span class="line">        ),</span><br><span class="line">        body: new Center(</span><br><span class="line">          //child: new Text(&apos;Hello World&apos;), // Replace the highlighted text...</span><br><span class="line">          child: new Text(wordPair.asPascalCase),  // With this highlighted text. !!!</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>如果应用正在运行，请使用 Flutter Hot Reload (热重载)按钮 (lightning bolt icon)更新应用程序。每次单击按钮或保存项目时，都会看到随机的词组文本，这是因为配对的词组是在 build 方法内部生成的，每次应用需要渲染时，或在 Flutter Inspector 中切换 Platform 时都会运行  </li>
+</ol>
+<p><a href="&quot;images/step2-screenshot.png&quot;">screenshot at completion of second step</a>  </p>
+<h4 id="有问题吗？"><a href="#有问题吗？" class="headerlink" title="有问题吗？"></a>有问题吗？</h4><p>如果应用程序运行不正常，请检查拼写错误。如有需要，可使用以下链接中的代码使项目恢复正常</p>
+<ul>
+<li><a href="https://gist.githubusercontent.com/Sfshaza/bb51e3b7df4ebbf3dfd02a4a38db2655/raw/57c25b976ec34d56591cb898a3df0b320e903b99/pubspec.yaml" target="_blank" rel="noopener">pubspec.yaml</a> (pubspec.yaml文件不会再更改。)</li>
+<li><a href="https://gist.githubusercontent.com/Sfshaza/bb51e3b7df4ebbf3dfd02a4a38db2655/raw/57c25b976ec34d56591cb898a3df0b320e903b99/main.dart" target="_blank" rel="noopener">lib/main.dart</a>   </li>
+</ul>
+<h3 id="第3步：添加有状态的widget"><a href="#第3步：添加有状态的widget" class="headerlink" title="第3步：添加有状态的widget"></a>第3步：添加有状态的widget</h3><p>Stateless widgets 是不可改变的，这意味着它们的属性不能改变——所有的值都是 final 的。</p>
+<p>Statefulwidget 在其 <strong>生命周期</strong> 保持的状态可能会变化，<strong>实现一个有状态的 widget 至少需要两个类</strong>：StatefulWidgets类和State类，其中StatefulWidgets类创建了一个State类的实例。StatefulWidget类本身是不可变的，但State类可存在于Widget的整个生命周期中。</p>
+<p>在这一步，将添加一个有状态的 RandomWords widget ，它可以创建其 State 类 RandomWordsState 。 State 类会为 widget 保存被推荐和被收藏的词组。  </p>
+<ol>
+<li><p>将有状态的 RandomWords widget 添加到 main.dart 。它可以在 MyApp 类之外的任何位置使用，但当前将把它放在文件底部。 RandomWords widget 除了创建 State 类之外几乎没有任何其他代码：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class RandomWords extends StatefulWidget &#123;</span><br><span class="line">  @override</span><br><span class="line">  createState() =&gt; new RandomWordsState();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加 RandomWordsState 类。这个类保存了 RandomWords widget 的状态，该应用程序的大部分代码都放在该类中。这个类将保存随着用户的滑动操作而生成的无限增长的词组，以及保存用户收藏的词组，用户通过触发心形图标来添加或删除收藏的词组列表。  </p>
+</li>
+</ol>
+<p>你可以一点点建立这个类。首先，通过以下!!!代码，创建一个最简的类：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  class RandomWordsState extends State&lt;RandomWords&gt; &#123; //!!!</span><br><span class="line">  &#125;</span><br><span class="line">  ```   </span><br><span class="line"></span><br><span class="line">3. 添加这个 state 类之后，IDE 会提示该类缺少 build 方法。接下来，需要添加一个基本的 build 方法，并将生成单词的代码行从 MyApp 类移动到 RandomWordsState 类的 build 方法中，生成词组。  </span><br><span class="line">将 build 方法添加到 RandomWordState 中，如!!!代码所示：</span><br></pre></td></tr></table></figure>
+<p>  class RandomWordsState extends State<randomwords> {<br>    @override     //-!!!<br>    Widget build(BuildContext context) {<br>      final wordPair = new WordPair.random();<br>      return new Text(wordPair.asPascalCase);<br>    }  //-!!!<br>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4. 根据!!!部分的更改，从 MyApp 中删除生成单词的代码：</span><br></pre></td></tr></table></figure></randomwords></p>
+<p>  class MyApp extends StatelessWidget {<br>    @override<br>    Widget build(BuildContext context) {<br>      final wordPair = new WordPair.random();  // !!! Delete this line</p>
+<pre><code>  return new MaterialApp(
+    title: &apos;Welcome to Flutter&apos;,
+    home: new Scaffold(
+      appBar: new AppBar(
+        title: new Text(&apos;Welcome to Flutter&apos;),
+     ),
+      body: new Center(
+        //child: new Text(wordPair.asPascalCase), // !!!Change the highlighted text to...
+        child: new RandomWords(), // !!!... this highlighted text
+      ),
+    ),
+  );
+}
+</code></pre><p>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">重启应用。如果尝试热重载，则可能会看到警告:</span><br></pre></td></tr></table></figure></p>
+<p>  Reloading…<br>  Not all changed program elements ran during view reassembly; consider<br>  restarting.<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">这可能是一个误报，但可以考虑重启应用，以确保更改能正常反映在应用的 UI 界面中。</span><br><span class="line"></span><br><span class="line">应用程序应该像之前一样运行，每次热重载或保存应用程序时都会显示一个词组。</span><br><span class="line"></span><br><span class="line">[screenshot at completion of third step](step3-screenshot.png)   </span><br><span class="line">#### 有问题吗? ####</span><br><span class="line"></span><br><span class="line">如果应用运行不正常，则可以使用以下链接中的代码使其恢复正常</span><br><span class="line"></span><br><span class="line">- [lib/main.dart](lib/main.dart)</span><br><span class="line"></span><br><span class="line">### 第4步：创建一个无限滚动的 ListView ###</span><br><span class="line">在这一步，可以扩展 RandomWordsState 类，生成并展示词组列表。当用户滑动列表，ListView widget 中显示的列表将无限增长。 ListView 的 builder 工厂构造函数允许按需建立一个延迟加载的列表 view 。</span><br><span class="line"></span><br><span class="line">1. \_suggestions 变量向 RandomWordsState 类中添加一个数组列表，用来保存推荐词组。 该变量以下划线(\_)开头，在 Dart 语言中使用下划线前缀表示强制私有。   </span><br><span class="line">此外，添加一个 biggerFont 变量来增大字体。</span><br></pre></td></tr></table></figure></p>
+<p>class RandomWordsState extends State<randomwords> {<br>  final _suggestions = <wordpair>[];</wordpair></randomwords></p>
+<p>  final _biggerFont = const TextStyle(fontSize: 18.0);<br>  …<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2. 向 RandomWordsState 类添加一个 \_buildSuggestions() 函数，用于构建一个显示词组的 ListView 。   </span><br><span class="line">ListView 类提供了一个 itemBuilder 属性，这是一个工厂 builder 并作为匿名函数进行回调。它有两个传入参数— BuildContext 上下文和行迭代器 i 。对于每个推荐词组都会执行一次函数调用，迭代器从 0 开始，每调用一次函数就累加 1 。这个模块允许推荐列表在用户滑动时无限增长。  </span><br><span class="line">添加如下代码行：</span><br></pre></td></tr></table></figure></p>
+<p>  class RandomWordsState extends State<randomwords> {<br>    …<br>    Widget _buildSuggestions() {<br>      return new ListView.builder(<br>        padding: const EdgeInsets.all(16.0),<br>        // The itemBuilder callback is called once per suggested word pairing,<br>        // and places each suggestion into a ListTile row.<br>        // For even rows, the function adds a ListTile row for the word pairing.<br>        // For odd rows, the function adds a Divider widget to visually<br>        // separate the entries. Note that the divider may be difficult<br>        // to see on smaller devices.<br>        itemBuilder: (context, i) {<br>          // Add a one-pixel-high divider widget before each row in theListView.<br>          if (i.isOdd) return new Divider();</randomwords></p>
+<pre><code>      // The syntax &quot;i ~/ 2&quot; divides i by 2 and returns an integer result.
+      // For example: 1, 2, 3, 4, 5 becomes 0, 1, 1, 2, 2.
+      // This calculates the actual number of word pairings in the ListView,
+      // minus the divider widgets.
+      final index = i ~/ 2;
+      // If you&apos;ve reached the end of the available word pairings...
+      if (index &gt;= _suggestions.length) {
+        // ...then generate 10 more and add them to the suggestions list.
+        _suggestions.addAll(generateWordPairs().take(10));
+      }
+      return _buildRow(_suggestions[index]);
+    }
+  );
+}
+</code></pre><p>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3.  函数都调用一次 \_buildRow 函数。这个函数每次会在一个 ListTile widget 中展示一条新词组，这将在下一步操作中，使一行数据更有表现力。    </span><br><span class="line">  添加 \_buildRow 函数到 RandomWordsState 类中：</span><br></pre></td></tr></table></figure></p>
+<p>  class RandomWordsState extends State<randomwords> {<br>    …</randomwords></p>
+<pre><code>Widget _buildRow(WordPair pair) {
+  return new ListTile(
+    title: new Text(
+      pair.asPascalCase,
+      style: _biggerFont,
+    ),
+  );
+}
+</code></pre><p>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4. 更新 RandomWordsState 类的 build 方法来使用 \_buildSuggestions() 函数，而不是直接调用单词生成库。对部分进行修改：</span><br></pre></td></tr></table></figure></p>
+<p>class RandomWordsState extends State<randomwords> {<br>  …<br>  @override<br>  Widget build(BuildContext context) {<br>    final wordPair = new WordPair.random(); // Delete these two lines.<br>    Return new Text(wordPair.asPascalCase);<br>    return new Scaffold (<br>      appBar: new AppBar(<br>        title: new Text(‘Startup Name Generator’),<br>      ),<br>    body: _buildSuggestions(),<br>    );<br>  }<br>  …<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5. 更新 MyApp 类的 build 方法。从 MyApp 中删除 Scaffold 和 AppBar 实例。这些将由 RandomWordsState 类进行统一管理，这样在下一步操作中，可以使用户从一个页面导航到另一页面时，更方便的更改应用栏中的页面名称。</span><br><span class="line"></span><br><span class="line">  用下面高亮的 build 方法替换原始代码：</span><br></pre></td></tr></table></figure></randomwords></p>
+<p>  class MyApp extends StatelessWidget {<br>    @override<br>    Widget build(BuildContext context) {<br>      return new MaterialApp(<br>        title: ‘Startup Name Generator’,<br>        home: new RandomWords(),<br>      );<br>    }<br>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">重启应用程序，将可以看到一个词组清单。尽量向下滑动，将继续看到新的词组。</span><br><span class="line"></span><br><span class="line">[screenshot at completion of fourth step](step4-screenshot.png)  </span><br><span class="line">有问题吗?</span><br><span class="line"></span><br><span class="line">如果应用运行不正常，则可以使用以下链接中的代码使其恢复正常</span><br><span class="line"></span><br><span class="line">- [lib/main.dart](https://gist.githubusercontent.com/Sfshaza/d6f9460a04d3a429eb6ac0b0f07da564/raw/34fe240f4122435c871bb737708ee0357741801c/main.dart)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 第5步：添加可交互性 ###</span><br><span class="line">在这一步，将为每一行添加可点击的心形图标。当用户点击列表中的条目，切换其“收藏”状态，词组就会添加到收藏栏，或从已保存词组的收藏栏中删除。</span><br><span class="line"></span><br><span class="line">1. 添加一个 Set 集合 \_saved 到 RandomWordsState 类。保存用户收藏的词组。Set 集合比 List 更适用于此，因为它不允许重复元素。</span><br></pre></td></tr></table></figure></p>
+<p>class RandomWordsState extends State<randomwords> {<br>  final _suggestions = <wordpair>[];</wordpair></randomwords></p>
+<p>  final _saved = new Set<wordpair>();</wordpair></p>
+<p>  final _biggerFont = const TextStyle(fontSize: 18.0);<br>  …<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2. 在 \_buildRow 函数中，添加 alreadySaved 标志检查来确保一个词组还没有被添加到收藏。</span><br></pre></td></tr></table></figure></p>
+<p>Widget _buildRow(WordPair pair) {<br>  final alreadySaved = _saved.contains(pair);<br>  …<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3. 在 \_buildRow() 的 ListTiles widget 中，添加一个心形图标来使用收藏功能，随后将添加与心形图标进行交互的功能。  </span><br><span class="line"></span><br><span class="line">  添加以下高亮代码行：</span><br></pre></td></tr></table></figure></p>
+<p>  Widget _buildRow(WordPair pair) {<br>    final alreadySaved = _saved.contains(pair);<br>    return new ListTile(<br>      title: new Text(<br>        pair.asPascalCase,<br>        style: _biggerFont,<br>      ),<br>      trailing: new Icon(<br>        alreadySaved ? Icons.favorite : Icons.favorite_border,<br>        color: alreadySaved ? Colors.red : null,<br>      ),<br>    );<br>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">4. 重启应用。现在应该可以在每一行看到心形图标，但还没有交互功能。</span><br><span class="line"></span><br><span class="line">5. 在 \_buildRow 函数中使心形可点击。如果词条已经被加入收藏，再次点击它将从收藏中删除。当心形图标被点击，函数将调用 setState() 通知应用框架state已经改变。</span><br><span class="line"></span><br><span class="line">  添加高亮代码行：</span><br></pre></td></tr></table></figure></p>
+<p>  Widget _buildRow(WordPair pair) {<br>    final alreadySaved = _saved.contains(pair);<br>    return new ListTile(<br>      title: new Text(<br>        pair.asPascalCase,<br>        style: _biggerFont,<br>      ),<br>      trailing: new Icon(<br>        alreadySaved ? Icons.favorite : Icons.favorite_border,<br>        color: alreadySaved ? Colors.red : null,<br>      ),<br>      onTap: () {<br>        setState(() {<br>          if (alreadySaved) {<br>            _saved.remove(pair);<br>          } else {<br>            _saved.add(pair);<br>          }<br>        });<br>      },<br>    );<br>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">  &lt;table&gt;&lt;tr&gt;&lt;td bgcolor=#f0f0f0&gt;</span><br><span class="line">  小贴士： 在 Flutter 的响应式风格框架中，调用 setState() ，将为 State 对象触发 build() 方法的调用，从而实现对UI的更新。</span><br><span class="line">  &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</span><br><span class="line"></span><br><span class="line">热重载应用。可以点击任意一行来收藏或取消收藏条目。 请注意，点击一行可以产生从心形图标展开的泼墨动画效果。</span><br><span class="line"></span><br><span class="line">[screenshot at completion of 5th step](step5-screenshot.png)  </span><br><span class="line">有问题吗?</span><br><span class="line"></span><br><span class="line">如果应用运行不正常，则可以使用以下链接中的代码使其恢复正常。</span><br><span class="line"></span><br><span class="line">- [lib/main.dart](https://gist.githubusercontent.com/Sfshaza/936ce0059029a8c6e88aaa826a3789cd/raw/a3065d5c681a81eff32f75a9cd5f4d9a5b24f9ff/main.dart)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 第6步：导航到新页面 ###</span><br><span class="line">在这一步，将添加一个显示收藏夹的新页面(在 Flutter 中称为 route(路由))。你将学习如何在主路由和新路由之间导航。</span><br><span class="line"></span><br><span class="line">在 Flutter 中， Navigator 管理着包含了应用程序所有路由的一个堆栈。将一个路由push到 Navigator 的堆栈，将显示更新为新页面路由。将一个路由 pull 出 Navigator 的堆栈，显示将返回到前一个页面路由。</span><br><span class="line"></span><br><span class="line">1. 在 RandomWordsState 类的 build 方法中，向 AppBar 添加一个列表图标。当用户点击列表图标时，包含了已收藏条目的新路由将被 push 到 Navigator 堆栈并显示新页面。</span><br><span class="line">&lt;table&gt;&lt;tr&gt;&lt;td bgcolor=#f1f1f1&gt;</span><br><span class="line"> 小贴士： 某些 widget 属性使用独立 widget(child) 和其他属性例如 action 组成一个子 widget 数组(children)，用方括号([])表示。</span><br><span class="line">&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</span><br><span class="line">将该图标及其相应的 action 操作添加到 build 方法中：</span><br></pre></td></tr></table></figure></p>
+<p>class RandomWordsState extends State<randomwords> {<br>  …<br>  @override<br>  Widget build(BuildContext context) {<br>    return new Scaffold(<br>      appBar: new AppBar(<br>        title: new Text(‘Startup Name Generator’),<br>        actions: <widget>[<br>          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved),<br>        ],<br>      ),<br>      body: _buildSuggestions(),<br>    );<br>  }<br>  …<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2. 向 RandomWordsState 类添加一个 \_pushSaved() 函数。</span><br></pre></td></tr></table></figure></widget></randomwords></p>
+<p>class RandomWordsState extends State<randomwords> {<br>  …<br>  void _pushSaved() {<br>  }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">重新加载应用程序。列表图标将出现在应用栏中。点击它不会有任何响应，因为 \_pushSaved 这个函数还未实现功能。</span><br><span class="line"></span><br><span class="line">3. 当用户点击应用栏中的列表图标时，将建立一个新路由并 push 到 Navigator 的路由堆栈中，这个操作将改变界面显示，展示新的路由页面。   </span><br><span class="line"></span><br><span class="line">  新页面的内容使用匿名函数在 MaterialPageRoute widget的builder属性中创建。</span><br><span class="line"></span><br><span class="line">  将函数调用添加到 Navigator.push 中作为参数,如高亮代码所示，将路由 push 到 Navigator 的堆栈中。</span><br></pre></td></tr></table></figure></randomwords></p>
+<p>  void _pushSaved() {<br>    Navigator.of(context).push(<br>    );<br>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4. 添加 MaterialPageRoute widget 及其 builder 属性。先添加生成 ListTile widget 的代码。其中 ListTile 的 divideTiles() 方法为每个 ListTile widget 之间添加水平间距。divided变量保存最终生成的所有行，并用 toList() 函数转换为列表。</span><br></pre></td></tr></table></figure></p>
+<p>void _pushSaved() {<br>  Navigator.of(context).push(<br>    new MaterialPageRoute(<br>      builder: (context) {<br>        final tiles = _saved.map(<br>              (pair) {<br>            return new ListTile(<br>              title: new Text(<br>                pair.asPascalCase,<br>                style: _biggerFont,<br>              ),<br>            );<br>          },<br>        );<br>        final divided = ListTile<br>            .divideTiles(<br>          context: context,<br>          tiles: tiles,<br>        )<br>            .toList();<br>      },<br>    ),<br>  );<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5. builder 属性返回一个 Scaffold widget ，其中包含了应用栏标题名为 “Saved Suggestions” 的新路由页面。新页面的body属性由包含多个 ListTile widget 的 ListView 组成。</span><br><span class="line"></span><br><span class="line">  添加如下代码：</span><br></pre></td></tr></table></figure></p>
+<p>void _pushSaved() {<br>  Navigator.of(context).push(<br>    new MaterialPageRoute(<br>      builder: (context) {<br>        final tiles = _saved.map(<br>              (pair) {<br>            return new ListTile(<br>              title: new Text(<br>                pair.asPascalCase,<br>                style: _biggerFont,<br>              ),<br>            );<br>          },<br>        );<br>        final divided = ListTile<br>            .divideTiles(<br>          context: context,<br>          tiles: tiles,<br>        )<br>            .toList();</p>
+<pre><code>    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(&apos;Saved Suggestions&apos;),
+      ),
+      body: new ListView(children: divided),
+    );
+  },
+),
+</code></pre><p>  );<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">6. 热重载应用程序。对一些条目点击收藏，然后点击应用栏右侧的列表图标。显示出包含收藏夹列表的新页面。注意，Navigator 会在应用栏左侧添加一个“返回”按钮。不必再显式实现 Navigator.pop 。点击返回按钮会返回到主页面。</span><br><span class="line"></span><br><span class="line">[screenshot at completion of 6th stepsecond route](step6a-screenshot.png)  </span><br><span class="line">有问题吗?</span><br><span class="line"></span><br><span class="line">如果应用运行不正常，则可以使用以下链接中的代码使其恢复正常。</span><br><span class="line"></span><br><span class="line">- [lib/main.dart](https://gist.github.com/Sfshaza/bc5547e112e4dc3a1aa87afdf917caeb)</span><br><span class="line"></span><br><span class="line">### 第7步：使用主题更改UI ##</span><br><span class="line">在最后一步中，将使用该应用的主题。 theme 控制的是应用程序的观感。可以使用默认主题，该主题取决于使用的模拟器或真机，也可以自定义主题以反映你的品牌。</span><br><span class="line"></span><br><span class="line">可以通过配置 ThemeData 类轻松更改应用程序的主题。应用程序目前使用默认主题，现在将更改主要颜色为白色。</span><br><span class="line"></span><br><span class="line">1. 将高亮代码添加到 MyApp 类中，可以把应用程序的主题更改为白色：</span><br></pre></td></tr></table></figure></p>
+<p>class MyApp extends StatelessWidget {<br>  @override<br>  Widget build(BuildContext context) {<br>    return new MaterialApp(<br>      title: ‘Startup Name Generator’,<br>      theme: new ThemeData(<br>        primaryColor: Colors.white,<br>      ),<br>      home: new RandomWords(),<br>    );<br>  }<br>}<br>```</p>
+<ol>
+<li><p>热重载应用程序。请注意，整个背景都是白色的，甚至包括应用栏。</p>
+</li>
+<li><p>作为读者的练习，可使用 <a href="https://docs.flutter.io/flutter/material/ThemeData-class.html" target="_blank" rel="noopener">ThemeData</a> 来改变用户界面的其他方面。 Material 库中的 <a href="https://docs.flutter.io/flutter/material/Colors-class.html" target="_blank" rel="noopener">Colors</a> 类提供了多种可以使用的颜色常量，而热重载使用户界面的修改变得简单快捷。<br><a href="step7-themes.png">screenshot at completion of 7th step</a><br>有问题吗?</p>
+</li>
+</ol>
+<p>如果又不能正常运行了，请使用以下链接中的代码查看最终应用的代码。</p>
+<ul>
+<li><a href="https://gist.githubusercontent.com/Sfshaza/c07c91a4061fce4b5eacaaf4d82e4993/raw/4001a72c0133b97c8e16bdeb3195ca03525696bd/main.dart" target="_blank" rel="noopener">lib/main.dart</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/07/12/编写第一个Flutter应用/" data-id="cjjiisce6003ex6s6aqu64wuw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/First-App/">First App</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/07/12/flutter初体验/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">flutter初体验</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 13.33px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 13.33px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 13.33px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 20px;">Flutter</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 16.67px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 13.33px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 13.33px;">Tool</a> <a href="/tags/andrid/" style="font-size: 16.67px;">andrid</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 13.33px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/12/编写第一个Flutter应用/">编写第一个Flutter应用</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter初体验/">flutter初体验</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-错误记录/">flutter-开发记录（错误或技巧）</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-配置编辑器/">flutter-配置编辑器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-install/">Flutter_install</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

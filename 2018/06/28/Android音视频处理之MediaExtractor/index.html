@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android音视频处理之MediaExtractor | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android提供了一个MediaExtractor类，可以用来分离容器中的视频track和音频track，下面的例子展示了使用MediaExtractor和MediaMuxer来实现视频的换音： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455">
+<meta name="keywords" content="andrid,Media,MediaExtractor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android音视频处理之MediaExtractor">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/06/28/Android音视频处理之MediaExtractor/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="Android提供了一个MediaExtractor类，可以用来分离容器中的视频track和音频track，下面的例子展示了使用MediaExtractor和MediaMuxer来实现视频的换音： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-28T03:15:44.922Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android音视频处理之MediaExtractor">
+<meta name="twitter:description" content="Android提供了一个MediaExtractor类，可以用来分离容器中的视频track和音频track，下面的例子展示了使用MediaExtractor和MediaMuxer来实现视频的换音： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android音视频处理之MediaExtractor" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/28/Android音视频处理之MediaExtractor/" class="article-date">
+  <time datetime="2018-06-28T02:29:55.000Z" itemprop="datePublished">2018-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android音视频处理之MediaExtractor
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Android提供了一个MediaExtractor类，可以用来分离容器中的视频track和音频track，下面的例子展示了使用MediaExtractor和MediaMuxer来实现视频的换音：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">private void muxingAudioAndVideo(String videoPath, String audioPath, String outputPath) throws IOException &#123;</span><br><span class="line">        MediaMuxer mediaMuxer = new MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);</span><br><span class="line"></span><br><span class="line">        //视频的MediaExtractor</span><br><span class="line">        MediaExtractor videoExtractor = new MediaExtractor();</span><br><span class="line">        videoExtractor.setDataSource(videoPath);</span><br><span class="line">        int videoTrackIndex = -1;</span><br><span class="line">        for (int i = 0; i &lt; videoExtractor.getTrackCount(); i++) &#123;</span><br><span class="line">            MediaFormat format = videoExtractor.getTrackFormat(i);</span><br><span class="line">            if (format.getString(MediaFormat.KEY_MIME).startsWith(&quot;video&quot;)) &#123;</span><br><span class="line">                videoExtractor.selectTrack(i);</span><br><span class="line">                videoTrackIndex = mediaMuxer.addTrack(format);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //音频的MediaExtractor</span><br><span class="line">        MediaExtractor audioExtractor = new MediaExtractor();</span><br><span class="line">        audioExtractor.setDataSource(audioPath);</span><br><span class="line">        int audioTrackIndex = -1;</span><br><span class="line">        for (int i = 0; i &lt; audioExtractor.getTrackCount(); i++) &#123;</span><br><span class="line">            MediaFormat format = audioExtractor.getTrackFormat(i);</span><br><span class="line">            if (format.getString(MediaFormat.KEY_MIME).startsWith(&quot;audio&quot;)) &#123;</span><br><span class="line">                audioExtractor.selectTrack(i);</span><br><span class="line">                audioTrackIndex = mediaMuxer.addTrack(format);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        // 添加完所有轨道后start</span><br><span class="line">        mediaMuxer.start();</span><br><span class="line"></span><br><span class="line">        // 封装视频track</span><br><span class="line">        if (-1 != videoTrackIndex) &#123;</span><br><span class="line">            MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();</span><br><span class="line">            info.presentationTimeUs = 0;</span><br><span class="line">            ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                int sampleSize = videoExtractor.readSampleData(buffer, 0);</span><br><span class="line">                if (sampleSize &lt; 0) &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">                info.offset = 0;</span><br><span class="line">                info.size = sampleSize;</span><br><span class="line">                info.flags = MediaCodec.BUFFER_FLAG_SYNC_FRAME;</span><br><span class="line">                info.presentationTimeUs = videoExtractor.getSampleTime();</span><br><span class="line">                mediaMuxer.writeSampleData(videoTrackIndex, buffer, info);</span><br><span class="line"></span><br><span class="line">                videoExtractor.advance();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 封装音频track</span><br><span class="line">        if (-1 != audioTrackIndex) &#123;</span><br><span class="line">            MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();</span><br><span class="line">            info.presentationTimeUs = 0;</span><br><span class="line">            ByteBuffer buffer = ByteBuffer.allocate(100 * 1024);</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                int sampleSize = audioExtractor.readSampleData(buffer, 0);</span><br><span class="line">                if (sampleSize &lt; 0) &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">                info.offset = 0;</span><br><span class="line">                info.size = sampleSize;</span><br><span class="line">                info.flags = MediaCodec.BUFFER_FLAG_SYNC_FRAME;</span><br><span class="line">                info.presentationTimeUs = audioExtractor.getSampleTime();</span><br><span class="line">                mediaMuxer.writeSampleData(audioTrackIndex, buffer, info);</span><br><span class="line"></span><br><span class="line">                audioExtractor.advance();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 释放MediaExtractor</span><br><span class="line">        videoExtractor.release();</span><br><span class="line">        audioExtractor.release();</span><br><span class="line"></span><br><span class="line">        // 释放MediaMuxer</span><br><span class="line">        mediaMuxer.stop();</span><br><span class="line">        mediaMuxer.release();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>MediaExtractor的接口比较简单，首先通过 <strong>setDataSource()设置数据源</strong>，数据源可以是本地文件地址，也可以是网络地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MediaExtractor mVideoExtractor = new MediaExtractor();</span><br><span class="line">mVideoExtractor.setDataSource(mVideoPath);</span><br></pre></td></tr></table></figure></p>
+<p>然后可以通过getTrackFormat(int index)来获取各个track的 <strong>MediaFormat，通过MediaFormat来获取track的详细信息</strong>，如：<strong>MimeType、分辨率、采样频率、帧率</strong> 等等,其内部就是一个map对象，通过key获取对应的信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; mVideoExtractor.getTrackCount(); i++) &#123;</span><br><span class="line">    MediaFormat format = mVideoExtractor.getTrackFormat(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>获取到track的详细信息后，通过selectTrack(int index)选择指定的通道：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if (format.getString(MediaFormat.KEY_MIME).startsWith(&quot;video/&quot;)) &#123;</span><br><span class="line">    mVideoExtractor.selectTrack(i);</span><br><span class="line">    break;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>指定通道之后就可以从MediaExtractor中读取数据了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">while (true) &#123;</span><br><span class="line">  int sampleSize = mVideoExtractor.readSampleData(buffer, 0);</span><br><span class="line">  if (sampleSize &lt; 0) &#123;</span><br><span class="line">    break;</span><br><span class="line">    &#125;</span><br><span class="line">    // do something</span><br><span class="line">    mVideoExtractor.advance(); // 移动到下一帧</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在读取结束之后，记得释放资源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mVideoExtractor.release();</span><br></pre></td></tr></table></figure></p>
+<p>问题：  </p>
+<ol>
+<li>Android MediaExtractor readSampleData IllegalArgumentException<br>视频采样的时候报的错误，主要视频的采用buffer设置的可能小了，开始设置的是100K，后来提到1M就没有问题；<br>参考地址：<a href="https://stackoverflow.com/questions/33148629/android-mediaextractor-readsampledata-illegalargumentexception" target="_blank" rel="noopener">https://stackoverflow.com/questions/33148629/android-mediaextractor-readsampledata-illegalargumentexception</a>  </li>
+<li>MPEG4Writer: Unsupported mime ‘audio/mpeg’<br>一开始使用的是mp3音频，显示不支持，后来换成m4a就没有问题，后期在看下MPEG4Writer支持什么音频格式！！！<br>参考地址： <a href="http://www.cnblogs.com/rockylearnstodevelop/p/5353717.html" target="_blank" rel="noopener">http://www.cnblogs.com/rockylearnstodevelop/p/5353717.html</a></li>
+</ol>
+<p>拓展：</p>
+<ol>
+<li><p>关于Android读取assert下的资源文件<br>Android 中资源分为两种,一种是res下可编译的资源文件, 这种资源文件系统会在R.java里面自动生成该资源文件的ID，访问也很简单,只需要调用R.XXX.id即可;第二种就是放在assets文件夹下面的原生资源文件,assets文件夹里面的文件都是保持原始的文件格式,放在这个文件夹下面的文件不会被R文件编译,所以不能像第一种那样直接使用.Android提供了一个工具类,方便我们操作获取assets文件下的文件:AssetManager,需要用AssetManager以字节流的形式读取文件。其主要步骤是：</p>
+<ul>
+<li>获取Context然后调用getAssets()来获取AssetManager引用。</li>
+<li>再用AssetManager的open（String fileName,int accessMode）方法并指定要读取的文件名称以及访<br>问模式来获取输入流InputStream。</li>
+<li>用InputStream读取文件，读取完后需要InputStream.close();</li>
+<li>最后调用AssetManager的close（）方法关闭AssetManager。</li>
+</ul>
+</li>
+<li><p>AssetManager提供了如下方法用于处理assets：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String[] list(String path);//列出该目录下的下级文件和文件夹名称</span><br><span class="line"></span><br><span class="line">   InputStream open(String fileName);//以顺序读取模式打开文件，默认模式为ACCESS_STREAMING</span><br><span class="line"></span><br><span class="line">    InputStream open(String fileName, int accessMode);//以指定模式打开文件。读取模式有以下几种：</span><br><span class="line">                                       //ACCESS_UNKNOWN : 未指定具体的读取模式</span><br><span class="line">                                       //ACCESS_RANDOM : 随机读取</span><br><span class="line">                                       //ACCESS_STREAMING : 顺序读取</span><br><span class="line">                                       //ACCESS_BUFFER : 缓存读取</span><br><span class="line">   void close()//关闭AssetManager实例</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<br>assets目录下主要存放四种文件：文本文件、图像文件、网页文件（包括html中引用的js/ccs/jpg等资源）、音频视频文件,下面通过具体的案例分别来说下怎么获取</p>
+<ul>
+<li>加载assets目录下的网页<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">webView.loadUrl(&quot;file:///android_asset/html/index.htmll&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<p>说明：这种方式可以加载assets目录下的网页，并且与网页有关的css，js，图片等文件也会的加载。</p>
+<ul>
+<li><p>加载assets目录下的图片资源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">InputStream is = getAssets().open(fileName);  </span><br><span class="line">bitmap = BitmapFactory.decodeStream(is);</span><br><span class="line">ivImg.setImageBitmap(bitmap);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载assets目录下文本文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">InputStream is = getAssets().open(fileName);  </span><br><span class="line">int lenght = is.available();  </span><br><span class="line">byte[]  buffer = new byte[lenght];  </span><br><span class="line">is.read(buffer);  </span><br><span class="line">String result = = new String(buffer, &quot;utf8&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载assets目录下音乐</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 打开指定音乐文件,获取assets目录下指定文件的AssetFileDescriptor对象  </span><br><span class="line">AssetFileDescriptor afd = am.openFd(music);  </span><br><span class="line">mPlayer.reset();  </span><br><span class="line">// 使用MediaPlayer加载指定的声音文件。  </span><br><span class="line">mPlayer.setDataSource(afd.getFileDescriptor(),  </span><br><span class="line">    afd.getStartOffset(), afd.getLength());  </span><br><span class="line">// 准备声音  </span><br><span class="line">mPlayer.prepare();  </span><br><span class="line">// 播放  </span><br><span class="line">mPlayer.start();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>补充下:Android中还有另外一个文件夹raw,和assets差不多,也不会被R文件编译,但是raw下不能在建文件夹,assets文件下是可以在建文件夹的,下面是获取raw文件夹下资源的方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">InputStream is = getResources().openRawResource(R.id.filename);</span><br></pre></td></tr></table></figure></p>
+<p>将assets下的文件复制到SD卡中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/**  </span><br><span class="line"> *  从assets目录中复制整个文件夹内容  </span><br><span class="line"> *  @param  context  Context 使用CopyFiles类的Activity</span><br><span class="line"> *  @param  oldPath  String  原文件路径  如：/aa  </span><br><span class="line"> *  @param  newPath  String  复制后路径  如：xx:/bb/cc  </span><br><span class="line"> */   </span><br><span class="line">public void copyFilesFassets(Context context,String oldPath,String newPath) &#123;                      </span><br><span class="line">         try &#123;  </span><br><span class="line">        String fileNames[] = context.getAssets().list(oldPath);//获取assets目录下的所有文件及目录名  </span><br><span class="line">        if (fileNames.length &gt; 0) &#123;//如果是目录  </span><br><span class="line">            File file = new File(newPath);  </span><br><span class="line">            file.mkdirs();//如果文件夹不存在，则递归  </span><br><span class="line">            for (String fileName : fileNames) &#123;  </span><br><span class="line">               copyFilesFassets(context,oldPath + &quot;/&quot; + fileName,newPath+&quot;/&quot;+fileName);  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125; else &#123;//如果是文件  </span><br><span class="line">            InputStream is = context.getAssets().open(oldPath);  </span><br><span class="line">            FileOutputStream fos = new FileOutputStream(new File(newPath));  </span><br><span class="line">            byte[] buffer = new byte[1024];  </span><br><span class="line">            int byteCount=0;                 </span><br><span class="line">            while((byteCount=is.read(buffer))!=-1) &#123;//循环从输入流读取 buffer字节          </span><br><span class="line">                fos.write(buffer, 0, byteCount);//将读取的输入流写入到输出流  </span><br><span class="line">            &#125;  </span><br><span class="line">            fos.flush();//刷新缓冲区  </span><br><span class="line">            is.close();  </span><br><span class="line">            fos.close();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125; catch (Exception e) &#123;  </span><br><span class="line">        // TODO Auto-generated catch block  </span><br><span class="line">        e.printStackTrace();  </span><br><span class="line">        //如果捕捉到错误则通知UI线程  </span><br><span class="line">                   MainActivity.handler.sendEmptyMessage(COPY_FALSE);  </span><br><span class="line">    &#125;                             </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>补充</strong>：Android获取assets或者raw目录的视频文件路径播放视频<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String mp4FilePath = &quot;file:///android_asset/Kotlin与ava共存.mp4&quot;;</span><br><span class="line">mVideoView = (VideoView) findViewById(R.id.mVideoView);</span><br><span class="line">mVideoView.setVideoPath(mp4FilePath);</span><br><span class="line">mVideoView.start();</span><br></pre></td></tr></table></figure></p>
+<p>会提示播放失败。因为通过assets目录构造URI，不能用来播放视频，也不能播放音频。在raw目录下的文件构造URI可以播放音频，也能播放视频。 .<br>正确的是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String uri = &quot;android.resource://&quot; + getPackageName() + &quot;/&quot; + R.raw.video;</span><br><span class="line">mVideoView = (VideoView) findViewById(R.id.mVideoView);</span><br><span class="line">mVideoView.setVideoPath(uri);</span><br><span class="line">//mVideoView.setVideoPath(uri);</span><br><span class="line">mVideoView.setVideoURI(Uri.parse(uri));</span><br><span class="line">mVideoView.start();</span><br></pre></td></tr></table></figure></p>
+<p>参考：<br>[1] Android中读取assets目录下的文件详细介绍 <a href="https://blog.csdn.net/greathfs/article/details/52123984" target="_blank" rel="noopener">https://blog.csdn.net/greathfs/article/details/52123984</a><br>[2] assets文件读取 <a href="https://www.cnblogs.com/wgscd/p/6738818.html" target="_blank" rel="noopener">https://www.cnblogs.com/wgscd/p/6738818.html</a><br>[3] asset视频播放 <a href="https://blog.csdn.net/e_inch_photo/article/details/78306785?utm_source=debugrun&amp;utm_medium=referral" target="_blank" rel="noopener">https://blog.csdn.net/e_inch_photo/article/details/78306785?utm_source=debugrun&amp;utm_medium=referral</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/28/Android音视频处理之MediaExtractor/" data-id="cjjiisccp0006x6s6lxgem6cq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/02/音视频操作使用到的类/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/27/Android_o_notification/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android o 中Notification使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 13.33px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 13.33px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 13.33px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 20px;">Flutter</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 16.67px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 13.33px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 13.33px;">Tool</a> <a href="/tags/andrid/" style="font-size: 16.67px;">andrid</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 13.33px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/12/编写第一个Flutter应用/">编写第一个Flutter应用</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter初体验/">flutter初体验</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-错误记录/">flutter-开发记录（错误或技巧）</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-配置编辑器/">flutter-配置编辑器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-install/">Flutter_install</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

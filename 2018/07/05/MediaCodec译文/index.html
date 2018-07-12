@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MediaCodec译文 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MediaCodec官方描述：MediaCodec class can be used to access low-level media codecs, i.e. encoder/decoder components. It is part of the Android low-level multimedia support infrastructure (normally used toge">
+<meta name="keywords" content="Media,MediaCodeC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MediaCodec译文">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="MediaCodec官方描述：MediaCodec class can be used to access low-level media codecs, i.e. encoder/decoder components. It is part of the Android low-level multimedia support infrastructure (normally used toge">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://cattlefoot.github.io/images/MediaCodeC_bufferflow.png">
+<meta property="og:image" content="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/images/MediaCodec_states.png">
+<meta property="og:image" content="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/images/Asynchronous_buffer_flow.png">
+<meta property="og:updated_time" content="2018-07-05T11:18:33.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MediaCodec译文">
+<meta name="twitter:description" content="MediaCodec官方描述：MediaCodec class can be used to access low-level media codecs, i.e. encoder/decoder components. It is part of the Android low-level multimedia support infrastructure (normally used toge">
+<meta name="twitter:image" content="https://cattlefoot.github.io/images/MediaCodeC_bufferflow.png">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-MediaCodec译文" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/05/MediaCodec译文/" class="article-date">
+  <time datetime="2018-07-05T11:17:28.000Z" itemprop="datePublished">2018-07-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MediaCodec译文
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="MediaCodec"><a href="#MediaCodec" class="headerlink" title="MediaCodec"></a>MediaCodec</h3><p>官方描述：MediaCodec class can be used to access low-level media codecs, i.e. encoder/decoder components. It is part of the Android low-level multimedia support infrastructure (normally used together with MediaExtractor, MediaSync, MediaMuxer, MediaCrypto, MediaDrm, Image, Surface, and AudioTrack.)<br>译文：MediaCodec类可用于访问底层媒体编解码器，例如，编码器/解码器组件。 它是Android低级多媒体支持基础架构的一部分（通常与MediaExtractor，MediaSync，MediaMuxer，MediaCrypto，MediaDrm，Image，Surface和AudioTrack一起使用。）   </p>
+<p><img src="/images/MediaCodeC_bufferflow.png" alt="MediaCodeC中缓存的处理"></p>
+<p>从广义上讲，编解码器就是处理输入数据来产生输出数据。MediaCode采用异步方式处理数据，并且使用了一组输入输出缓存（input and output buffers）。简单来讲，你请求或接收到一个空的输入缓存（input buffer），向其中填充满数据并将它传递给编解码器处理。编解码器处理完这些数据并将处理结果输出至一个空的输出缓存（output buffer）中。最终，你请求或接收到一个填充了结果数据的输出缓存（output buffer），使用完其中的数据，并将其释放给编解码器再次使用。</p>
+<ol>
+<li>数据类型（Data Types）</li>
+</ol>
+<p>　　编解码器可以处理三种类型的数据：压缩数据（即为经过H254. H265. 等编码的视频数据或AAC等编码的音频数据）、原始音频数据、原始视频数据。三种类型的数据均可以利用ByteBuffers进行处理，但是对于原始视频数据应提供一个Surface以提高编解码器的性能。Surface直接使用本地视频数据缓存（native video buffers），而没有映射或复制数据到ByteBuffers，因此，这种方式会更加高效。在使用Surface的时候，通常不能直接访问原始视频数据，但是可以使用ImageReader类来访问非安全的解码（原始）视频帧。这仍然比使用ByteBuffers更加高效，因为一些本地缓存（native buffer）可以被映射到 direct ByteBuffers。当使用ByteBuffer模式，你可以利用Image类和getInput/OutputImage(int)方法来访问到原始视频数据帧。</p>
+<ol>
+<li>压缩缓存（Compressed Buffers）</li>
+</ol>
+<p>　　输入缓存（对于解码器）和输出缓存（对编码器）中包含由多媒体格式类型决定的压缩数据。对于视频类型是单个压缩的视频帧。对于音频数据通常是单个可访问单元(一个编码的音频片段，通常包含几毫秒的遵循特定格式类型的音频数据)，但这种要求也不是十分严格，一个缓存内可能包含多个可访问的音频单元。在这两种情况下，缓存不会在任意的字节边界上开始或结束，而是在帧或可访问单元的边界上开始或结束。</p>
+<ol>
+<li>原始音频缓存（Raw Audio Buffers）</li>
+</ol>
+<p>　　原始的音频数据缓存包含完整的PCM（脉冲编码调制）音频数据帧，这是每一个通道按照通道顺序的一个样本。每一个样本是一个按照本机字节顺序的16位带符号整数（16-bit signed integer in native byte order）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">short[] getSamplesForChannel(MediaCodec codec, int bufferId, int channelIx) &#123;</span><br><span class="line">　　ByteBuffer outputBuffer = codec.getOutputBuffer(bufferId);</span><br><span class="line">　　MediaFormat format = codec.getOutputFormat(bufferId);</span><br><span class="line">　　ShortBuffer samples = outputBuffer.order(ByteOrder.nativeOrder()).asShortBuffer();</span><br><span class="line">　　int numChannels = formet.getInteger(MediaFormat.KEY_CHANNEL_COUNT);</span><br><span class="line">　　if (channelIx &lt; 0 || channelIx &gt;= numChannels) &#123;</span><br><span class="line">　　　　return null;</span><br><span class="line">　　&#125;</span><br><span class="line">　　short[] res = new short[samples.remaining() / numChannels];</span><br><span class="line">　　for (int i = 0; i &lt; res.length; ++i) &#123;</span><br><span class="line">　　　　res[i] = samples.get(i * numChannels + channelIx);</span><br><span class="line">　　&#125;</span><br><span class="line">　　return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>原始视频缓存（Raw Video Buffers）</li>
+</ol>
+<p>　　在ByteBuffer模式下，视频缓存（video buffers）根据它们的颜色格式（color format）进行展现。你可以通过调用getCodecInfo().getCapabilitiesForType(…).colorFormats方法获得编解码器支持的颜色格式数组。视频编解码器可以支持三种类型的颜色格式：  </p>
+<ul>
+<li>本地原始视频格式（native raw video format）：这种格式通过COLOR_FormatSurface标记，并可以与输入或输出Surface一起使用。</li>
+<li>灵活的YUV缓存（flexible YUV buffers）(例如：COLOR_FormatYUV420Flexible)：利用一个输入或输出Surface，或在在ByteBuffer模式下，可以通过调用getInput/OutputImage(int)方法使用这些格式。</li>
+<li>其他，特定的格式（other, specific formats）：通常只在ByteBuffer模式下被支持。有些颜色格式是特定供应商指定的。其他的一些被定义在 MediaCodecInfo.CodecCapabilities中。这些颜色格式同 flexible format相似，你仍然可以使用 getInput/OutputImage(int)方法。<br>　　从Android 5.1（LOLLIPOP_MR1）开始，所有的视频编解码器都支持灵活的YUV4:2:0缓存（flexible YUV 4:2:0 buffers）。</li>
+</ul>
+<ol>
+<li>状态（States）  </li>
+</ol>
+<p>在编解码器的生命周期内有三种理论状态：停止态-Stopped、执行态-Executing、释放态-Released，停止状态（Stopped）包括了三种子状态：未初始化（Uninitialized）、配置（Configured）、错误（Error）。执行状态（Executing）在概念上会经历三种子状态：刷新（Flushed）、运行（Running）、流结束（End-of-Stream）。<br><img src="images/MediaCodec_states.png" alt="编码器的三种理论状态">   </p>
+<ul>
+<li>当你使用任意一种工厂方法（factory methods）创建了一个编解码器，此时编解码器处于未初始化状态（Uninitialized）。首先，你需要使用configure(…)方法对编解码器进行配置，这将使编解码器转为配置状态（Configured）。然后调用start()方法使其转入执行状态（Executing）。在这种状态下你可以通过上述的缓存队列操作处理数据。</li>
+<li>执行状态（Executing）包含三个子状态： 刷新（Flushed）、运行（ Running） 以及流结束（End-of-Stream）。在调用start()方法后编解码器立即进入刷新子状态（Flushed），此时编解码器会拥有所有的缓存。一旦第一个输入缓存（input buffer）被移出队列，编解码器就转入运行子状态（Running），编解码器的大部分生命周期会在此状态下度过。当你将一个带有end-of-stream 标记的输入缓存入队列时，编解码器将转入流结束子状态（End-of-Stream）。在这种状态下，编解码器不再接收新的输入缓存，但它仍然产生输出缓存（output buffers）直到end-of- stream标记到达输出端。你可以在执行状态（Executing）下的任何时候通过调用flush()方法使编解码器重新返回到刷新子状态（Flushed）。</li>
+<li>通过调用stop()方法使编解码器返回到未初始化状态（Uninitialized），此时这个编解码器可以再次重新配置 。当你使用完编解码器后，你必须调用release()方法释放其资源。</li>
+<li>在极少情况下编解码器会遇到错误并进入错误状态（Error）。这个错误可能是在队列操作时返回一个错误的值或者有时候产生了一个异常导致的。通过调用 reset()方法使编解码器再次可用。你可以在任何状态调用reset()方法使编解码器返回到未初始化状态（Uninitialized）。否则，调用 release()方法进入最终的Released状态。</li>
+</ul>
+<ol>
+<li>创建（Creation）  </li>
+</ol>
+<p>　　根据指定的MediaFormat使用MediaCodecList创建一个MediaCodec实例。在解码文件或数据流时，你可以通过调用MediaExtractor.getTrackFormat方法获得所期望的格式（media format）。并调用MediaFormat.setFeatureEnabled方法注入任何你想要添加的特定属性，然后调用MediaCodecList.findDecoderForFormat方法获得可以处理指定的媒体格式的编解码器的名字。最后，通过调用createByCodecName(String)方法创建一个编解码器。<br>　　注意：在Android 5.0 （LOLLIPOP）上，传递给MediaCodecList.findDecoder/EncoderForFormat的格式不能包含帧率-frame rate。通过调用format.setString(MediaFormat.KEY_FRAME_RATE, null)方法清除任何存在于当前格式中的帧率。<br>　　你也可以根据MIME类型利用createDecoder/EncoderByType(String)方法创建一个你期望的编解码器。然而，这种方式不能够给编解码器加入指定特性，而且创建的编解码器有可能不能处理你所期望的媒体格式。</p>
+<ol>
+<li>创建安全的解码器（Creating secure decoders<br>）</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在Android 4.4（KITKAT_WATCH）及之前版本，安全的编解码器（secure codecs）没有被列在MediaCodecList中，但是仍然可以在系统中使用。安全编解码器只能够通过名字进行实例化，其名字是在常规编解码器的名字后附加.secure标识（所有安全编解码器的名字都必须以.secure结尾），调用createByCodecName(String)方法创建安全编解码器时，如果系统中不存在指定名字的编解码器就会抛出IOException异常。<br>&nbsp;&nbsp;&nbsp;&nbsp;从Android 5.0(LOLLIPOP）及之后版本，你可以在媒体格式中使用FEATURE_SecurePlayback属性来创建一个安全编解码器。</p>
+<ol>
+<li>初始化（Initialization）</li>
+</ol>
+<p>　　在创建了编解码器后，如果你想异步地处理数据，可以通过调用setCallback方法设置一个回调方法。然后，使用指定的媒体格式配置编解码器。这时你可以为视频原始数据产生者（例如视频解码器）指定输出Surface。此时你也可以为secure 编解码器设置解密参数（详见MediaCrypto） 。最后，因为编解码器可以工作于多种模式，你必须指定是该编码器是作为一个解码器（decoder）还是编码器（encoder）运行。</p>
+<p>　　从API LOLLIPOP起，你可以在Configured 状态下查询输入和输出格式的结果。在开始编解码前你可以通过这个结果来验证配置的结果，例如，颜色格式。  </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;如果你想将原始视频数据（raw video data）送视频消费者处理（将原始视频数据作为输入的编解码器，例如视频编码器），你可以在配置好视频消费者编解码器（encoder）后调用createInputSurface方法创建一个目的surface来存放输入数据，如此，调用视频生产者（decoder）的setInputSurface(Surface)方法将前面创建的目的Surface配置给视频生产者作为输出缓存位置。</p>
+<ol>
+<li>Codec-specific数据    </li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;有些格式，特别是ACC音频和MPEG4、H.264和H.265视频格式要求实际数据以若干个包含配置数据或编解码器指定数据的缓存为前缀。当处理这种压缩格式的数据时，这些数据必须在调用start()方法后且在处理任何帧数据之前提交给编解码器。这些数据必须在调用queueInputBuffer方法时使用BUFFER_FLAG_CODEC_CONFIG进行标记。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Codec-specific数据也可以被包含在传递给configure方法的格式信息（MediaFormat）中，在ByteBuffer条目中以”csd-0”, “csd-1”等key标记。这些keys一直包含在通过MediaExtractor获得的Audio Track or Video Track的MediaFormat中。一旦调用start()方法，MediaFormat中的Codec-specific数据会自动提交给编解码器；你不能显示的提交这些数据。如果MediaFormat中不包含编解码器指定的数据，你可以根据格式要求，按照正确的顺序使用指定数目的缓存来提交codec-specific数据。在H264 AVC编码格式下，你也可以连接所有的codec-specific数据并作为一个单独的codec-config buffer提交。</p>
+<p>Android 使用下列的codec-specific data buffers。对于适当的MediaMuxer轨道配置，这些也要在轨道格式中进行设置。每一个参数集以及被标记为（*）的codec-specific-data段必须以”\x00\x00\x00\x01”字符开头。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Format</th>
+<th style="text-align:left">CSD buffer #0</th>
+<th style="text-align:left">CSD buffer #1</th>
+<th style="text-align:left">CSD buffer #2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">AAC</td>
+<td style="text-align:left">Decoder-specific information from ESDS*</td>
+<td style="text-align:left">Not Used</td>
+<td style="text-align:left">Not Used</td>
+</tr>
+<tr>
+<td style="text-align:left">VORBIS</td>
+<td style="text-align:left">Identification header</td>
+<td style="text-align:left">Setup header</td>
+<td style="text-align:left">Not Used</td>
+</tr>
+<tr>
+<td style="text-align:left">OPUS</td>
+<td style="text-align:left">Identification header</td>
+<td style="text-align:left">Pre-skip in nanosecs(unsigned 64-bit native-order integer.) This overrides the pre-skip value in the identification header.</td>
+<td style="text-align:left">Seek Pre-roll in nanosecs(unsigned 64-bit native-order integer.)</td>
+</tr>
+<tr>
+<td style="text-align:left">FLAC</td>
+<td style="text-align:left">mandatory metadata block (called the STREAMINFO block),optionally followed by any number of other metadata blocks</td>
+<td style="text-align:left">Not Used</td>
+<td style="text-align:left">Not Used</td>
+</tr>
+<tr>
+<td style="text-align:left">MPEG-4</td>
+<td style="text-align:left">Decoder-specific information from ESDS*</td>
+<td style="text-align:left">Not Used</td>
+<td style="text-align:left">Not Used</td>
+</tr>
+<tr>
+<td style="text-align:left">H.264 AVC</td>
+<td style="text-align:left">SPS (Sequence Parameter Sets*)</td>
+<td style="text-align:left">PPS (Picture Parameter Sets*)</td>
+<td style="text-align:left">Not Used</td>
+</tr>
+<tr>
+<td style="text-align:left">H.265 HEVC</td>
+<td style="text-align:left">VPS (Video Parameter Sets<em>) + SPS (Sequence Parameter Sets</em>) + PPS (Picture Parameter Sets*)</td>
+<td style="text-align:left">Not Used</td>
+<td style="text-align:left">Not Used</td>
+</tr>
+<tr>
+<td style="text-align:left">VP9</td>
+<td style="text-align:left">VP9 CodecPrivate Data (optional)</td>
+<td style="text-align:left">Not Used</td>
+<td style="text-align:left">Not Used</td>
+</tr>
+</tbody>
+</table>
+<p>注意：当编解码器被立即刷新或start之后不久刷新，并且在任何输出buffer或输出格式变化被返回前需要特别地小心，因为编解码器的codec specific data可能会在flush过程中丢失。为保证编解码器的正常运行，你必须在刷新后使用标记为BUFFER_FLAG_CODEC_CONFIGbuffers的buffers再次提交这些数据。</p>
+<p>　　 编码器（或者产生压缩数据的编解码器）将会在有效的输出缓存之前产生和返回编解码器指定的数据，这些数据会以codec-config flag进行标记。包含codec-specific-data的Buffers没有有意义的时间戳。</p>
+<p>数据处理（Data Processing）<br>　　每一个编解码器都包含一组输入和输出缓存（input and output buffers），这些缓存在API调用中通过buffer-id进行引用。当成功调用start()方法后客户端将不会“拥有”输入或输出buffers。在同步模式下，通过调用dequeueInput/OutputBuffer(…) 方法从编解码器获得（取得所有权）一个输入或输出buffer。在异步模式下，你可以通过MediaCodec.Callback.onInput/OutputBufferAvailable(…)的回调方法自动地获得可用的buffers。</p>
+<p>　　在获得一个输入buffe后，向其中填充数据，并利用queueInputBuffer方法将其提交给编解码器，若使用解密，则利用queueSecureInputBuffer方法提交。不要提交多个具有相同时间戳的输入buffers（除非它是也被同样标记的codec-specific data）。</p>
+<p>　　在异步模式下通过onOutputBufferAvailable方法的回调或者在同步模式下响应dequeuOutputBuffer的调用，编解码器返回一个只读的output buffer。在这个output buffer被处理后，调用一个releaseOutputBuffer方法将这个buffer返回给编解码器。</p>
+<p>　　当你不需要立即向编解码器重新提交或释放buffers时，保持对输入或输出buffers的所有权可使编解码器停止工作，当然这些行为依赖于设备情况。特别地，编解码器可能延迟产生输出buffers直到输出的buffers被释放或重新提交。因此，尽可能短时间地持有可用的buffers。</p>
+<p>根据API版本情况，你有三种处理相关数据的方式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Processing Mode</th>
+<th style="text-align:left">API version &lt;= 20 Jelly Bean/KitKat</th>
+<th style="text-align:left">API version &gt;= 21  Lollipop and later</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Synchronous API using buffer arrays</td>
+<td style="text-align:left">Supported</td>
+<td style="text-align:left">Deprecated</td>
+</tr>
+<tr>
+<td style="text-align:left">Synchronous API using buffers</td>
+<td style="text-align:left">Not Available</td>
+<td style="text-align:left">Supported</td>
+</tr>
+<tr>
+<td style="text-align:left">Asynchronous API using buffers</td>
+<td style="text-align:left">Not Available</td>
+<td style="text-align:left">Supported</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>使用缓存的异步处理方式（Asynchronous Processing using Buffers）</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;从Android 5.0（LOLLIPOP）开始，首选的方法是调用configure之前通过设置回调异步地处理数据。异步模式稍微改变了状态转换方式，因为你必须在调用flush()方法后再调用start()方法才能使编解码器的状态转换为Running子状态并开始接收输入buffers。同样，初始调用start方法将编解码器的状态直接变化为Running 子状态并通过回调方法开始传递可用的输入buufers。<br><img src="images/Asynchronous_buffer_flow.png" alt="异步模式处理"><br>　异步模式下，编解码器典型的使用方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">MediaCodec codec = MediaCodec.createByCodecName(name);</span><br><span class="line"> MediaFormat mOutputFormat; // member variable</span><br><span class="line"> codec.setCallback(new MediaCodec.Callback() &#123;</span><br><span class="line">   @Override</span><br><span class="line">   void onInputBufferAvailable(MediaCodec mc, int inputBufferId) &#123;</span><br><span class="line">     ByteBuffer inputBuffer = codec.getInputBuffer(inputBufferId);</span><br><span class="line">     // fill inputBuffer with valid data</span><br><span class="line">     …</span><br><span class="line">     codec.queueInputBuffer(inputBufferId, …);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @Override</span><br><span class="line">   void onOutputBufferAvailable(MediaCodec mc, int outputBufferId, …) &#123;</span><br><span class="line">     ByteBuffer outputBuffer = codec.getOutputBuffer(outputBufferId);</span><br><span class="line">     MediaFormat bufferFormat = codec.getOutputFormat(outputBufferId); // option A</span><br><span class="line">     // bufferFormat is equivalent to mOutputFormat</span><br><span class="line">     // outputBuffer is ready to be processed or rendered.</span><br><span class="line">     …</span><br><span class="line">     codec.releaseOutputBuffer(outputBufferId, …);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @Override</span><br><span class="line">   void onOutputFormatChanged(MediaCodec mc, MediaFormat format) &#123;</span><br><span class="line">     // Subsequent data will conform to new format.</span><br><span class="line">     // Can ignore if using getOutputFormat(outputBufferId)</span><br><span class="line">     mOutputFormat = format; // option B</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @Override</span><br><span class="line">   void onError(…) &#123;</span><br><span class="line">     …</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;);</span><br><span class="line"> codec.configure(format, …);</span><br><span class="line"> mOutputFormat = codec.getOutputFormat(); // option B</span><br><span class="line"> codec.start();</span><br><span class="line"> // wait for processing to complete</span><br><span class="line"> codec.stop();</span><br><span class="line"> codec.release();</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>使用缓存的同步处理方式（Synchronous Processing using Buffers） .<br>　　从Android5.0（LOLLIPOP）开始，即使在同步模式下使用编解码器你应该通过getInput/OutputBuffer(int) 和/或 getInput/OutputImage(int) 方法检索输入和输出buffers。这允许通过框架进行某些优化，例如，在处理动态内容过程中。如果你调用getInput/OutputBuffers()方法这种优化是不可用的。</li>
+</ol>
+<p>　　注意，不要同时混淆使用缓存和缓存数组的方法。特别地，仅仅在调用start()方法后或取出一个值为INFO_OUTPUT_FORMAT_CHANGED的输出buffer ID后你才可以直接调用getInput/OutputBuffers方法。</p>
+<p>　　同步模式下MediaCodec的典型应用如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">MediaCodec codec = MediaCodec.createByCodecName(name);</span><br><span class="line"> codec.configure(format, …);</span><br><span class="line"> MediaFormat outputFormat = codec.getOutputFormat(); // option B</span><br><span class="line"> codec.start();</span><br><span class="line"> for (;;) &#123;</span><br><span class="line">   int inputBufferId = codec.dequeueInputBuffer(timeoutUs);</span><br><span class="line">   if (inputBufferId &gt;= 0) &#123;</span><br><span class="line">     ByteBuffer inputBuffer = codec.getInputBuffer(…);</span><br><span class="line">     // fill inputBuffer with valid data</span><br><span class="line">     …</span><br><span class="line">     codec.queueInputBuffer(inputBufferId, …);</span><br><span class="line">   &#125;</span><br><span class="line">   int outputBufferId = codec.dequeueOutputBuffer(…);</span><br><span class="line">   if (outputBufferId &gt;= 0) &#123;</span><br><span class="line">     ByteBuffer outputBuffer = codec.getOutputBuffer(outputBufferId);</span><br><span class="line">     MediaFormat bufferFormat = codec.getOutputFormat(outputBufferId); // option A</span><br><span class="line">     // bufferFormat is identical to outputFormat</span><br><span class="line">     // outputBuffer is ready to be processed or rendered.</span><br><span class="line">     …</span><br><span class="line">     codec.releaseOutputBuffer(outputBufferId, …);</span><br><span class="line">   &#125; else if (outputBufferId == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) &#123;</span><br><span class="line">     // Subsequent data will conform to new format.</span><br><span class="line">     // Can ignore if using getOutputFormat(outputBufferId)</span><br><span class="line">     outputFormat = codec.getOutputFormat(); // option B</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> codec.stop();</span><br><span class="line"> codec.release();</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>使用缓存数组的同步处理方式（Synchronous Processing using Buffer Arrays）– (deprecated)<br>　　在Android 4.4（KITKAT_WATCH）及之前版本，一组输入或输出buffers使用ByteBuffer[]数组表示。在成功调用了start()方法后，通过调用getInput/OutputBuffers()方法检索buffer数组。在这些数组中使用buffer的ID-s（非负数）作为索引，如下面的演示示例中，注意数组大小和系统使用的输入和输出buffers的数量之间并没有固定的关系，尽管这个数组提供了上限边界。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">MediaCodec codec = MediaCodec.createByCodecName(name);</span><br><span class="line"> codec.configure(format, …);</span><br><span class="line"> codec.start();</span><br><span class="line"> ByteBuffer[] inputBuffers = codec.getInputBuffers();</span><br><span class="line"> ByteBuffer[] outputBuffers = codec.getOutputBuffers();</span><br><span class="line"> for (;;) &#123;</span><br><span class="line">   int inputBufferId = codec.dequeueInputBuffer(…);</span><br><span class="line">   if (inputBufferId &gt;= 0) &#123;</span><br><span class="line">     // fill inputBuffers[inputBufferId] with valid data</span><br><span class="line">     …</span><br><span class="line">     codec.queueInputBuffer(inputBufferId, …);</span><br><span class="line">   &#125;</span><br><span class="line">   int outputBufferId = codec.dequeueOutputBuffer(…);</span><br><span class="line">   if (outputBufferId &gt;= 0) &#123;</span><br><span class="line">     // outputBuffers[outputBufferId] is ready to be processed or rendered.</span><br><span class="line">     …</span><br><span class="line">     codec.releaseOutputBuffer(outputBufferId, …);</span><br><span class="line">   &#125; else if (outputBufferId == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) &#123;</span><br><span class="line">     outputBuffers = codec.getOutputBuffers();</span><br><span class="line">   &#125; else if (outputBufferId == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) &#123;</span><br><span class="line">     // Subsequent data will conform to new format.</span><br><span class="line">     MediaFormat format = codec.getOutputFormat();</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> codec.stop();</span><br><span class="line"> codec.release();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>流结束处理（End-of-stream Handling）<br>　　当到达输入数据结尾时，你必须在调用queueInputBuffer方法中通过指定BUFFER_FLAG_END_OF_STREAM标记来通知编解码器。你可以在最后一个有效的输入buffer上做这些操作，或者提交一个额外的以end-of-stream标记的空的输入buffer。如果使用一个空的buffer，它的时间戳将被忽略。</p>
+</li>
+</ol>
+<p>　　编解码器将会继续返回输出buffers，直到它发出输出流结束的信号，这是通过指定dequeueOutputBuffer方法中MediaCodec.BufferInfo的end-of-stream标记来实现的，或者是通过回调方法onOutputBufferAvailable来返回end-of-stream标记。可以在最后一个有效的输出buffer中设置或者在最后一个有效的输出buffer后添加一个空的buffer来设置，这种空的buffer的时间戳应该被忽略。</p>
+<p>　　当通知输入流结束后不要再提交额外的输入buffers，除非编解码器被刷新或停止或重启。</p>
+<ol>
+<li>使用一个输出表面（Using an Output Surface）<br>　　使用一个输出Surface进行数据处理的方法与ByteBuffer模式几乎是相同的，然而，输出buffers不再可访问，而且被表示为null值。E.g.方法getOutputBuffer/Image(int)将返回null，方法getOutputBuffers()将返回仅包含null值的数组。</li>
+</ol>
+<p>　　当使用一个输出Surface时，你能够选择是否渲染surface上的每一个输出buffer，你有三种选择：</p>
+<ul>
+<li>不要渲染这个buffer（Do not render the buffer）：通过调用releaseOutputBuffer(bufferId, false)。</li>
+<li>使用默认的时间戳渲染这个buffer（Render the buffer with the default timestamp）：调用releaseOutputBuffer(bufferId, true)。</li>
+<li>使用指定的时间戳渲染这个buffer（Render the buffer with a specific timestamp）：调用 releaseOutputBuffer(bufferId, timestamp)。<br>　　从Android6.0(M)开始，默认的时间戳是buffer的presentation timestamp（转换为纳秒）。在此前的版本中这是没有被定义的。</li>
+</ul>
+<p>　　而且，从Android6.0(M)开始，你可以通过使用setOutputSurface方法动态地改变输出Surface。</p>
+<ol>
+<li>使用一个输入表面（Using an Input Surface）<br>　　当使用输入Surface时，将没有可访问的输入buffers,因为这些buffers将会从输入surface自动地向编解码器传输。调用dequeueInputBuffer时将抛出一个IllegalStateException异常，调用getInputBuffers()将要返回一个不能写入的伪ByteBuffer[]数组。</li>
+</ol>
+<p>　　调用signalEndOfInputStream()方法发送end-of-stream信号。调用这个方法后，输入surface将会立即停止向编解码器提交数据。</p>
+<p>查询&amp;自适应播放支持（Seeking &amp; Adaptive Playback Support）<br>　　视频解码器（通常指处理压缩视频数据的编解码器）关于搜索-seek和格式转换（不管它们是否支持）表现不同，且被配置为adaptive playback。你可以通过调用CodecCapabilities.isFeatureSupported(String)方法来检查解码器是否支持adaptive playback 。支持Adaptive playback的解码器只有在编解码器被配置在Surface上解码时才被激活。</p>
+<p>　　流域界与关键帧（Stream Boundary and Key Frames）</p>
+<p>　　在调用start()或flush()方法后，输入数据在合适的流边界开始是非常重要的：其第一帧必须是关键帧（key-frame）。一个关键帧能够独立地完全解码（对于大多数编解码器它意味着I-frame），关键帧之后显示的帧不会引用关键帧之前的帧。</p>
+<p>　　下面的表格针对不同的视频格式总结了合适的关键帧。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Format</th>
+<th style="text-align:left">Suitable key frame</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">VP9/VP8</td>
+<td style="text-align:left">a suitable intraframe where no subsequent frames refer to frames prior to this frame. (There is no specific name for such key frame.)</td>
+</tr>
+<tr>
+<td style="text-align:left">H.265 HEVC</td>
+<td style="text-align:left">IDR or CRA</td>
+</tr>
+<tr>
+<td style="text-align:left">H.264 AVC</td>
+<td style="text-align:left">IDR</td>
+</tr>
+<tr>
+<td style="text-align:left">MPEG-4 H.263 MPEG-2</td>
+<td style="text-align:left">a suitable I-frame where no subsequent frames refer to frames prior to this frame.(There is no specific name for such key frame.)</td>
+</tr>
+</tbody>
+</table>
+<p>对于不支持adaptive playback的解码器（包括解码到Surface上解码器）</p>
+<p>　　为了开始解码与先前提交的数据（也就是seek后）不相邻的数据你必须刷新解码器。由于所有输出buffers会在flush的一刻立即撤销，你可能希望在调用flush方法前等待这些buffers首先被标记为end-of-stream。在调用flush方法后输入数据在一个合适的流边界或关键帧开始是非常重要的。</p>
+<p>　　注意：flush后提交的数据的格式不能改变；flush()方法不支持格式的不连续性；为此，一个完整的stop()-configure(…)-start()的过程是必要的。</p>
+<p>　　同时注意：如果你调用start()方法后过快地刷新编解码器，通常，在收到第一个输出buffer或输出format变化前，你需要向这个编解码器再次提交codec-specific-data。具体查看codec-specific-data部分以获得更多信息。</p>
+<p>　　对于支持及被配置为adaptive playback的几码器</p>
+<p>　　为了开始解码与先前提交的数据（也就是seek后）不相邻的数据，你没有必要刷新解码器；然而，在间断后传入的数据必须开始于一个合适的流边界或关键帧。</p>
+<p>　　针对一些视频格式-也就是H.264、H.265、VP8和VP9，也可以修改图片大小或者配置mid-stream。为了做到这些你必须将整个新codec-specific配置数据与关键帧一起打包到一个单独的buffer中（包括所有的开始数据），并将它作为一个常规的输入数据提交。</p>
+<p>　　在picture-size被改变后以及任意具有新大小的帧返回之前，你可以从dequeueOutputBuffer方法或onOutputFormatChanged回调中得到 INFO_OUTPUT_FORMAT_CHANGED的返回值。</p>
+<p>　　注意：就像使用codec-specific data时的情况，在你修改图片大小后立即调用fush()方法时需要非常小心。如果你没有接收到图片大小改变的确认信息，你需要重试修改图片大小的请求。</p>
+<ol>
+<li>错误处理（Error handling）</li>
+</ol>
+<p>　　工厂方法createByCodecName以及createDecoder/EncoderByType会在创建codec失败时抛出一个IOException，你必须捕获异常或声明向上传递异常。在编解码器不允许使用该方法的状态下调用时，MediaCodec方法将会抛出IllegalStateException异常；这种情况一般是由于API接口的不正确调用引起的。涉及secure buffers的方法可能会抛出一个MediaCodec.CryptoException异常，可以调用getErrorCode()方法获得更多的异常信息。</p>
+<p>　　内部的编解码器错误将导致MediaCodec.CodecException，这可能是由于media内容错误、硬件错误、资源枯竭等原因所致，即使你已经正确的使用了API。当接收到一个CodecException时，可以调用isRecoverable()和isTransient()两个方法来决定建议的行为。</p>
+<p>可恢复错误（recoverable errors）：如果isRecoverable() 方法返回true,然后就可以调用stop(),configure(…),以及start()方法进行修复。<br>短暂错误（transient errors）：如果isTransient()方法返回true,资源短时间内不可用，这个方法可能会在一段时间之后重试。<br>致命错误（fatal errors）：如果isRecoverable()和isTransient()方法均返回fase，CodecException错误是致命的，此时就必须reset这个编解码器或调用released方法释放资源。<br>　　isRecoverable()和isTransient()方法不可能同时都返回true。</p>
+<ol>
+<li>嵌套类（Nested classes）</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类名</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">MediaCodec.BufferInfo</td>
+<td style="text-align:left">class</td>
+<td style="text-align:left">每一个缓存区的元数据都包含有一个偏移量offset和大小size用于指示相关编解码器（输出）缓存中有效数据的范围。</td>
+</tr>
+<tr>
+<td style="text-align:left">MediaCodec.Callback</td>
+<td style="text-align:left">class</td>
+<td style="text-align:left">MediaCodec回调接口</td>
+</tr>
+<tr>
+<td style="text-align:left">MediaCodec.CodecException</td>
+<td style="text-align:left">class</td>
+<td style="text-align:left">当发生内部的编解码器错误是抛出。</td>
+</tr>
+<tr>
+<td style="text-align:left">MediaCodec.CryptoException</td>
+<td style="text-align:left">class</td>
+<td style="text-align:left">在入队列一个安全的输入缓存过程中发生加密错误时抛出。</td>
+</tr>
+<tr>
+<td style="text-align:left">MediaCodec.CryptoInfo</td>
+<td style="text-align:left">class</td>
+<td style="text-align:left">描述（至少部分地）加密的输入样本的结构的元数据。</td>
+</tr>
+<tr>
+<td style="text-align:left">MediaCodec.OnFrameRenderedListener</td>
+<td style="text-align:left">interface</td>
+<td style="text-align:left">当一个输出帧在输出surface上呈现时，监听器被调用。</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>常量  </li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">BUFFER_FLAG_CODEC_CONFIG</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">2（0x00000002）</td>
+<td style="text-align:left">这表示带有此标记的缓存包含编解码器初始化或编解码器特定的数据而不是多媒体数据media data。</td>
+</tr>
+<tr>
+<td style="text-align:left">BUFFER_FLAG_END_OF_STREAM</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">4（0x00000004</td>
+<td style="text-align:left">它表示流结束，该标志之后不会再有可用的buffer，除非接下来对Codec执行flush()方法。</td>
+</tr>
+<tr>
+<td style="text-align:left">BUFFER_FLAG_KEY_FRAME</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">1（0x00000001）</td>
+<td style="text-align:left">这表示带有此标记的（编码的）缓存包含关键帧数据。</td>
+</tr>
+<tr>
+<td style="text-align:left">BUFFER_FLAG_PARTIAL_FRAME</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">8 (0x00000008)</td>
+<td style="text-align:left">这表明缓冲区只包含帧的一部分，并且解码器应该对数据进行批处理，直到没有该标志的缓冲区在解码帧之前出现。</td>
+</tr>
+<tr>
+<td style="text-align:left">BUFFER_FLAG_SYNC_FRAME</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">1（0x00000001）</td>
+<td style="text-align:left">这个常量在API level 21中弃用，使用BUFFER_FLAG_KEY_FRAME代替。这表示带有此标记的（编码的）缓存包含关键帧数据。</td>
+</tr>
+<tr>
+<td style="text-align:left">CONFIGURE_FLAG_ENCODE</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">1（0x00000001）</td>
+<td style="text-align:left">如果编解码器被用作编码器，传递这个标志。</td>
+</tr>
+<tr>
+<td style="text-align:left">CRYPTO_MODE_AES_CBC</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">2（0x00000002）</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">CRYPTO_MODE_AES_CTR</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">1（0x00000001）</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">CRYPTO_MODE_UNENCRYPTED</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">0（0x00000000）</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">INFO_OUTPUT_BUFFERS_CHANGED</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">-3 (0xfffffffd)</td>
+<td style="text-align:left">此常数在API级别21中已弃用。由于getOutputBuffers（）已被弃用，此返回值可以被忽略。 每次出队时，客户端都应该使用get-buffer或get-image方法的on命令来请求当前缓冲区。输出缓冲区已更改，客户端必须从此处引用由getOutputBuffers（）返回的新输出缓冲区集合。此外，此事件表示视频缩放模式可能已重置为默认值。</td>
+</tr>
+<tr>
+<td style="text-align:left">INFO_OUTPUT_FORMAT_CHANGED</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">-2 (0xfffffffe)</td>
+<td style="text-align:left">输出格式已更改，后续数据将采用新格式。 getOutputFormat（）返回新的格式。 请注意，您也可以使用新的getOutputFormat（int）方法来获取特定输出缓冲区的格式。 这使您无需跟踪输出格式更改。</td>
+</tr>
+<tr>
+<td style="text-align:left">INFO_TRY_AGAIN_LATER</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">-1 (0xffffffff)</td>
+<td style="text-align:left">如果在调用dequeueOutputBuffer（MediaCodec.BufferInfo，long）时指定了非负超时，则表示该呼叫超时。</td>
+</tr>
+<tr>
+<td style="text-align:left">PARAMETER_KEY_REQUEST_SYNC_FRAME</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">“request-sync”</td>
+<td style="text-align:left">请求编码器“很快”产生一个同步帧。 提供值为0的整数。</td>
+</tr>
+<tr>
+<td style="text-align:left">PARAMETER_KEY_SUSPEND</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">“drop-input-frames”</td>
+<td style="text-align:left">暂时暂停/恢复输入数据的编码。虽然暂停输入数据被有效丢弃，而不是被馈送到编码器中。在“表面输入”模式下，这个参数只与编码器一起使用才是有意义的，因为在这种情况下，客户端代码对编码器的输入端没有控制。该值是一个整数对象，包含要挂起的值1或要恢复的值0。</td>
+</tr>
+<tr>
+<td style="text-align:left">PARAMETER_KEY_VIDEO_BITRATE</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">“video-bitrate”</td>
+<td style="text-align:left">立即改变视频编码器的目标比特率。该值是包含BPS中的新比特率的整数对象。</td>
+</tr>
+<tr>
+<td style="text-align:left">VIDEO_SCALING_MODE_SCALE_TO_FIT</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">1 (0x00000001)</td>
+<td style="text-align:left">内容按比例缩放到表面尺寸。</td>
+</tr>
+<tr>
+<td style="text-align:left">VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">2 (0x00000002)</td>
+<td style="text-align:left">内容是缩放，保持其纵横比，使用整个表面积，可以裁剪内容。这种模式只适用于1:1像素长宽比的内容，因为你不能为一个表面配置像素的长宽比。对于Build.VERSION_CODES.N版本，如果视频旋转90度或270度，则此模式可能无法工作。</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>公有方法</li>
+</ol>
+<h4 id="configure"><a href="#configure" class="headerlink" title="configure"></a>configure</h4><p>public void configure (MediaFormat format,Surface surface,MediaCrypto crypto,int flags)：Configures a component.（配置组件。）</p>
+<ul>
+<li><p>参数<br>format     -》 MediaFormat: The format of the input data (decoder) or the desired format of the output data (encoder). Passing null as format is equivalent to passing an an empty mediaformat.  （输入数据（解码器）的格式或输出数据（编码器）的所需格式。 以格式传递null相当于传递一个空的媒体格式。）<br>surface -》    Surface: Specify a surface on which to render the output of this decoder. Pass null as surface if the codec does not generate raw video output (e.g. not a video decoder) and/or if you want to configure the codec for ByteBuffer output.（指定要渲染此解码器输出的表面。 如果编解码器不生成原始视频输出（例如，不是视频解码器），并且/或者如果要为ByteBuffer输出配置编解码器，则将null传递为曲面。）<br>crypto -》    MediaCrypto: Specify a crypto object to facilitate secure decryption of the media data. Pass null as crypto for non-secure codecs. （指定一个加密对象以促进媒体数据的安全解密。 传递null作为非安全编解码器的加密。）<br>flags -》    int: Specify CONFIGURE_FLAG_ENCODE to configure the component as an encoder.（指定CONFIGURE_FLAG_ENCODE将组件配置为编码器。）</p>
+</li>
+<li><p>异常<br>IllegalArgumentException -》    if the surface has been released (or is invalid), or the format is unacceptable (e.g. missing a mandatory key), or the flags are not set properly (e.g. missing CONFIGURE_FLAG_ENCODE for an encoder). （如果表面已被释放（或无效），或格式不可接受（例如，缺少必需的密钥），或者标记未正确设置（例如，编码器缺少CONFIGURE_FLAG_ENCODE）。）<br>IllegalStateException -》    if not in the Uninitialized state.（如果不是未初始化状态。）<br>MediaCodec.CryptoException -》    upon DRM error.（在DRM错误。）<br>MediaCodec.CodecException -》    upon codec error.（编解码器错误。）    </p>
+</li>
+</ul>
+<h4 id="configure-1"><a href="#configure-1" class="headerlink" title="configure"></a>configure</h4><p>public void configure (MediaFormat format,Surface surface,int flags,MediaDescrambler descrambler)：Configure a component to be used with a descrambler.（配置要与解扰器一起使用的组件。）  </p>
+<ul>
+<li><p>参数<br>format     -》 MediaFormat: The format of the input data (decoder) or the desired format of the output data (encoder). Passing null as format is equivalent to passing an an empty mediaformat.  （输入数据（解码器）的格式或输出数据（编码器）的所需格式。 以格式传递null相当于传递一个空的媒体格式。）<br>surface -》    Surface: Specify a surface on which to render the output of this decoder. Pass null as surface if the codec does not generate raw video output (e.g. not a video decoder) and/or if you want to configure the codec for ByteBuffer output.（指定要渲染此解码器输出的表面。 如果编解码器不生成原始视频输出（例如，不是视频解码器），并且/或者如果要为ByteBuffer输出配置编解码器，则将null传递为曲面。）<br>flags -》    int: Specify CONFIGURE_FLAG_ENCODE to configure the component as an encoder.（指定CONFIGURE_FLAG_ENCODE将组件配置为编码器。）<br>descrambler -》    MediaDescrambler: Specify a descrambler object to facilitate secure descrambling of the media data, or null for non-secure codecs.（指定解扰器对象以促进媒体数据的安全解扰，或者指定非安全编解码器为null。）  </p>
+</li>
+<li><p>异常<br>IllegalArgumentException -》    if the surface has been released (or is invalid), or the format is unacceptable (e.g. missing a mandatory key), or the flags are not set properly (e.g. missing CONFIGURE_FLAG_ENCODE for an encoder). （如果表面已被释放（或无效），或格式不可接受（例如，缺少必需的密钥），或者标记未正确设置（例如，编码器缺少CONFIGURE_FLAG_ENCODE）。）<br>IllegalStateException -》    if not in the Uninitialized state.（如果不是未初始化状态。）<br>MediaCodec.CryptoException -》    upon DRM error.（在DRM错误。）<br>MediaCodec.CodecException -》    upon codec error.（编解码器错误。）</p>
+</li>
+</ul>
+<h4 id="createByCodecName"><a href="#createByCodecName" class="headerlink" title="createByCodecName"></a>createByCodecName</h4><p>public static MediaCodec createByCodecName (String name)：If you know the exact name of the component you want to instantiate use this method to instantiate it. Use with caution. Likely to be used with information obtained from MediaCodecList（如果您知道要实例化的组件的确切名称，请使用此方法将其实例化。 谨慎使用。 可能与从MediaCodecList获取的信息一起使用）  </p>
+<ul>
+<li><p>参数<br>name    -》String: The name of the codec to be instantiated.This value must never be null.（要实例化的编解码器的名称。此值绝不能为null。）</p>
+</li>
+<li><p>返回值<br>MediaCodec    -》 This value will never be null.（此值绝不能为null。）</p>
+</li>
+<li><p>异常<br>IOException -》    if the codec cannot be created.  （如果无法创建编解码器）<br>IllegalArgumentException -》    if name is not valid.（如果名称无效）<br>NullPointerException -》    if name is null.（如果名称为空）  </p>
+</li>
+</ul>
+<h4 id="createDecoderByType"><a href="#createDecoderByType" class="headerlink" title="createDecoderByType"></a>createDecoderByType</h4><p>public static MediaCodec createDecoderByType (String type)：Instantiate the preferred decoder supporting input data of the given mime type. The following is a partial list of defined mime types and their semantics:（实例化支持给定MIME类型的输入数据的首选解码器。 以下是定义的MIME类型及其语义的部分列表：）</p>
+<ul>
+<li>“video/x-vnd.on2.vp8” - VP8 video (i.e. video in .webm)</li>
+<li>“video/x-vnd.on2.vp9” - VP9 video (i.e. video in .webm)</li>
+<li>“video/avc” - H.264/AVC video</li>
+<li>“video/hevc” - H.265/HEVC video</li>
+<li>“video/mp4v-es” - MPEG4 video</li>
+<li>“video/3gpp” - H.263 video</li>
+<li>“audio/3gpp” - AMR narrowband audio</li>
+<li>“audio/amr-wb” - AMR wideband audio</li>
+<li>“audio/mpeg” - MPEG1/2 audio layer III</li>
+<li>“audio/mp4a-latm” - AAC audio (note, this is raw AAC packets, not packaged in LATM!)</li>
+<li>“audio/vorbis” - vorbis audio</li>
+<li>“audio/g711-alaw” - G.711 alaw audio</li>
+<li>“audio/g711-mlaw” - G.711 ulaw audio<br>Note: It is preferred to use MediaCodecList.findDecoderForFormat(MediaFormat) and createByCodecName(String) to ensure that the resulting codec can handle a given format.（注意：最好使用MediaCodecList.findDecoderForFormat（MediaFormat）和createByCodecName（String）来确保生成的编解码器可以处理给定的格式。）</li>
+</ul>
+<ul>
+<li><p>参数<br>type -》    String: The mime type of the input data.This value must never be null.（输入数据的mime类型。此值绝不能为null。）</p>
+</li>
+<li><p>异常<br>IOException     -》if the codec cannot be created.（如果无法创建编解码器）<br>IllegalArgumentException -》     if type is not a valid mime type.（如果type不是有效的mime类型）<br>NullPointerException -》    if type is null.（如果type为空）</p>
+</li>
+</ul>
+<h4 id="createEncoderByType"><a href="#createEncoderByType" class="headerlink" title="createEncoderByType"></a>createEncoderByType</h4><p>public static MediaCodec createEncoderByType (String type)：Instantiate the preferred encoder supporting output data of the given mime type. Note: It is preferred to use MediaCodecList.findEncoderForFormat(MediaFormat) and createByCodecName(String) to ensure that the resulting codec can handle a given format.<br>（实例化支持给定MIME类型的输出数据的首选编码器。 注意：最好使用MediaCodecList.findEncoderForFormat（MediaFormat）和createByCodecName（String）来确保生成的编解码器可以处理给定的格式。）</p>
+<ul>
+<li><p>参数<br>type    -》String: The desired mime type of the output data.This value must never be null.（所需的MIME类型的输出数据。该值不能为空。）</p>
+</li>
+<li><p>返回值<br>MediaCodec    -》This value will never be null.（这个值永远不为空）。</p>
+</li>
+<li><p>异常<br>IOException -》 if the codec cannot be created. （如果编解码器不能被创建。）<br>IllegalArgumentException -》    if type is not a valid mime type.  （如果type不是有效的MIME类型。）<br>NullPointerException -》    if type is null.  （如果type为null。）</p>
+</li>
+</ul>
+<h4 id="createInputSurface"><a href="#createInputSurface" class="headerlink" title="createInputSurface"></a>createInputSurface</h4><p>public Surface createInputSurface ()：Requests a Surface to use as the input to an encoder, in place of input buffers. This may only be called after configure(MediaFormat, Surface, MediaCrypto, int) and before start().The application is responsible for calling release() on the Surface when done.The Surface must be rendered with a hardware-accelerated API, such as OpenGL ES. Surface.lockCanvas(android.graphics.Rect) may fail or produce unexpected results.（请求Surface用作编码器的输入，以代替输入缓冲区。 这只能在configure（MediaFormat，Surface，MediaCrypto，int）和start（）之前调用。应用程序负责在完成时调用Surface上的release（）。Surface必须使用硬件加速API（如OpenGL ES）进行渲染。 Surface.lockCanvas（android.graphics.Rect）可能会失败或产生意想不到的结果。）</p>
+<ul>
+<li>返回值<br>Surface    -》 This value will never be null.（这个值永远不为空）</li>
+<li>异常<br>IllegalStateException -》    if not in the Configured state.（如果不在配置状态）</li>
+</ul>
+<h4 id="createPersistentInputSurface"><a href="#createPersistentInputSurface" class="headerlink" title="createPersistentInputSurface"></a>createPersistentInputSurface</h4><p>public static Surface createPersistentInputSurface ()：Create a persistent input surface that can be used with codecs that normally have an input surface, such as video encoders. A persistent input can be reused by subsequent MediaCodec or MediaRecorder instances, but can only be used by at most one codec or recorder instance concurrently.The application is responsible for calling release() on the Surface when done.（创建可与通常具有输入表面的编解码器一起使用的持久输入表面，例如视频编码器。 持久性输入可以被后续MediaCodec或MediaRecorder实例重用，但最多只能同时使用一个编解码器或录制器实例。应用程序负责在完成时调用Surface上的release（）。）</p>
+<ul>
+<li>返回值<br>Surface    -》 an input surface that can be used with setInputSurface(Surface).This value will never be null.（一个可以与setInputSurface（Surface）一起使用的输入表面。该值永远不会为空）</li>
+</ul>
+<h4 id="dequeueInputBuffer"><a href="#dequeueInputBuffer" class="headerlink" title="dequeueInputBuffer"></a>dequeueInputBuffer</h4><p>public int dequeueInputBuffer (long timeoutUs)：Returns the index of an input buffer to be filled with valid data or -1 if no such buffer is currently available. This method will return immediately if timeoutUs == 0, wait indefinitely for the availability of an input buffer if timeoutUs &lt; 0 or wait up to “timeoutUs” microseconds if timeoutUs &gt; 0.（返回要用有效数据填充的输入缓冲区的索引，如果当前没有可用的缓冲区，则返回-1。 如果timeoutU == 0，此方法将立即返回，如果timeoutU <0，则无限期等待输入缓冲区的可用性;如果timeoutus> 0，则等待“timeoutUs”微秒。）</0，则无限期等待输入缓冲区的可用性;如果timeoutus></p>
+<ul>
+<li>参数<br>timeoutUs    -》 long: The timeout in microseconds, a negative timeout indicates “infinite”.（超时（微秒），负超时表示“无限”。<br>）</li>
+<li>返回值<br>int -》 缓冲区索引id</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state, or codec is configured in asynchronous mode.（如果不处于执行状态，或编解码器配置为异步模式。）<br>MediaCodec.CodecException     -》 upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="dequeueOutputBuffer"><a href="#dequeueOutputBuffer" class="headerlink" title="dequeueOutputBuffer"></a>dequeueOutputBuffer</h4><p>public int dequeueOutputBuffer (MediaCodec.BufferInfo info, long timeoutUs)：Dequeue an output buffer, block at most “timeoutUs” microseconds. Returns the index of an output buffer that has been successfully decoded or one of the INFO<em>* constants.（出队输出缓冲区，最多阻止“timeoutUs”微秒。 返回已成功解码的输出缓冲区的索引或其中一个INFO</em> *常量。）</p>
+<ul>
+<li>参数<br>info -》    MediaCodec.BufferInfo: Will be filled with buffer meta data.This value must never be null.（将填充缓冲区元数据。该值不能为空）<br>timeoutUs     -》 long: The timeout in microseconds, a negative timeout indicates “infinite”.（超时（微秒），负超时表示“无限”。<br>）</li>
+<li>返回值<br>int -》 缓冲区索引id</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state, or codec is configured in asynchronous mode.（如果不处于执行状态，或编解码器配置为异步模式。）<br>MediaCodec.CodecException     -》 upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="flush"><a href="#flush" class="headerlink" title="flush"></a>flush</h4><p>public void flush ()：Flush both input and output ports of the component.Upon return, all indices previously returned in calls to dequeueInputBuffer and dequeueOutputBuffer — or obtained via onInputBufferAvailable or onOutputBufferAvailable callbacks — become invalid, and all buffers are owned by the codec.If the codec is configured in asynchronous mode, call start() after flush has returned to resume codec operations. The codec will not request input buffers until this has happened. Note, however, that there may still be outstanding onOutputBufferAvailable callbacks that were not handled prior to calling flush. The indices returned via these callbacks also become invalid upon calling flush and should be discarded.If the codec is configured in synchronous mode, codec will resume automatically if it is configured with an input surface. Otherwise, it will resume when dequeueInputBuffer is called.（刷新组件的输入和输出端口。返回时，以前通过调用dequeueInputBuffer和dequeueOutputBuffer返回的所有索引 - 或通过onInputBufferAvailable或onOutputBufferAvailable回调获得 - 都变为无效，并且所有缓冲区都由编解码器拥有。如果编解码器配置为 异步模式，在刷新后调用start（）返回以恢复编解码器操作。 在这种情况发生之前，编解码器不会请求输入缓冲器。 但请注意，在调用刷新之前，可能仍有未完成的onOutputBufferAvailable回调。 通过这些回调返回的索引在调用flush时也会失效，应该丢弃。如果编解码器配置为同步模式，如果配置了输入表面，编解码器将自动恢复。 否则，它将在调用dequeueInputBuffer时继续。）</p>
+<ul>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="getCodecInfo"><a href="#getCodecInfo" class="headerlink" title="getCodecInfo"></a>getCodecInfo</h4><p>public MediaCodecInfo getCodecInfo ()<br>Get the codec info. If the codec was created by createDecoderByType or createEncoderByType, what component is chosen is not known beforehand, and thus the caller does not have the MediaCodecInfo.（获取编解码器信息。 如果编解码器是由createDecoderByType或createEncoderByType创建的，则选择哪个组件并不是事先知道的，因此调用者没有MediaCodecInfo。）</p>
+<ul>
+<li>返回参数<br>MediaCodecInfo    -》 This value will never be null.（ 该值永远不会为空）</li>
+<li>异常<br>IllegalStateException -》     if in the Released state.（如果处于Released状态。）</li>
+</ul>
+<h4 id="getInputBuffer"><a href="#getInputBuffer" class="headerlink" title="getInputBuffer"></a>getInputBuffer</h4><p>public ByteBuffer getInputBuffer (int index)：Returns a cleared, writable ByteBuffer object for a dequeued input buffer index to contain the input data. After calling this method any ByteBuffer or Image object previously returned for the same input index MUST no longer be used.（返回已清除的可写ByteBuffer对象，用于包含输入数据的出列输入缓冲区索引。 在调用这个方法之后，必须不再使用先前为相同输入索引返回的任何ByteBuffer或Image对象。）</p>
+<ul>
+<li>参数<br>index -》    int: The index of a client-owned input buffer previously returned from a call to dequeueInputBuffer(long), or received via an onInputBufferAvailable callback.（先前从调用dequeueInputBuffer（long）返回的客户机拥有的输入缓冲区的索引，或通过onInputBufferAvailable回调接收的索引。）   </li>
+<li>返回值<br>ByteBuffer -》    the input buffer, or null if the index is not a dequeued input buffer, or if the codec is configured for surface input.（输入缓冲区;如果索引不是出列输入缓冲区，或者编解码器配置为表面输入，则为null。）</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="getOutputFormat"><a href="#getOutputFormat" class="headerlink" title="getOutputFormat"></a>getOutputFormat</h4><p>public MediaFormat getOutputFormat (int index)：Returns the output format for a specific output buffer.（返回特定输出缓冲区的输出格式）  </p>
+<ul>
+<li>参数<br>index -》    int: The index of a client-owned input buffer previously returned from a call to dequeueInputBuffer(long).（先前从调用dequeueInputBuffer（long）返回的客户机拥有的输入缓冲区的索引。）</li>
+<li>返回值<br>MediaFormat    -》 the format for the output buffer, or null if the index is not a dequeued output buffer.（输出缓冲区的格式;如果索引不是出队输出缓冲区，则返回null。）</li>
+</ul>
+<h4 id="getOutputFormat-1"><a href="#getOutputFormat-1" class="headerlink" title="getOutputFormat"></a>getOutputFormat</h4><p>public MediaFormat getOutputFormat ()：Call this after dequeueOutputBuffer signals a format change by returning INFO_OUTPUT_FORMAT_CHANGED. You can also call this after configure(MediaFormat, Surface, MediaCrypto, int) returns successfully to get the output format initially configured for the codec. Do this to determine what optional configuration parameters were supported by the codec.（通过返回INFO_OUTPUT_FORMAT_CHANGED，dequeueOutputBuffer发出格式更改后调用此函数。 您也可以在configure（MediaFormat，Surface，MediaCrypto，int）成功返回后获取为编解码器初始配置的输出格式。 这样做可以确定编解码器支持哪些可选的配置参数。）</p>
+<ul>
+<li>返回值<br>MediaFormat    -》 This value will never be null.（该值永远不会为空）</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="getOutputImage"><a href="#getOutputImage" class="headerlink" title="getOutputImage"></a>getOutputImage</h4><p>public Image getOutputImage (int index)：Returns a read-only Image object for a dequeued output buffer index that contains the raw video frame. After calling this method, any ByteBuffer or Image object previously returned for the same output index MUST no longer be used.(返回包含原始视频帧的出列输出缓冲区索引的只读Image对象。 在调用这个方法之后，必须不再使用先前为相同输出索引返回的任何ByteBuffer或Image对象。)</p>
+<ul>
+<li>返回值<br>index -》    int: The index of a client-owned output buffer previously returned from a call to dequeueOutputBuffer(MediaCodec.BufferInfo, long), or received via an onOutputBufferAvailable callback.（先前从调用dequeueOutputBuffer（MediaCodec.BufferInfo，long）或通过onOutputBufferAvailable回调接收的客户端拥有的输出缓冲区的索引。）</li>
+<li>返回值<br>Image -》    the output image, or null if the index is not a dequeued output buffer, not a raw video frame, or if the codec was configured with an output surface. （输出图像;如果索引不是出列输出缓冲区，不是原始视频帧，或者编解码器配置了输出表面，则为null。）</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="queueInputBuffer"><a href="#queueInputBuffer" class="headerlink" title="queueInputBuffer"></a>queueInputBuffer</h4><p>public void queueInputBuffer (int index,int offset, int size,long presentationTimeUs,int flags)：After filling a range of the input buffer at the specified index submit it to the component. Once an input buffer is queued to the codec, it MUST NOT be used until it is later retrieved by getInputBuffer(int) in response to a dequeueInputBuffer(long) return value or a MediaCodec.Callback.onInputBufferAvailable(MediaCodec, int) callback.Many decoders require the actual compressed data stream to be preceded by “codec specific data”, i.e. setup data used to initialize the codec such as PPS/SPS in the case of AVC video or code tables in the case of vorbis audio. The class MediaExtractor provides codec specific data as part of the returned track format in entries named “csd-0”, “csd-1” …  These buffers can be submitted directly after start() or flush() by specifying the flag BUFFER_FLAG_CODEC_CONFIG. However, if you configure the codec with a MediaFormat containing these keys, they will be automatically submitted by MediaCodec directly after start. Therefore, the use of BUFFER_FLAG_CODEC_CONFIG flag is discouraged and is recommended only for advanced users. To indicate that this is the final piece of input data (or rather that no more input data follows unless the decoder is subsequently flushed) specify the flag BUFFER_FLAG_END_OF_STREAM.（在指定索引处填充输入缓冲区的范围后，将其提交给组件。一旦输入缓冲区排队等待编解码器，它就不能被使用，直到它稍后被getInputBuffer（int）检索以响应dequeueInputBuffer（long）返回值或MediaCodec.Callback.onInputBufferAvailable（MediaCodec，int）回调。许多解码器要求实际压缩数据流在“编解码器特定数据”之前，即用于初始化编解码器的设置数据，例如在AVC视频情况下为PPS / SPS或在​​vorbis音频情况下为代码表。 MediaExtractor类在名为“csd-0”，“csd-1”的条目中提供特定于编解码器的数据作为返回轨道格式的一部分…可以通过指定标志BUFFER_FLAG_CODEC_CONFIG在start（）或flush（）后直接提交这些缓冲区。但是，如果使用包含这些密钥的MediaFormat配置编解码器，它们将在启动后直接由MediaCodec自动提交。因此，不鼓励使用BUFFER_FLAG_CODEC_CONFIG标志，并且建议仅限高级用户使用。为了表明这是最后一块输入数据（或者除非解码器随后被刷新，否则不会有更多的输入数据出现）指定标志BUFFER_FLAG_END_OF_STREAM。）<br>注意：在Build.VERSION_CODES.M之前，presentationTimeUs没有传播到（呈现的）表面输出缓冲区的帧时间戳，并且结果帧时间戳未定义。 使用releaseOutputBuffer（int，long）来确保设置了特定的帧时间戳。 同样，由于帧时间戳可以被目标表面用于渲染同步，因此必须注意使presentationTimeUs正常化，以便不会误认为系统时间。 （请参阅SurfaceView细节）。   </p>
+<ul>
+<li>参数<br>index -》    int: The index of a client-owned input buffer previously returned in a call to dequeueInputBuffer(long).（先前在调用dequeueInputBuffer（long）时返回的客户机拥有的输入缓冲区的索引）<br>offset -》    int: The byte offset into the input buffer at which the data starts.（输入缓冲区中数据开始的字节偏移量）<br>size -》    int: The number of bytes of valid input data.（有效输入数据的字节数）<br>presentationTimeUs -》    long: The presentation timestamp in microseconds for this buffer. This is normally the media time at which this buffer should be presented (rendered). When using an output surface, this will be propagated as the timestamp for the frame (after conversion to nanoseconds).（此缓冲区的呈现时间戳（以微秒为单位）。 这通常是介质缓冲区应呈现（呈现）的介质时间。 使用输出表面时，这将作为帧的时间戳（转换为纳秒后）传播。）<br>flags -》    int: A bitmask of flags BUFFER_FLAG_CODEC_CONFIG and BUFFER_FLAG_END_OF_STREAM. While not prohibited, most codecs do not use the BUFFER_FLAG_KEY_FRAME flag for input buffers.（标志BUFFER_FLAG_CODEC_CONFIG和BUFFER_FLAG_END_OF_STREAM的位掩码。 虽然不禁止，但大多数编解码器不会将BUFFER_FLAG_KEY_FRAME标志用于输入缓冲区。）</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）<br>MediaCodec.CryptoException     -》 if a crypto object has been specified in configure(MediaFormat, Surface, MediaCrypto, int)（如果在配置中指定了加密对象（MediaFormat，Surface，MediaCrypto，int）  </li>
+</ul>
+<h4 id="queueSecureInputBuffer"><a href="#queueSecureInputBuffer" class="headerlink" title="queueSecureInputBuffer"></a>queueSecureInputBuffer</h4><p>public void queueSecureInputBuffer (int index, int offset, 、MediaCodec.CryptoInfo info,long presentationTimeUs,int flags)：Similar to queueInputBuffer but submits a buffer that is potentially encrypted. Check out further notes at queueInputBuffer.（与queueInputBuffer类似，但提交可能加密的缓冲区。 在queueInputBuffer中查看进一步的注释。）</p>
+<ul>
+<li>参数<br>index -》    int: The index of a client-owned input buffer previously returned in a call to dequeueInputBuffer(long).（先前在调用dequeueInputBuffer（long）时返回的客户机拥有的输入缓冲区的索引。）<br>offset -》    int: The byte offset into the input buffer at which the data starts.输入缓冲区中数据开始的字节偏移量）<br>info -》    MediaCodec.CryptoInfo: Metadata required to facilitate decryption, the object can be reused immediately after this call returns.This value must never be null.（为便于解密而需要的元数据，该对象可在此调用返回后立即重用。此值绝不能为空。）<br>presentationTimeUs -》    long: The presentation timestamp in microseconds for this buffer. This is normally the media time at which this buffer should be presented (rendered).（此缓冲区的呈现时间戳（以微秒为单位）。 这通常是介质缓冲区应呈现（呈现）的介质时间。）<br>flags    -》 int: A bitmask of flags BUFFER_FLAG_CODEC_CONFIG and BUFFER_FLAG_END_OF_STREAM. While not prohibited, most codecs do not use the BUFFER_FLAG_KEY_FRAME flag for input buffers.（标志BUFFER_FLAG_CODEC_CONFIG和BUFFER_FLAG_END_OF_STREAM的位掩码。 虽然不禁止，但大多数编解码器不会将BUFFER_FLAG_KEY_FRAME标志用于输入缓冲区。）<ul>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）<br>MediaCodec.CryptoException     -》 if a crypto object has been specified in configure(MediaFormat, Surface, MediaCrypto, int)（如果在配置中指定了加密对象（MediaFormat，Surface，MediaCrypto，int）</li>
+</ul>
+</li>
+</ul>
+<h4 id="release"><a href="#release" class="headerlink" title="release"></a>release</h4><p>public void release ()；Free up resources used by the codec instance. Make sure you call this when you’re done to free up any opened component instance instead of relying on the garbage collector to do this for you at some point in the future.（释放编解码器实例使用的资源。 确保在你完成释放任何打开的组件实例时调用它，而不是依赖垃圾回收器在将来的某个时刻为你做这件事。）</p>
+<h4 id="releaseOutputBuffer"><a href="#releaseOutputBuffer" class="headerlink" title="releaseOutputBuffer"></a>releaseOutputBuffer</h4><p>public void releaseOutputBuffer (int index, boolean render)：If you are done with a buffer, use this call to return the buffer to the codec or to render it on the output surface. If you configured the codec with an output surface, setting render to true will first send the buffer to that output surface. The surface will release the buffer back to the codec once it is no longer used/displayed. Once an output buffer is released to the codec, it MUST NOT be used until it is later retrieved by getOutputBuffer(int) in response to a dequeueOutputBuffer(MediaCodec.BufferInfo, long) return value or a MediaCodec.Callback.onOutputBufferAvailable(MediaCodec, int, MediaCodec.BufferInfo) callback.（如果完成了缓冲区，则使用此调用将缓冲区返回给编解码器或将其呈现在输出表面上。 如果您使用输出表面配置编解码器，将渲染设置为true将首先将缓冲区发送到该输出表面。 一旦不再使用/显示，表面就会将缓冲区释放回编解码器。 一旦输出缓冲区被释放到编解码器，它就不能被使用，直到之后被getOutputBuffer（int）检索以响应dequeueOutputBuffer（MediaCodec.BufferInfo，long）返回值或MediaCodec.Callback.onOutputBufferAvailable（MediaCodec，int ，MediaCodec.BufferInfo）回调。）</p>
+<ul>
+<li>参数<br>index    -》 int: The index of a client-owned output buffer previously returned from a call to dequeueOutputBuffer(MediaCodec.BufferInfo, long).（先前从调用dequeueOutputBuffer（MediaCodec.BufferInfo，long）返回的客户端拥有的输出缓冲区的索引。）<br>render -》     boolean: If a valid surface was specified when configuring the codec, passing true renders this output buffer to the surface.（如果在配置编解码器时指定了有效曲面，则传递true会将此输出缓冲区渲染到曲面。）</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="releaseOutputBuffer-1"><a href="#releaseOutputBuffer-1" class="headerlink" title="releaseOutputBuffer"></a>releaseOutputBuffer</h4><p>public void releaseOutputBuffer (int index, long renderTimestampNs)：If you are done with a buffer, use this call to update its surface timestamp and return it to the codec to render it on the output surface. If you have not specified an output surface when configuring this video codec, this call will simply return the buffer to the codec.（如果已完成缓冲区，则使用此调用更新其表面时间戳并将其返回给编解码器以在输出表面上呈现它。 如果您在配置此视频编解码器时尚未指定输出界面，则此调用将简单地将缓冲区返回给编解码器。）<br>The timestamp may have special meaning depending on the destination surface.（时间戳根据目的地表面可能有特殊含义。）<br><strong>SurfaceView specifics</strong><br> If you render your buffer on a SurfaceView, you can use the timestamp to render the buffer at a specific time (at the VSYNC at or after the buffer timestamp). For this to work, the timestamp needs to be reasonably close to the current System.nanoTime(). Currently, this is set as within one (1) second. A few notes:（如果在SurfaceView上渲染缓冲区，则可以使用时间戳在特定时间渲染缓冲区（在缓冲区时间戳之后或之后的VSYNC处）。 为此，时间戳需要相当接近当前的System.nanoTime（）。 目前，这是在一（1）秒内设定的。 一些注意事项：）      </p>
+<ul>
+<li>the buffer will not be returned to the codec until the timestamp has passed and the buffer is no longer used by the Surface.（该缓冲区将不会返回到编解码器，直到时间戳已经过去并且该缓冲区不再被Surface使用。）</li>
+<li>buffers are processed sequentially, so you may block subsequent buffers to be displayed on the Surface. This is important if you want to react to user action, e.g. stop the video or seek.（缓冲区会按顺序处理，因此您可能会阻止后续缓冲区显示在Surface上。 如果您想对用户操作做出反应，这很重要。 停止视频或寻求。）</li>
+<li>if multiple buffers are sent to the Surface to be rendered at the same VSYNC, the last one will be shown, and the other ones will be dropped.（如果将多个缓冲区发送到要在同一个VSYNC上渲染的Surface，则会显示最后一个缓冲区，其他则会被放弃。）</li>
+<li>if the timestamp is not “reasonably close” to the current system time, the Surface will ignore the timestamp, and display the buffer at the earliest feasible time. In this mode it will not drop frames.（如果时间戳不与当前系统时间“合理接近”，Surface将忽略时间戳，并在最早的可行时间显示缓冲区。 在这种模式下，它不会丢帧。）</li>
+<li>for best performance and quality, call this method when you are about two VSYNCs’ time before the desired render time. For 60Hz displays, this is about 33 msec.（为获得最佳性能和质量，当您在所需渲染时间之前约两个VSYNC的时间时调用此方法。 对于60Hz的显示器，这是大约33毫秒。）</li>
+</ul>
+<p>Once an output buffer is released to the codec, it MUST NOT be used until it is later retrieved by getOutputBuffer(int) in response to a dequeueOutputBuffer(MediaCodec.BufferInfo, long) return value or a MediaCodec.Callback.onOutputBufferAvailable(MediaCodec, int, MediaCodec.BufferInfo) callback.（一旦输出缓冲区被释放到编解码器，它就不能被使用，直到之后被getOutputBuffer（int）检索以响应dequeueOutputBuffer（MediaCodec.BufferInfo，long）返回值或MediaCodec.Callback.onOutputBufferAvailable（MediaCodec，int ，MediaCodec.BufferInfo）回调。）</p>
+<ul>
+<li>参数<br>index -》    int: The index of a client-owned output buffer previously returned from a call to dequeueOutputBuffer(MediaCodec.BufferInfo, long).（他先前从调用dequeueOutputBuffer（MediaCodec.BufferInfo，long）返回的客户端拥有的输出缓冲区的索引，）<br>renderTimestampNs -》     long: The timestamp to associate with this buffer when it is sent to the Surface.（发送到Surface时与此缓冲区关联的时间戳。）</li>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h4><p>public void reset ()：Returns the codec to its initial (Uninitialized) state. Call this if an unrecoverable error has occured to reset the codec to its initial state after creation.（将编解码器返回到其初始（未初始化）状态。 如果在创建后发生不可恢复的错误以将编解码器重置为其初始状态，请调用此函数。）</p>
+<ul>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.（如果不处于执行状态）<br>MediaCodec.CodecException  -》     upon codec error.（编解码器错误。）</li>
+</ul>
+<h4 id="setCallback"><a href="#setCallback" class="headerlink" title="setCallback"></a>setCallback</h4><p>public void setCallback (MediaCodec.Callback cb,Handler handler)：Sets an asynchronous callback for actionable MediaCodec events. If the client intends to use the component in asynchronous mode, a valid callback should be provided before configure(MediaFormat, Surface, MediaCrypto, int) is called. When asynchronous callback is enabled, the client should not call getInputBuffers(), getOutputBuffers(), dequeueInputBuffer(long) or dequeueOutputBuffer(BufferInfo, long).<br>Also, flush() behaves differently in asynchronous mode. After calling flush, you must call start() to “resume” receiving input buffers, even if an input surface was created.（为可操作的MediaCodec事件设置异步回调。 如果客户端打算以异步模式使用组件，则应在调用configure（MediaFormat，Surface，MediaCrypto，int）之前提供有效的回调。 启用异步回调时，客户端不应调用getInputBuffers（），getOutputBuffers（），dequeueInputBuffer（long）或dequeueOutputBuffer（BufferInfo，long）。<br>另外，flush（）在异步模式下表现不同。 在调用flush之后，即使创建了输入曲面，也必须调用start（）来“继续”接收输入缓冲区。）</p>
+<ul>
+<li>参数<br>cb -》    MediaCodec.Callback: The callback that will run. Use null to clear a previously set callback (before configure is called and run in synchronous mode).（将运行的回调。 使用null清除先前设置的回调（在调用configure并在同步模式下运行之前）。）<br>handler    -》 Handler: Callbacks will happen on the handler’s thread. If null, callbacks are done on the default thread (the caller’s thread or the main thread.)（回调将在处理程序的线程上发生。 如果为null，则在默认线程（调用者线程或主线程）上完成回调。）</li>
+</ul>
+<h4 id="setCallback-1"><a href="#setCallback-1" class="headerlink" title="setCallback"></a>setCallback</h4><p>public void setCallback (MediaCodec.Callback cb)：Sets an asynchronous callback for actionable MediaCodec events on the default looper.Same as setCallback(Callback, Handler) with handler set to null.</p>
+<h4 id="setInputSurface"><a href="#setInputSurface" class="headerlink" title="setInputSurface"></a>setInputSurface</h4><p>public void setInputSurface (Surface surface)：Configures the codec (e.g. encoder) to use a persistent input surface in place of input buffers. This may only be called after configure(MediaFormat, Surface, MediaCrypto, int) and before start(), in lieu of createInputSurface().（配置编解码器（例如编码器）以使用持久输入表面代替输入缓冲器。 这只能在configure（MediaFormat，Surface，MediaCrypto，int）和start（）之前调用，而不是createInputSurface（）。）</p>
+<ul>
+<li>参数<br>surface -》    Surface: a persistent input surface created by createPersistentInputSurface()，This value must never be null.（由createPersistentInputSurface（）创建的持久性输入表面，该值不能为空。）</li>
+<li>异常<br>IllegalStateException  -》    if not in the Configured state or does not require an input surface.（如果不处于配置状态或不需要输入表面。）<br>IllegalArgumentException -》    if the surface was not created by createPersistentInputSurface(). （如果表面不是由createPersistentInputSurface（）创建的。）</li>
+</ul>
+<h4 id="setOnFrameRenderedListener"><a href="#setOnFrameRenderedListener" class="headerlink" title="setOnFrameRenderedListener"></a>setOnFrameRenderedListener</h4><p>public void setOnFrameRenderedListener (MediaCodec.OnFrameRenderedListener listener, Handler handler)：Registers a callback to be invoked when an output frame is rendered on the output surface.This method can be called in any codec state, but will only have an effect in the Executing state for codecs that render buffers to the output surface.<br>Note: This callback is for informational purposes only: to get precise render timing samples, and can be significantly delayed and batched. Some frames may have been rendered even if there was no callback generated.（注册在输出表面上呈现输出帧时调用的回调函数。可以在任何编解码器状态中调用此方法，但仅对于将缓冲区呈现到输出表面的编解码器在执行状态中起作用。<br>注意：此回调仅用于提供信息：获取精确的渲染时间采样，并且可以显着延迟和批处理。 即使没有生成回调，某些帧可能已经被渲染。）</p>
+<ul>
+<li>参数<br>listener     -》 MediaCodec.OnFrameRenderedListener: the callback that will be run，This value may be null.<br>handler -》    Handler: the callback will be run on the handler’s thread. If null, the callback will be run on the default thread, which is the looper from which the codec was created, or a new thread if there was none.</li>
+</ul>
+<h4 id="setOutputSurface"><a href="#setOutputSurface" class="headerlink" title="setOutputSurface"></a>setOutputSurface</h4><p>public void setOutputSurface (Surface surface)：Dynamically sets the output surface of a codec.This can only be used if the codec was configured with an output surface. The new output surface should have a compatible usage type to the original output surface. E.g. codecs may not support switching from a SurfaceTexture (GPU readable) output to ImageReader (software readable) output.（动态设置编解码器的输出表面。仅当编解码器配置有输出表面时才能使用此选项。 新的输出表面应与原始输出表面具有兼容的使用类型。 例如。 编解码器可能不支持从SurfaceTexture（GPU可读）输出切换到ImageReader（软件可读）输出。）</p>
+<ul>
+<li>参数<br>surface -》    Surface: the output surface to use. It must not be null.</li>
+<li>异常<br>IllegalStateException -》    if the codec does not support setting the output surface in the current state.<br>IllegalArgumentException -》    if the new surface is not of a suitable type for the codec.</li>
+</ul>
+<h4 id="setParameters"><a href="#setParameters" class="headerlink" title="setParameters"></a>setParameters</h4><p>public void setParameters (Bundle params)：Communicate additional parameter changes to the component instance. Note: Some of these parameter changes may silently fail to apply.</p>
+<ul>
+<li>参数<br>params    -》Bundle: The bundle of parameters to set.This value may be null.</li>
+<li>异常<br>IllegalStateException    if in the Released state.  </li>
+</ul>
+<h4 id="setVideoScalingMode"><a href="#setVideoScalingMode" class="headerlink" title="setVideoScalingMode"></a>setVideoScalingMode</h4><p>public void setVideoScalingMode (int mode)：If a surface has been specified in a previous call to configure(MediaFormat, Surface, MediaCrypto, int) specifies the scaling mode to use. The default is “scale to fit”.</p>
+<p><strong> ⚠️ </strong> The scaling mode may be reset to the default each time an INFO_OUTPUT_BUFFERS_CHANGED event is received from the codec; therefore, the client must call this method after every buffer change event (and before the first output buffer is released for rendering) to ensure consistent scaling mode.<br><strong> ⚠️ </strong> Since the INFO_OUTPUT_BUFFERS_CHANGED event is deprecated, this can also be done after each INFO_OUTPUT_FORMAT_CHANGED event.</p>
+<ul>
+<li>参数<br>mode -》     int</li>
+<li>异常<br>IllegalArgumentException -》    if mode is not recognized.<br>IllegalStateException -》    if in the Released state.</li>
+</ul>
+<h4 id="signalEndOfInputStream"><a href="#signalEndOfInputStream" class="headerlink" title="signalEndOfInputStream"></a>signalEndOfInputStream</h4><p>public void signalEndOfInputStream ()：Signals end-of-stream on input. Equivalent to submitting an empty buffer with BUFFER_FLAG_END_OF_STREAM set. This may only be used with encoders receiving input from a Surface created by createInputSurface().</p>
+<ul>
+<li>异常<br>IllegalStateException -》    if not in the Executing state.<br>MediaCodec.CodecException    -》 upon codec error.</li>
+</ul>
+<h4 id="start"><a href="#start" class="headerlink" title="start"></a>start</h4><p>public void start ()：After successfully configuring the component, call start.Call start also if the codec is configured in asynchronous mode, and it has just been flushed, to resume requesting input buffers.</p>
+<ul>
+<li>异常<br>IllegalStateException -》    if not in the Configured state or just after flush() for a codec that is configured in asynchronous mode.<br>MediaCodec.CodecException -》    upon codec error. Note that some codec errors for start may be attributed to future method calls.</li>
+</ul>
+<h4 id="stop"><a href="#stop" class="headerlink" title="stop"></a>stop</h4><p>public void stop ()：Finish the decode/encode session, note that the codec instance remains active and ready to be start()ed again. To ensure that it is available to other client call release() and don’t just rely on garbage collection to eventually do this for you.</p>
+<ul>
+<li>异常<br>IllegalStateException -》    if in the Released state.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/" data-id="cjjiiscea003mx6s6olmw8lzc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/05/MediaExtractor译文/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          MediaExtractor译文
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/02/音视频操作使用到的类/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 13.33px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 13.33px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 13.33px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 20px;">Flutter</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 16.67px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 13.33px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 13.33px;">Tool</a> <a href="/tags/andrid/" style="font-size: 16.67px;">andrid</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 13.33px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/12/编写第一个Flutter应用/">编写第一个Flutter应用</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter初体验/">flutter初体验</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-错误记录/">flutter-开发记录（错误或技巧）</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-配置编辑器/">flutter-配置编辑器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-install/">Flutter_install</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

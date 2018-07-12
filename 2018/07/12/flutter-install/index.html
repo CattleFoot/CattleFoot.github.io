@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Flutter_install | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="文章目录：    系统要求 获取Flutter Sdk 克隆仓库 运行flutter doctor 更新系统路径   编译器设置 平台设置 IOS设置 安装Xcode 设置IOS模拟器 部署到IOS设备   Android设置 安装Android Studio 设置Android设备 设置Android模拟器    系统要求安装并运行 Flutter ，你的开发环境必须满足这些最低要求：    操">
+<meta name="keywords" content="Flutter,install,macOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter_install">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/07/12/flutter-install/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="文章目录：    系统要求 获取Flutter Sdk 克隆仓库 运行flutter doctor 更新系统路径   编译器设置 平台设置 IOS设置 安装Xcode 设置IOS模拟器 部署到IOS设备   Android设置 安装Android Studio 设置Android设备 设置Android模拟器    系统要求安装并运行 Flutter ，你的开发环境必须满足这些最低要求：    操">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-12T03:29:58.115Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flutter_install">
+<meta name="twitter:description" content="文章目录：    系统要求 获取Flutter Sdk 克隆仓库 运行flutter doctor 更新系统路径   编译器设置 平台设置 IOS设置 安装Xcode 设置IOS模拟器 部署到IOS设备   Android设置 安装Android Studio 设置Android设备 设置Android模拟器    系统要求安装并运行 Flutter ，你的开发环境必须满足这些最低要求：    操">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-flutter-install" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/12/flutter-install/" class="article-date">
+  <time datetime="2018-07-12T01:06:17.000Z" itemprop="datePublished">2018-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flutter_install
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>文章目录：  </p>
+<ul>
+<li>系统要求</li>
+<li>获取Flutter Sdk<ul>
+<li>克隆仓库</li>
+<li>运行flutter doctor</li>
+<li>更新系统路径</li>
+</ul>
+</li>
+<li>编译器设置</li>
+<li>平台设置</li>
+<li>IOS设置<ul>
+<li>安装Xcode</li>
+<li>设置IOS模拟器</li>
+<li>部署到IOS设备</li>
+</ul>
+</li>
+<li>Android设置<ul>
+<li>安装Android Studio</li>
+<li>设置Android设备</li>
+<li>设置Android模拟器</li>
+</ul>
+</li>
+</ul>
+<h3 id="系统要求"><a href="#系统要求" class="headerlink" title="系统要求"></a>系统要求</h3><p>安装并运行 Flutter ，你的开发环境必须满足这些最低要求：  </p>
+<ul>
+<li><strong>操作系统</strong>：macOS （64-bit）。</li>
+<li><strong>磁盘空间</strong>： 700 MB （不包括 Xcode 和 Android Studio 的磁盘空间）。</li>
+<li><strong>工具</strong>：Flutter 依赖你环境中可用的这些命令行工具。<ul>
+<li>bash， mkdir，rm，git， curl，unzip，which   </li>
+</ul>
+</li>
+</ul>
+<h3 id="获取-Flutter-SDK"><a href="#获取-Flutter-SDK" class="headerlink" title="获取 Flutter SDK"></a>获取 Flutter SDK</h3><p>获取 Flutter ，你可使用 <strong>git</strong> 去克隆 Flutter 的仓库然后添加 <strong>flutter</strong> 工具到你的路径，运行 flutter doctor 显示你可能要安装的依赖。</p>
+<h4 id="克隆仓库"><a href="#克隆仓库" class="headerlink" title="克隆仓库"></a>克隆仓库</h4><p>如果你是第一次在你机器上安装 Flutter ，克隆 <strong>beta</strong> 分支的仓库然后添加 <strong>flutter</strong> 工具到你的路径：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone -b beta https://github.com/flutter/flutter.git</span><br><span class="line">$ export PATH=`pwd`/flutter/bin:$PATH</span><br></pre></td></tr></table></figure></p>
+<p>上面的命令会在当前的终端窗口暂时设置 PATH 变量，要永久添加 Flutter 到你的路径，请参阅 <a href="http://doc.flutter-dev.cn/setup-macos/#update-your-path" target="_blank" rel="noopener">更新你的路径</a>。</p>
+<p>要更新一个现有版本的 Flutter ，请参阅<a href="http://doc.flutter-dev.cn/upgrading/" target="_blank" rel="noopener">更新 Flutter</a> 。</p>
+<h4 id="运行-flutter-doctor"><a href="#运行-flutter-doctor" class="headerlink" title="运行 flutter doctor"></a>运行 flutter doctor</h4><p>运行以下命令可以看到你是否需要安装任何依赖来完成安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ flutter doctor</span><br></pre></td></tr></table></figure></p>
+<p>这个命令会检查你的环境并显示一份报告在终端窗口，Dart SDK 已和 Flutter 捆绑在一起，所以你不需要额外安装 Dart 。仔细检查输出信息是否需要安装其他软件或者执行其他任务（以 <strong>粗体</strong> 字显示）。</p>
+<p>举个例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[-] Android toolchain - develop for Android devices</span><br><span class="line">    • Android SDK at /Users/obiwan/Library/Android/sdk</span><br><span class="line">    ✗ Android SDK is missing command line tools; download from https://goo.gl/XxQghQ</span><br><span class="line">    • Try re-installing or updating your Android SDK,</span><br><span class="line">      visit https://flutter.io/setup/#android-setup for detailed instructions.</span><br></pre></td></tr></table></figure></p>
+<p>这是你第一次去运行 flutter 命令（比如 <strong>flutter doctor</strong> ），它会下载依赖库，并且自行编译。后续运行这条命令就会更加快了。</p>
+<p>接下来的章节就是描述怎么执行这些任务和完成设置过程。你会看到 <strong>flutter doctor</strong> 输出了,假如你是用了 IDE ，就会显示 IntelliJ IDEA ， Android Studio 和 VS Code 这些编译器的可用插件。请参阅<a href="http://doc.flutter-dev.cn/get-started/editor/" target="_blank" rel="noopener">编译器设置</a>根据步骤去安装 Flutter 和 Dart 插件。</p>
+<p>当你安装好了所有缺失的依赖库，运行 <strong>flutter doctor</strong> 命令去验证你的设置是否正确。</p>
+<p>这个 <strong>flutter</strong> 工具使用了 Google Analytics 匿名分析 报告功能，使用情况信息和基本崩溃报告。这些数据用于帮助改进 Flutter 工具。并且这个分析报告是不会在第一次运行或者任何涉及到 <strong>flutter config</strong> 的设置运行时发送，因此你可以在任何分析之前退出分析。要禁用分析的话，输入 <strong>flutter config –no-analytics</strong> ，要显示当前配置的话输入 <strong>flutter config</strong> 。详情请参阅 Google 的隐私政策：www.google.com/intl/en/policies/privacy。</p>
+<h4 id="更新你的路径"><a href="#更新你的路径" class="headerlink" title="更新你的路径"></a>更新你的路径</h4><p>你只能在命令行中更新你当前会话窗口的 PATH 变量，如<a href="http://doc.flutter-dev.cn/setup-macos/#clone-the-repo" target="_blank" rel="noopener">克隆 Flutter</a> 库所示。当永久更新这个变量，这样子你就可以在任意终端会话中运行 flutter 命令了。</p>
+<p>对于计算机来说，永久给全部终端会话修改这个变量这些操作都是不同的。通常，你会打开新窗口时将命令输入。举个例子：</p>
+<ol>
+<li>确定好放置 Flutter SDK 的目录，你会在步骤 3 用到它。</li>
+<li>打开（或者创建） <strong>$HOME/.bash_profile</strong> 这个文件或者文件名可能不同于你计算机的。</li>
+<li><p>添加下面命令行并将 <strong>[PATH_TO_FLUTTER_GIT_DIRECTORY]</strong> 改为你克隆 Flutter 仓库的路径：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export PATH=[PATH_TO_FLUTTER_GIT_DIRECTORY]/flutter/bin:$PATH</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行 <strong>source $HOME/.bash_profile</strong> 刷新当前窗口。</p>
+</li>
+<li>验证 <strong>flutter/bin</strong> 是否在你的路径上：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo $PATH</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>更多的细节，可以参阅<a href="https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path" target="_blank" rel="noopener">StackExchange 上的问题</a>。</p>
+<h3 id="编译器设置"><a href="#编译器设置" class="headerlink" title="编译器设置"></a>编译器设置</h3><p>使用 <strong>flutter</strong> 命令行工具，你可以使用任何编辑器去开发 Flutter 应用。在命令提示符窗口输入 flutter help 可以显示可用的操作。</p>
+<p>我推荐使用我们的插件来获取<a href="http://doc.flutter-dev.cn/using-ide/" target="_blank" rel="noopener">丰富的 IDE 体验</a> ，支持编辑，运行和调试 Flutter 应用。参阅<a href="http://doc.flutter-dev.cn/get-started/editor/" target="_blank" rel="noopener">编译器设置</a>了解详细步骤。</p>
+<h3 id="平台设置"><a href="#平台设置" class="headerlink" title="平台设置"></a>平台设置</h3><p>macOS 支持为 iOS 和 Android 开发 Flutter 应用程序。现在只要在两个系统平台中的一个完成设置，就可以构建运行你的第一个 Flutter 应用程序了。</p>
+<h3 id="iOS-设置"><a href="#iOS-设置" class="headerlink" title="iOS 设置"></a>iOS 设置</h3><h4 id="安装-Xcode"><a href="#安装-Xcode" class="headerlink" title="安装 Xcode"></a>安装 Xcode</h4><p>为 iOS 开发 Flutter 应用，你需要一台安装了 Xcode 7.2 或者更新版本的 Mac 。</p>
+<ol>
+<li>安装 Xcode 7.2 或者更新版本（通过<a href="https://developer.apple.com/xcode/" target="_blank" rel="noopener">网页下载</a>或者 <a href="https://itunes.apple.com/us/app/xcode/id497799835" target="_blank" rel="noopener">App Store</a> 安装）。</li>
+<li>通过在在命令行运行 <strong>sudo xcode-select –switch /Applications/Xcode.app/Contents/Developer</strong> 来配置 Xcode 命令行工具来使用安装好的最新版本 Xcode 。</li>
+</ol>
+<p>大多数情况下，这是安装最新版 Xcode 的正确的路径。如果你想使用不同的版本，请改为指定的路径。</p>
+<p>3.确保 Xcode 许可协议是通过打开一次 Xcode 或者从命令行中运行 <strong>sudo xcodebuild -license</strong> 来签署的。<br>使用 Xcode ，你就可以在你的 iOS 设备或者在模拟器上运行 Flutter 应用。</p>
+<h4 id="设置-iOS-模拟器"><a href="#设置-iOS-模拟器" class="headerlink" title="设置 iOS 模拟器"></a>设置 iOS 模拟器</h4><p>准备在 iOS 模拟器上运行并测试你的 Flutter 应用，根据以下步骤：</p>
+<p>在你的 Mac 上，可以通过 Spotlight 或者使用以下命令找到模拟器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ open -a Simulator</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>通过检查模拟器的 <strong>Hardware &gt; Device</strong> 设置，确保你的模拟器运行 64 位的设备（iPhone 5s 或者更高版本）。</li>
+<li>根据你开发设备的屏幕尺寸，模拟高屏幕密度的 iOS 设备可能会溢出你的屏幕，在模拟器的 <strong>Window &gt; Scale</strong> 菜单设置设备的比例。</li>
+<li>运行 <strong>flutter run</strong> 来启动你的应用</li>
+</ol>
+<h4 id="部署到-iOS-设备"><a href="#部署到-iOS-设备" class="headerlink" title="部署到 iOS 设备"></a>部署到 iOS 设备</h4><p>部署你的 Flutter 应用程序到物理的 iOS 设备，你需要一些额外的工具和一个 Apple 账号。你还需要在 Xcode 中设置物理设备的部署。</p>
+<ol>
+<li>安装 <a href="https://brew.sh/" target="_blank" rel="noopener">homebrew</a>。</li>
+<li>打开终端运行这些命令来安装部署 Flutter 应用程序到 iOS 设备的工具<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install --HEAD libimobiledevice</span><br><span class="line">$ brew install ideviceinstaller ios-deploy cocoapods</span><br><span class="line">$ pod setup</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果这些命令中的任何一个命令失败出现错误，运行 <strong>brew doctor</strong> 并根据说明解决问题。</p>
+<ol>
+<li><p>遵循 Xcode 的签名流程来配置你的项目：</p>
+<ol>
+<li>打开默认的 Xcode 工作空间，找到你的 Flutter 项目目录并打开终端运行 <strong>open ios/Runner.xcworkspace</strong> 。</li>
+<li>在 Xcode 左边的导航面板，选择 <strong>Runner</strong> 项目。</li>
+<li><p>在 <strong>Runner</strong> 目标设置界面，确保在 <strong>General &gt; Signing &gt; Team</strong> 选择了你的开发团队，当你选择了开发团队，Xcode 创建和下载一个开发证书，向你的设备注册你的账户，并创建和下载配置文件（如果你需要的话）。</p>
+<ul>
+<li>要开始你的第一个 iOS 开发项目，你可能需要在 Xcode 上注册你的 Apple ID。<br>Xcode account add<br>任意的 Apple ID 都支持开发和测试。需要注册 Apple 开发者计划才能分发你的应用到 App Store 。请参阅 <a href="https://developer.apple.com/support/compare-memberships/" target="_blank" rel="noopener">Apple 会员类型之间的差异</a>。</li>
+<li>你第一次用物理设备开发 iOS 时，你需要同时信任该设备上的 Mac 和开发证书。 当你的 iOS 设备第一次连接到你的 Mac 时，在对话框提示中选择 <strong>Trust</strong>。<br><a href="&quot;images/trust-computer.png&quot;">Trust Mac</a><br>然后，打开 iOS 设备上的设置，选择 <strong>常规 &gt; 设备管理</strong> 然后信任你的证书。<br>如果 Xcode 的自动签名失败，验证项目的 <strong>General &gt; Identity &gt; Bundle Identifier</strong> 是否唯一。<br><a href="&quot;xcode-unique-bundle-id.png&quot;">Check the app’s Bundle ID</a><br>运行flutter run 启动你的应用程序。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="Android设置"><a href="#Android设置" class="headerlink" title="Android设置"></a>Android设置</h3><h4 id="安装-Android-Studio"><a href="#安装-Android-Studio" class="headerlink" title="安装 Android Studio"></a>安装 Android Studio</h4><p>为 Android 开发 Flutter 应用，你可以使用 Mac ，Windows 或者是 Linux（64 位）机器。</p>
+<p>Flutter 要求安装和配置 Android Studio：</p>
+<ol>
+<li><p>下载并安装 <a href="https://developer.android.com/studio/index.html" target="_blank" rel="noopener">Android Studio</a>。</p>
+</li>
+<li><p>启动 Android Studio，并执行 Android Studio 安装向导。这将会安装 Flutter 为 Android 开发所需的最新的 Android SDK ，Android SDK 平台工具和 Android SDK 构建工具。</p>
+</li>
+</ol>
+<h4 id="设置你的-Android-设备"><a href="#设置你的-Android-设备" class="headerlink" title="设置你的 Android 设备"></a>设置你的 Android 设备</h4><p>为了在 Android 设备上运行和测试你的 Flutter 应用，你需要一台运行 Android 4.1（ API 级别 16 ）或者更高版本的 Android 设备。</p>
+<ol>
+<li>在你的设备上启动 <strong>开发者选项</strong> 和 <strong>USB 调试</strong>，详情说明可在 <a href="https://developer.android.com/studio/debug/dev-options.html" target="_blank" rel="noopener">Android 文档</a>中找到。</li>
+<li>使用 USB 线将设备插入电脑。如果在设备上出现提示，请授权你的电脑访问你的设备。</li>
+<li>在终端运行 flutter devices 命令来验证 Flutter 识别到你连接的 Android 设备。</li>
+<li>运行 flutter run 来启动的你的应用。<br>通常情况下， Flutter 使用了 adb 工具所基于的 Android SDK 版本，如果你要安装使用不同的 Android SDK 版本，就必须设置 ANDROID_HOME 环境变量设置为安装目录。</li>
+</ol>
+<h4 id="设置-Android-模拟器"><a href="#设置-Android-模拟器" class="headerlink" title="设置 Android 模拟器"></a>设置 Android 模拟器</h4><p>准备在 Android 模拟器上运行和测试你的 Flutter 应用，需要按照以下几个步骤来操作：</p>
+<ol>
+<li>在你的电脑上启动 <a href="https://developer.android.com/studio/run/emulator-acceleration.html" target="_blank" rel="noopener">VM 加速</a>。<ol>
+<li>启动 <strong>Android Studio &gt; Tools &gt; Android &gt; AVD Manager</strong> 和选择 <strong>Create Virtual Device</strong> 。</li>
+<li>选择一个设备的定义和选择 <strong>Next</strong> 。</li>
+<li>为你的模拟器 Android 版本选择一个或者多个系统镜像，和选择 <strong>Next</strong> 。推荐使用 x86 or x86_64 镜像。</li>
+<li>为了提高模拟器性能，选择 <strong>Hardware - GLES 2.0</strong> 来启动<a href="https://developer.android.com/studio/run/emulator-acceleration.html" target="_blank" rel="noopener">硬件加速</a>。</li>
+<li>验证 AVD 的配置是否正确，然后选择 Finish 。</li>
+</ol>
+</li>
+</ol>
+<p>有关上述步骤的详细信息,请查阅<a href="https://developer.android.com/studio/run/managing-avds.html" target="_blank" rel="noopener">管理 AVDs</a> 。</p>
+<ol>
+<li>在 Android 虚拟设备管理器中，在工具栏点击 <strong>Run</strong> 。模拟器启动和显示所选操作系统版本和设备的默认界面。</li>
+<li>通过 <strong>flutter run</strong> 来启动你的应用，连接设备的名称是 <strong>Android SDK built for <platform></platform></strong> ，这里的 platform 是指设备 soc 芯片系列，比如 x86 。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-install/" data-id="cjjiiscd2000qx6s64vz21l5c" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/install/">install</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macOS/">macOS</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/12/flutter-配置编辑器/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          flutter-配置编辑器
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/05/音视频点知识/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">音视频点知识</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 13.33px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 13.33px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 13.33px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 20px;">Flutter</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 16.67px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 13.33px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 13.33px;">Tool</a> <a href="/tags/andrid/" style="font-size: 16.67px;">andrid</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 13.33px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/12/编写第一个Flutter应用/">编写第一个Flutter应用</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter初体验/">flutter初体验</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-错误记录/">flutter-开发记录（错误或技巧）</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-配置编辑器/">flutter-配置编辑器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/12/flutter-install/">Flutter_install</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
