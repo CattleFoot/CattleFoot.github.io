@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>android-camera2预览拍照录制 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android 5.0(Lollipop)增加了Camera2 API，并将原有的Camera API标记为废弃。对于原有的Camera API来说，Camera2重新定义了相机的API，也重构了相机API的架构。在Camera2中其主要思想是基于会话模式和事件驱动与相机实现交互，对于预览、拍照、录制等操作都是在会话的基础下请求某种类型的会话操作。 比如一次拍照的操作：     下面一起看下cam">
+<meta name="keywords" content="Android,camera2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android-camera2预览拍照录制">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/07/22/android-camera2预览拍照录制/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="Android 5.0(Lollipop)增加了Camera2 API，并将原有的Camera API标记为废弃。对于原有的Camera API来说，Camera2重新定义了相机的API，也重构了相机API的架构。在Camera2中其主要思想是基于会话模式和事件驱动与相机实现交互，对于预览、拍照、录制等操作都是在会话的基础下请求某种类型的会话操作。 比如一次拍照的操作：     下面一起看下cam">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://cattlefoot.github.io/2018/07/22/android-camera2预览拍照录制/%22./images/take-picture.png%22">
+<meta property="og:updated_time" content="2018-07-24T01:28:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android-camera2预览拍照录制">
+<meta name="twitter:description" content="Android 5.0(Lollipop)增加了Camera2 API，并将原有的Camera API标记为废弃。对于原有的Camera API来说，Camera2重新定义了相机的API，也重构了相机API的架构。在Camera2中其主要思想是基于会话模式和事件驱动与相机实现交互，对于预览、拍照、录制等操作都是在会话的基础下请求某种类型的会话操作。 比如一次拍照的操作：     下面一起看下cam">
+<meta name="twitter:image" content="https://cattlefoot.github.io/2018/07/22/android-camera2预览拍照录制/%22./images/take-picture.png%22">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android-camera2预览拍照录制" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/22/android-camera2预览拍照录制/" class="article-date">
+  <time datetime="2018-07-22T02:06:52.000Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      android-camera2预览拍照录制
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Android 5.0(Lollipop)增加了Camera2 API，并将原有的Camera API标记为废弃。对于原有的Camera API来说，Camera2重新定义了相机的API，也重构了相机API的架构。在Camera2中其主要思想是基于会话模式和事件驱动与相机实现交互，对于预览、拍照、录制等操作都是在会话的基础下请求某种类型的会话操作。</p>
+<p>比如一次拍照的操作：<br><img src="&quot;./images/take-picture.png&quot;" alt="拍照">    </p>
+<p>下面一起看下camera2的操作：</p>
+<ol>
+<li>相机初始化<br>我们知道要使用相机，首先我们需要获得相关的权限，主要是在manifest中定义，其次在Android6.0还需要动态获取权限。</li>
+</ol>
+<ul>
+<li>在manifest中定义需要的权限<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.CAMERA&quot; /&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果要保存照片、录制视频，还需要两个权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.RECORD_AUDIO&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>相机功能：相机特性，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-feature android:name=&quot;android.hardware.camera&quot; /&gt;</span><br><span class="line">&lt;uses-feature android:name=&quot;android.hardware.camera.autofocus&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>动态权限申请<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private final String[] VIDEO_PERMISSIONS = &#123;</span><br><span class="line">           Manifest.permission.CAMERA,</span><br><span class="line">           Manifest.permission.RECORD_AUDIO,</span><br><span class="line">           Manifest.permission.WRITE_EXTERNAL_STORAGE,</span><br><span class="line">           Manifest.permission.READ_EXTERNAL_STORAGE,</span><br><span class="line">   &#125;;</span><br><span class="line">......</span><br><span class="line">   if (!hasPermissionsGranted(getApplicationContext(), VIDEO_PERMISSIONS)) &#123;</span><br><span class="line">               requestPermissions(VIDEO_PERMISSIONS, 1);</span><br><span class="line">               return;</span><br><span class="line">           &#125;</span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">hasPermissionsGranted(Context context, String[] permissions) &#123;</span><br><span class="line">       for (String permission : permissions) &#123;</span><br><span class="line">           if (ActivityCompat.checkSelfPermission(context, permission)</span><br><span class="line">                   != PackageManager.PERMISSION_GRANTED) &#123;</span><br><span class="line">               return false;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return true;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>以上基础工作好了基本可以开始对相机操作了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">//初始化相机设备</span><br><span class="line">private void initCamera() &#123;</span><br><span class="line">       //设备管理类</span><br><span class="line">       cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);</span><br><span class="line">       try &#123;</span><br><span class="line">         //获取相机设备特征类，通过该类可以获取相机的一些特性，如相机的方向</span><br><span class="line">           CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraManager.getCameraIdList()[0]);</span><br><span class="line">           mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);</span><br><span class="line">           Log.e(TAG, &quot;sensor_orientation is :&quot; + mSensorOrientation);</span><br><span class="line">           StreamConfigurationMap streamConfigurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);</span><br><span class="line">           //获取录制视屏时的宽高，这个通过MediaRecorder类获取系统支持的录制视频的宽高，主要是防止配置录制适配配置时失败</span><br><span class="line">           mVideoSize = chooseVideoSize(streamConfigurationMap.getOutputSizes(MediaRecorder.class));</span><br><span class="line">           //根据录制视频支持的宽高和SurfaceTexture支持的宽高，以及当前视图的宽高设置预览视图的宽高</span><br><span class="line">           mPreviewSize = chooseOptimalSize(streamConfigurationMap.getOutputSizes(SurfaceTexture.class), surfaceView.getWidth(), surfaceView.getHeight(), mVideoSize);</span><br><span class="line">           //imageReader初始化，用于获取拍照信息</span><br><span class="line">           imageReader = ImageReader.newInstance(mPreviewSize.getWidth(), mPreviewSize.getHeight(), ImageFormat.JPEG, 2);</span><br><span class="line">           imageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() &#123;</span><br><span class="line">               @Override</span><br><span class="line">               public void onImageAvailable(ImageReader reader) &#123;</span><br><span class="line">                   imageView.setVisibility(View.VISIBLE);</span><br><span class="line">                   // 拿到拍照照片数据</span><br><span class="line">                   Image image = reader.acquireNextImage();</span><br><span class="line">                   ByteBuffer buffer = image.getPlanes()[0].getBuffer();</span><br><span class="line">                   byte[] bytes = new byte[buffer.remaining()];</span><br><span class="line">                   buffer.get(bytes);//由缓冲区存入字节数组</span><br><span class="line">                   final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);</span><br><span class="line">                   if (bitmap != null) &#123;</span><br><span class="line">                       imageView.setImageBitmap(bitmap);</span><br><span class="line">                   &#125;</span><br><span class="line">                   updatePreView();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;, mainHandler);</span><br><span class="line">           //打开摄像头，stateCallback为相机的状态监听回调</span><br><span class="line">           cameraManager.openCamera(cameraManager.getCameraIdList()[0], stateCallback, mainHandler);</span><br><span class="line">           mMediaRecorder = new MediaRecorder();</span><br><span class="line">           Log.d(TAG, &quot;open camera&quot;);</span><br><span class="line"></span><br><span class="line">       &#125; catch (CameraAccessException e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   //开启相机后有一个回调，stateCallback,该回调是用来返回相机是否正常打开的状态的开启相机后有一个回调，stateCallback,该回调是用来返回相机是否正常打开的状态的</span><br><span class="line">     private CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() &#123;</span><br><span class="line">         @Override</span><br><span class="line">         public void onOpened(@NonNull CameraDevice cameraDevice) &#123;</span><br><span class="line">             Log.d(TAG, &quot;camera open&quot;);</span><br><span class="line">             mCameraDevice = cameraDevice;</span><br><span class="line">             takePreview();</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         @Override</span><br><span class="line">         public void onDisconnected(@NonNull CameraDevice cameraDevice) &#123;</span><br><span class="line">             Log.d(TAG, &quot;camera onDisconnected&quot;);</span><br><span class="line"></span><br><span class="line">             if (null != mCameraDevice) &#123;</span><br><span class="line">                 mCameraDevice.close();</span><br><span class="line">                 mCameraDevice = null;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         @Override</span><br><span class="line">         public void onError(@NonNull CameraDevice cameraDevice, int i) &#123;</span><br><span class="line">             Log.d(TAG, &quot;camera onError&quot;);</span><br><span class="line">             cameraDevice.close();</span><br><span class="line">             mCameraDevice = null;</span><br><span class="line">             Toast.makeText(ImageShowActivity.this, &quot;摄像头开启失败&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>开启相机预览</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * 开始预览,此处创建一个捕获视频信息的请求，以此来获取一个会话session，在获取会话时监听其配置状态，一旦成功，则此时通过会话构建一个重复预览的请求；</span><br><span class="line">   */</span><br><span class="line">  private void takePreview() &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">          closePreviewSession();</span><br><span class="line">          SurfaceTexture surfaceTexture = surfaceView.getSurfaceTexture();</span><br><span class="line">          surfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());</span><br><span class="line">          Log.e(TAG, &quot;preview SurfaceTexture buffer size is width:&quot; + mPreviewSize.getWidth() + &quot; height :&quot; + mPreviewSize.getHeight());</span><br><span class="line">          Surface previewSurface = new Surface(surfaceTexture);</span><br><span class="line">          List&lt;Surface&gt; surfaces = new ArrayList&lt;&gt;();</span><br><span class="line">          surfaces.add(previewSurface);</span><br><span class="line">          surfaces.add(imageReader.getSurface());</span><br><span class="line">          // 创建CameraCaptureSession，该对象负责管理处理预览请求和拍照请求</span><br><span class="line">          mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() //</span><br><span class="line">          &#123;</span><br><span class="line">              @Override</span><br><span class="line">              public void onConfigured(CameraCaptureSession cameraCaptureSession) &#123;</span><br><span class="line">                  Log.d(&quot;onConfigured&quot;, &quot;onConfigured&quot;);</span><br><span class="line">                  if (null == mCameraDevice) return;</span><br><span class="line">                  // 当摄像头已经准备好时，开始显示预览</span><br><span class="line">                  mCameraCaptureSession = cameraCaptureSession;</span><br><span class="line">                  updatePreView();</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">              @Override</span><br><span class="line">              public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) &#123;</span><br><span class="line">                  Log.d(&quot;onConfigureFailed&quot;, &quot;onConfigureFailed&quot;);</span><br><span class="line"></span><br><span class="line">                  Toast.makeText(ImageShowActivity.this, &quot;配置失败&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;, childHandler);</span><br><span class="line">      &#125; catch (CameraAccessException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  /**</span><br><span class="line">    * 更新预览视图，构建一个TEMPLATE_PREVIEW捕获请求，此时是对会话进行设置！！！setRepeatingRequest！！！</span><br><span class="line">    */  </span><br><span class="line">  private void updatePreView() &#123;</span><br><span class="line">       try &#123;</span><br><span class="line">           // 创建预览需要的CaptureRequest.Builder</span><br><span class="line">           CaptureRequest.Builder mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);</span><br><span class="line">           // 将SurfaceView的surface作为CaptureRequest.Builder的目标</span><br><span class="line">           SurfaceTexture surfaceTexture = surfaceView.getSurfaceTexture();</span><br><span class="line">           Log.e(TAG, &quot;update preview SurfaceTexture buffer size is width:&quot; + mPreviewSize.getWidth() + &quot; height :&quot; + mPreviewSize.getHeight());</span><br><span class="line">           surfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());</span><br><span class="line">           Surface previewSurface = new Surface(surfaceTexture);</span><br><span class="line"></span><br><span class="line">           mPreviewBuilder.addTarget(previewSurface);</span><br><span class="line">           mPreviewBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);</span><br><span class="line">           mCameraCaptureSession.setRepeatingRequest(mPreviewBuilder.build(), null, childHandler);</span><br><span class="line">       &#125; catch (CameraAccessException e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>拍照</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 拍照，构建一个TEMPLATE_STILL_CAPTURE静态的相机信息捕获请求，需要注意的是需要获取ImageReader的surface并将其作为捕获去请求的目标输出。</span><br><span class="line">     */</span><br><span class="line">private void takePicture() &#123;</span><br><span class="line">      if (mCameraDevice == null)</span><br><span class="line">          return;</span><br><span class="line">      // 创建拍照需要的CaptureRequest.Builder</span><br><span class="line">      try &#123;</span><br><span class="line">          CaptureRequest.Builder captureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);</span><br><span class="line">          // 将surfaceHolder的surface作为CaptureRequest.Builder的目标</span><br><span class="line">          captureRequestBuilder.addTarget(imageReader.getSurface());</span><br><span class="line">          // 自动对焦</span><br><span class="line">          captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);</span><br><span class="line">          // 自动曝光</span><br><span class="line">          captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);</span><br><span class="line">          // 获取手机方向，手机竖屏和平板的方向是不同的，需要调整。</span><br><span class="line">          int rotation = getWindowManager().getDefaultDisplay().getRotation();</span><br><span class="line">          // 根据设备方向计算设置照片的方向</span><br><span class="line">          captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));</span><br><span class="line">          //拍照</span><br><span class="line">          CaptureRequest mCaptureRequest = captureRequestBuilder.build();</span><br><span class="line">          mCameraCaptureSession.capture(mCaptureRequest, null, childHandler);</span><br><span class="line">      &#125; catch (CameraAccessException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">    * Retrieves the JPEG orientation from the specified screen rotation.</span><br><span class="line">    *</span><br><span class="line">    * @param rotation The screen rotation.</span><br><span class="line">    * @return The JPEG orientation (one of 0, 90, 270, and 360)</span><br><span class="line">    */</span><br><span class="line">   private int getOrientation(int rotation) &#123;</span><br><span class="line">       // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)</span><br><span class="line">       // We have to take that into account and rotate JPEG properly.</span><br><span class="line">       // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.</span><br><span class="line">       // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.</span><br><span class="line">       return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>录制视频</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 视屏录制，比较上层api是直接通过Recorder类来实现录制，通过这个不需要自己对视屏数据进行处理，只需要指定具体编码格式即可，同时注意这里是重启一个会话。</span><br><span class="line">     */</span><br><span class="line">    private void startRecordingVideo() &#123;</span><br><span class="line">        //关闭预览会话</span><br><span class="line">        closePreviewSession();</span><br><span class="line">        //对Recoder类进行设置</span><br><span class="line">        setUpMediaRecorder();</span><br><span class="line">        try &#123;</span><br><span class="line">            //创建录制的session会话中的请求</span><br><span class="line">            CaptureRequest.Builder mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);</span><br><span class="line">            //向CaptureRequest添加surface</span><br><span class="line">            SurfaceTexture surfaceTexture = surfaceView.getSurfaceTexture();</span><br><span class="line">            Log.e(TAG, &quot;video SurfaceTexture  buffer size is width:&quot; + mVideoSize.getWidth() + &quot; height :&quot; + mVideoSize.getHeight());</span><br><span class="line">            surfaceTexture.setDefaultBufferSize(mVideoSize.getWidth(), mVideoSize.getHeight());</span><br><span class="line">            Surface previewSurface = new Surface(surfaceTexture);</span><br><span class="line">            mPreviewBuilder.addTarget(previewSurface);</span><br><span class="line">            //向CaptureRequest添加surface</span><br><span class="line">            mPreviewBuilder.addTarget(mMediaRecorder.getSurface());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            mCameraDevice.createCaptureSession(Arrays.asList(previewSurface, mMediaRecorder.getSurface()), new</span><br><span class="line">                    CameraCaptureSession.StateCallback() &#123;</span><br><span class="line">                        @Override</span><br><span class="line">                        public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) &#123;</span><br><span class="line">                            mCameraCaptureSession = cameraCaptureSession;</span><br><span class="line">                            updatePreView();</span><br><span class="line">                            runOnUiThread(new Runnable() &#123;</span><br><span class="line">                                @Override</span><br><span class="line">                                public void run() &#123;</span><br><span class="line">                                    mMediaRecorder.start();</span><br><span class="line"></span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        @Override</span><br><span class="line">                        public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) &#123;</span><br><span class="line">                            Log.d(&quot;onConfigureFailed&quot;, &quot;onConfigureFailed&quot;);</span><br><span class="line"></span><br><span class="line">                            Toast.makeText(ImageShowActivity.this, &quot;RecordingVideo 配置失败&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;, childHandler);</span><br><span class="line">        &#125; catch (CameraAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 对Recorder类进行设置，主要包括音频、视频源、视频输出格式、输出路径、编码频率、视频帧频率、视频宽高、视频编码格式、音频编码格式</span><br><span class="line">     */</span><br><span class="line">    private void setUpMediaRecorder() &#123;</span><br><span class="line">        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);</span><br><span class="line">        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);</span><br><span class="line">        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);</span><br><span class="line">        //!!!这里需要设置路径，要不获取surface时会为空。context.getExternalFilesDir(null);</span><br><span class="line">        mMediaRecorder.setOutputFile(Environment</span><br><span class="line">                .getExternalStorageDirectory() + &quot;/&quot; + System.currentTimeMillis() + &quot;.mp4&quot;);</span><br><span class="line">        mMediaRecorder.setVideoEncodingBitRate(10000000);</span><br><span class="line">        mMediaRecorder.setVideoFrameRate(30);</span><br><span class="line">        // 设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错!!!!!!需要小心设置，同时需要根据Recorder类来遴选出当前设备支持的分辨率，如果不恰当，则录制视频的时候会显示配置失败</span><br><span class="line">        Log.e(TAG, &quot;video size is width:&quot; + mVideoSize.getWidth() + &quot; height :&quot; + mVideoSize.getHeight());</span><br><span class="line">        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());</span><br><span class="line"></span><br><span class="line">        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);</span><br><span class="line">        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);</span><br><span class="line">        int rotation = getWindowManager().getDefaultDisplay().getRotation();</span><br><span class="line">        //调整视频的方向</span><br><span class="line">        switch (mSensorOrientation) &#123;</span><br><span class="line">            case SENSOR_ORIENTATION_DEFAULT_DEGREES:</span><br><span class="line">                mMediaRecorder.setOrientationHint(DEFAULT_ORIENTATIONS.get(rotation));</span><br><span class="line">                break;</span><br><span class="line">            case SENSOR_ORIENTATION_INVERSE_DEGREES:</span><br><span class="line">                mMediaRecorder.setOrientationHint(INVERSE_ORIENTATIONS.get(rotation));</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            mMediaRecorder.prepare();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>手机支持的一些分辨率：<br>width:4608 height:3456<br>width:4608 height:2304<br>width:3456 height:3456<br>width:3840 height:2160<br>width:3280 height:2448<br>width:3264 height:2448<br>width:3264 height:1840<br>width:3264 height:1632<br>width:2448 height:2448<br>width:2592 height:1952<br>width:2048 height:1536<br>width:1920 height:1080<br>width:1440 height:1080<br>width:1536 height:864<br>width:1456 height:1456<br>width:1920 height:960<br>width:1440 height:720<br>width:1280 height:960<br>width:1280 height:720<br>width:960 height:720</p>
+<p>参考地址：<br>[1].官网示例 <a href="https://github.com/googlesamples/android-Camera2Basic" target="_blank" rel="noopener">https://github.com/googlesamples/android-Camera2Basic</a><br>[2]. <a href="https://blog.csdn.net/z_x_Qiang/article/details/77600880?locationNum=1&amp;fps=1" target="_blank" rel="noopener">https://blog.csdn.net/z_x_Qiang/article/details/77600880?locationNum=1&amp;fps=1</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/07/22/android-camera2预览拍照录制/" data-id="cjkw64a3t000ngms6idf6ldph" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/camera2/">camera2</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/08/12/LinearLayout源码解读/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          LinearLayout源码解读
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/17/http之head解析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">http之head解析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/16/根据Uri获取文档的路径/">根据Uri获取文档的路径</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/12/LinearLayout源码解读/">LinearLayout源码解读</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/android-camera2预览拍照录制/">android-camera2预览拍照录制</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/17/http之head解析/">http之head解析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/17/okhttp使用记录/">okhttp使用记录</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

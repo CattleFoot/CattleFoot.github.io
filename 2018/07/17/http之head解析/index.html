@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>http之head解析 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Header Header 解释 示例     Accept-Ranges 表明服务器是否支持指定范围请求及那种类型的分段请求 Accept-Ranges: bytes   Age 从原始服务器到代理缓存形成的估算时间（以秒计，非负） Age：12   Allow 对某网络资源的有效请求行为，不允许则返回405 Allow：GET，HEAD   Cache-Control 告诉所有的缓存机制">
+<meta name="keywords" content="HTTP,head">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http之head解析">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/07/17/http之head解析/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="Header Header 解释 示例     Accept-Ranges 表明服务器是否支持指定范围请求及那种类型的分段请求 Accept-Ranges: bytes   Age 从原始服务器到代理缓存形成的估算时间（以秒计，非负） Age：12   Allow 对某网络资源的有效请求行为，不允许则返回405 Allow：GET，HEAD   Cache-Control 告诉所有的缓存机制">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-17T06:42:49.234Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="http之head解析">
+<meta name="twitter:description" content="Header Header 解释 示例     Accept-Ranges 表明服务器是否支持指定范围请求及那种类型的分段请求 Accept-Ranges: bytes   Age 从原始服务器到代理缓存形成的估算时间（以秒计，非负） Age：12   Allow 对某网络资源的有效请求行为，不允许则返回405 Allow：GET，HEAD   Cache-Control 告诉所有的缓存机制">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-http之head解析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/17/http之head解析/" class="article-date">
+  <time datetime="2018-07-17T03:31:15.000Z" itemprop="datePublished">2018-07-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      http之head解析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <table>
+<thead>
+<tr>
+<th style="text-align:left">Header</th>
+<th style="text-align:left">Header 解释</th>
+<th style="text-align:left">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Accept-Ranges</td>
+<td style="text-align:left">表明服务器是否支持指定范围请求及那种类型的分段请求</td>
+<td style="text-align:left">Accept-Ranges: bytes</td>
+</tr>
+<tr>
+<td style="text-align:left">Age</td>
+<td style="text-align:left">从原始服务器到代理缓存形成的估算时间（以秒计，非负）</td>
+<td style="text-align:left">Age：12</td>
+</tr>
+<tr>
+<td style="text-align:left">Allow</td>
+<td style="text-align:left">对某网络资源的有效请求行为，不允许则返回405</td>
+<td style="text-align:left">Allow：GET，HEAD</td>
+</tr>
+<tr>
+<td style="text-align:left">Cache-Control</td>
+<td style="text-align:left">告诉所有的缓存机制是否可以缓存及那种类型</td>
+<td style="text-align:left">Cache-Control: no-cache</td>
+</tr>
+<tr>
+<td style="text-align:left">Content-Encoding</td>
+<td style="text-align:left">web服务器支持的返回内容压缩编码类型</td>
+<td style="text-align:left">Content-Encoding:gzip</td>
+</tr>
+<tr>
+<td style="text-align:left">Content-Language</td>
+<td style="text-align:left">响应体的语言</td>
+<td style="text-align:left">Content-Language: en,zh</td>
+</tr>
+<tr>
+<td style="text-align:left">Content-Length</td>
+<td style="text-align:left">响应体的长度</td>
+<td style="text-align:left">Content-Length:348</td>
+</tr>
+<tr>
+<td style="text-align:left">Content-Location</td>
+<td style="text-align:left">请求资源可替代的备用的另一个地址</td>
+<td style="text-align:left">Content-Location: /index.htm</td>
+</tr>
+<tr>
+<td style="text-align:left">Content-MD5</td>
+<td style="text-align:left">返回资源的MD5校验值</td>
+<td style="text-align:left">Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</td>
+</tr>
+<tr>
+<td style="text-align:left">Content-Range</td>
+<td style="text-align:left">在整个返回体中本部分的字节位置</td>
+<td style="text-align:left">Content-Range: bytes 21010-47021/47022</td>
+</tr>
+<tr>
+<td style="text-align:left">Content-type</td>
+<td style="text-align:left">返回内容的MIME类型</td>
+<td style="text-align:left">Content-Type: text/html; charset=utf-8</td>
+</tr>
+<tr>
+<td style="text-align:left">Date</td>
+<td style="text-align:left">原始服务器消息发出的时间</td>
+<td style="text-align:left">Date: Tue, 15 Nov 2010 08:12:31 GMT</td>
+</tr>
+<tr>
+<td style="text-align:left">ETag</td>
+<td style="text-align:left">请求变量的实体标签的当前值</td>
+<td style="text-align:left">ETag: “737060cd8c284d8af7ad3082f209582d”</td>
+</tr>
+<tr>
+<td style="text-align:left">Expires</td>
+<td style="text-align:left">响应过期的日期和时间</td>
+<td style="text-align:left">Expires: Thu, 01 Dec 2010 16:00:00 GMT</td>
+</tr>
+<tr>
+<td style="text-align:left">Last-Modified</td>
+<td style="text-align:left">请求资源的最后修改时间</td>
+<td style="text-align:left">Last-Modified: Tue, 15 Nov 2010 12:45:26 GMT</td>
+</tr>
+<tr>
+<td style="text-align:left">Location</td>
+<td style="text-align:left">用来重定向接收方到非请求URL的位置来完成请求和标识新的资源</td>
+<td style="text-align:left">Location: <a href="http://www.zcmhi.com/archives/94.html" target="_blank" rel="noopener">http://www.zcmhi.com/archives/94.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Pragma</td>
+<td style="text-align:left">包括实现特定的指令，它可应用到响应链上的任何接收方</td>
+<td style="text-align:left">Pragma: no-cache</td>
+</tr>
+<tr>
+<td style="text-align:left">Proxy-Authenticate</td>
+<td style="text-align:left">它指出认证方案和可应用到代理的该URL上的参数</td>
+<td style="text-align:left">Proxy-Authenticate: Basic</td>
+</tr>
+<tr>
+<td style="text-align:left">refresh</td>
+<td style="text-align:left">应用于重定向或一个新的资源被创造，在5秒之后重定向（由网景提出，被大部分浏览器支持）</td>
+<td style="text-align:left">Refresh: 5; url=</td>
+</tr>
+</tbody>
+</table>
+<p><a href="http://www.zcmhi.com/archives/94.html" target="_blank" rel="noopener">http://www.zcmhi.com/archives/94.html</a> |<br>| Retry-After | 如果实体暂时不可取，通知客户端在指定时间之后再次尝试  | Retry-After: 120 |<br>| Server | web服务器软件名称 | Server: Apache/1.3.27 (Unix) (Red-Hat/Linux) |<br>| Set-Cookie | 设置Http Cookie | Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1 |<br>| Trailer | 指出头域在分块传输编码的尾部存在 | Trailer: Max-Forwards |<br>| Transfet-Encoding | 文件传输编码 | Transfer-Encoding:chunked |<br>| Vary | 告诉下游代理是使用缓存响应还是从原始服务器请求 | Vary: * |<br>| Via | 告诉代理客户端响应是通过哪里发送的 | Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1) |<br>| Warning | 警告实体可能存在的问题 | Warning: 199 Miscellaneous warning |<br>| WWW-Authenticate | 表明客户端请求实体应该使用的授权方案  | WWW-Authenticate: Basic |</p>
+<h3 id="HTTP-Request的Header信息"><a href="#HTTP-Request的Header信息" class="headerlink" title="HTTP Request的Header信息"></a>HTTP Request的Header信息</h3><p>http请求由三部分组成，分别是：请求行、消息报头、请求正文。请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本，格式如下：<br>POST /rest/sur?dk=28192985&amp;ak=23565637&amp;av=4.5.0&amp;c=default-Channel&amp;v=3.0&amp;s=72eec83f97e2d4b15457f2b348b450d2&amp;d=Wp4zp4JKnXIDAPzAGdNq5Fdp&amp;sv=6.2.0&amp;p=MacOSX&amp;t=1531794939&amp;u=&amp;is=0 HTTP/1.1<br>一个简单的请求头：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /rest/sur?dk=28192985&amp;ak=23565637&amp;av=4.5.0&amp;c=default-Channel&amp;v=3.0&amp;s=72eec83f97e2d4b15457f2b348b450d2&amp;d=Wp4zp4JKnXIDAPzAGdNq5Fdp&amp;sv=6.2.0&amp;p=MacOSX&amp;t=1531794939&amp;u=&amp;is=0 HTTP/1.1</span><br><span class="line">Host	adash.m.taobao.com</span><br><span class="line">Content-Type	multipart/form-data; boundary=--iphone_BOUNDARY--</span><br><span class="line">Connection	keep-alive</span><br><span class="line">Accept	*/*</span><br><span class="line">User-Agent	%E9%92%89%E9%92%89/400 CFNetwork/901.1 Darwin/17.6.0 (x86_64)</span><br><span class="line">Accept-Language	zh-cn</span><br><span class="line">Accept-Encoding	gzip</span><br><span class="line">Content-Length	702</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>HTTP请求方式</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">方法</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">GET</td>
+<td style="text-align:left">向Web服务器请求一个文件</td>
+</tr>
+<tr>
+<td style="text-align:left">POST</td>
+<td style="text-align:left">向Web服务器发送数据让Web服务器进行处理</td>
+</tr>
+<tr>
+<td style="text-align:left">PUT</td>
+<td style="text-align:left">向Web服务器发送数据并存储在Web服务器内部</td>
+</tr>
+<tr>
+<td style="text-align:left">HEAD</td>
+<td style="text-align:left">检查一个对象是否存在</td>
+</tr>
+<tr>
+<td style="text-align:left">DELETE</td>
+<td style="text-align:left">从Web服务器上删除一个文件</td>
+</tr>
+<tr>
+<td style="text-align:left">CONNECT</td>
+<td style="text-align:left">对通道提供支持</td>
+</tr>
+<tr>
+<td style="text-align:left">TRACE</td>
+<td style="text-align:left">跟踪到服务器的路径</td>
+</tr>
+<tr>
+<td style="text-align:left">OPTIONS</td>
+<td style="text-align:left">查询Web服务器的性能</td>
+</tr>
+</tbody>
+</table>
+<p>说明：<br>主要使用到“GET”和“POST”。</p>
+<p>实例：<br>POST /test/tupian/cm HTTP/1.1<br>分成三部分：</p>
+<ul>
+<li><p>POST：HTTP请求方式</p>
+</li>
+<li><p>/test/tupian/cm：请求Web服务器的目录地址（或者指令）</p>
+</li>
+<li><p>HTTP/1.1: URI（Uniform Resource Identifier，统一资源标识符）及其版本</p>
+</li>
+</ul>
+<p><strong>备注：</strong>  在Ajax中，对应method属性设置。</p>
+<ol>
+<li>Host</li>
+</ol>
+<p>说明：<br>请求的web服务器域名地址</p>
+<p>实例：<br>例如web请求URL：<a href="http://zjm-forum-test10.zjm.baidu.com:8088/test/tupian/cm" target="_blank" rel="noopener">http://zjm-forum-test10.zjm.baidu.com:8088/test/tupian/cm</a> ，Host就为zjm-forum-test10.zjm.baidu.com:8088</p>
+<ol>
+<li>User-Agent</li>
+</ol>
+<p>说明：<br>HTTP客户端运行的浏览器类型的详细信息。通过该头部信息，web服务器可以判断到当前HTTP请求的客户端浏览器类别。</p>
+<p>实例：<br>User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11</p>
+<ol>
+<li>Accept</li>
+</ol>
+<p>说明：<br>指定客户端能够接收的内容类型，内容类型中的先后次序表示客户端接收的先后次序。</p>
+<p>实例：<br>Accept:text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,<em>/</em>;q=0.5</p>
+<p>备注：<br>在Prototyp（1.5）的Ajax代码封装中，将Accept默认设置为“text/javascript, text/html, application/xml, text/xml, <em>/</em>”。这是因为Ajax默认获取服务器返回的Json数据模式。在Ajax代码中，可以使用XMLHttpRequest 对象中setRequestHeader函数方法来动态设置这些Header信息。</p>
+<ol>
+<li>Accept-Language</li>
+</ol>
+<p>说明：<br>指定HTTP客户端浏览器用来展示返回信息所优先选择的语言。</p>
+<p>实例：<br>Accept-Language: zh-cn,zh;q=0.5   ,这里默认为中文。</p>
+<ol>
+<li>Accept-Encoding</li>
+</ol>
+<p>说明：<br>指定客户端浏览器可以支持的web服务器返回内容压缩编码类型。表示允许服务器在将输出内容发送到客户端以前进行压缩，以节约带宽。而这里设置的就是客户端浏览器所能够支持的返回压缩格式。</p>
+<p>实例：<br>Accept-Encoding: gzip,deflate</p>
+<p><strong>备注：</strong>  其实在百度很多产品线中，apache在给客户端返回页面数据之前，将数据以gzip格式进行压缩。</p>
+<p>另外有关deflate压缩介绍：<a href="http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_deflate.html" target="_blank" rel="noopener">http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_deflate.html</a></p>
+<ol>
+<li>Accept-Charset</li>
+</ol>
+<p>说明：<br>浏览器可以接受的字符编码集。</p>
+<p>实例：Accept-Charset: gb2312,utf-8;q=0.7,*;q=0.7</p>
+<ol>
+<li>Content-Type</li>
+</ol>
+<p>说明：  显示此HTTP请求提交的内容类型。一般只有post提交时才需要设置该属性。</p>
+<p>实例：  Content-type: application/x-www-form-urlencoded;charset:UTF-8</p>
+<p>有关Content-Type属性值可以如下两种编码类型：  </p>
+<ul>
+<li>“application/x-www-form-urlencoded”： 表单数据向服务器提交时所采用的编码类型，默认的缺省值就是“application/x-www-form-urlencoded”。 然而，在向服务器发送大量的文本、包含非ASCII字符的文本或二进制数据时这种编码方式效率很低。</li>
+<li>“multipart/form-data”： 在文件上载时，所使用的编码类型应当是“multipart/form-data”，它既可以发送文本数据，也支持二进制数据上载。  </li>
+</ul>
+<p>当提交为表单数据时，可以使用“application/x-www-form-urlencoded”；当提交的是文件时，就需要使用“multipart/form-data”编码类型。</p>
+<p>在Content-Type属性当中还是指定提交内容的charset字符编码。一般不进行设置，它只是告诉web服务器post提交的数据采用的何种字符编码。 一般在开发过程，是由前端工程与后端UI工程师商量好使用什么字符编码格式来post提交的，然后后端ui工程师按照固定的字符编码来解析提交的数据。所以这里设置的charset没有多大作用。</p>
+<ol>
+<li>Connection</li>
+</ol>
+<p>说明： 表示是否需要持久连接。如果web服务器端看到这里的值为“Keep-Alive”，或者看到请求使用的是HTTP 1.1（HTTP 1.1默认进行持久连接），它就可以利用持久连接的优点，当页面包含多个元素时（例如Applet，图片），显著地减少下载所需要的时间。要实现这一点， web服务器需要在返回给客户端HTTP头信息中发送一个Content-Length（返回信息正文的长度）头，最简单的实现方法是：先把内容写入ByteArrayOutputStream，然 后在正式写出内容之前计算它的大小。</p>
+<p>实例： Connection: keep-alive</p>
+<ol>
+<li>Keep-Alive</li>
+</ol>
+<p>说明：显示此HTTP连接的Keep-Alive时间。使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。</p>
+<p>以前HTTP请求是一站式连接，从HTTP/1.1协议之后，就有了长连接，即在规定的Keep-Alive时间内，连接是不会断开的。</p>
+<p>实例： Keep-Alive: 300</p>
+<ol>
+<li>cookie</li>
+</ol>
+<p>说明：HTTP请求发送时，会把保存在该请求域名下的所有cookie值一起发送给web服务器。</p>
+<ol>
+<li>Referer</li>
+</ol>
+<p>说明：包含一个URL，用户从该URL代表的页面出发访问当前请求的页面</p>
+<h3 id="服务器端返回HTTP头部信息"><a href="#服务器端返回HTTP头部信息" class="headerlink" title="服务器端返回HTTP头部信息"></a>服务器端返回HTTP头部信息</h3><p>简单示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type	text/plain</span><br><span class="line">Content-Length	8</span><br><span class="line">Last-Modified	Mon, 15 May 2017 18:04:40 GMT</span><br><span class="line">ETag	&quot;ae780585f49b94ce1444eb7d28906123&quot;</span><br><span class="line">Accept-Ranges	bytes</span><br><span class="line">Server	AmazonS3</span><br><span class="line">X-Amz-Cf-Id	jodC9tJqDu4my9HVAend7hMtgKNcrlV4SUHJOKveUP-hHSIJ6ewkig==</span><br><span class="line">Cache-Control	no-cache, no-store, must-revalidate</span><br><span class="line">Date	Tue, 17 Jul 2018 02:28:52 GMT</span><br><span class="line">Proxy-Connection	Keep-alive</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>Content-Length</li>
+</ol>
+<p>说明：表示web服务器返回消息正文的长度</p>
+<ol>
+<li>Content-Type:</li>
+</ol>
+<p>说明：返回数据的类型（例如text/html文本类型）和字符编码格式。</p>
+<p>实例： Content-Type: text/html;charset=utf-8</p>
+<ol>
+<li>Date<br>说明：显示当前的时间</li>
+</ol>
+<p>本文根据RFC2616(HTTP/1.1规范),参考</p>
+<p><a href="http://www.w3.org/Protocols/rfc2068/rfc2068" target="_blank" rel="noopener">http://www.w3.org/Protocols/rfc2068/rfc2068</a></p>
+<p><a href="http://www.w3.org/Protocols/rfc2616/rfc2616" target="_blank" rel="noopener">http://www.w3.org/Protocols/rfc2616/rfc2616</a></p>
+<p><a href="http://www.ietf.org/rfc/rfc3229.txt" target="_blank" rel="noopener">http://www.ietf.org/rfc/rfc3229.txt</a></p>
+<p><a href="https://blog.csdn.net/u012359618/article/details/50240617" target="_blank" rel="noopener">https://blog.csdn.net/u012359618/article/details/50240617</a>  </p>
+<p><a href="https://www.cnblogs.com/wenqiang/p/5698772.html" target="_blank" rel="noopener">https://www.cnblogs.com/wenqiang/p/5698772.html</a></p>
+<p>通常HTTP消息包括客户机向服务器的请求消息和服务器向客户机的响应消息。这两种类型的消息由一个起始行，一个或者多个头域，一个只是头域结束的空行和可 选的消息体组成。HTTP的头域包括通用头，请求头，响应头和实体头四个部分。每个头域由一个域名，冒号（:）和域值三部分组成。域名是大小写无关的，域 值前可以添加任何数量的空格符，头域可以被扩展为多行，在每行开始处，使用至少一个空格或制表符。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/07/17/http之head解析/" data-id="cjkw64a4q0039gms6u1e164dd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/head/">head</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/22/android-camera2预览拍照录制/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          android-camera2预览拍照录制
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/17/okhttp使用记录/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">okhttp使用记录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/16/根据Uri获取文档的路径/">根据Uri获取文档的路径</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/12/LinearLayout源码解读/">LinearLayout源码解读</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/android-camera2预览拍照录制/">android-camera2预览拍照录制</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/17/http之head解析/">http之head解析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/17/okhttp使用记录/">okhttp使用记录</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

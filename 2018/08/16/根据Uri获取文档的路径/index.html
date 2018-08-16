@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>根据Uri获取文档的路径 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="根据Url获取文档的绝对路径，解决Android4.4以上版本Uri转换。Android在4.4之后的版本(包括4.4)中，从相册中选取图片返回Uri进行了改动。所以无法通过该Uri来取得文件路径从而解码图片将其显示出来。在4.3或以下可以直接用Intent.ACTION_GET_CONTENT打开相册;在4.4或以上,官方建议用ACTION_OPEN_DOCUMENT打开相册在Android4.">
+<meta name="keywords" content="android,Uri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="根据Uri获取文档的路径">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/08/16/根据Uri获取文档的路径/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="根据Url获取文档的绝对路径，解决Android4.4以上版本Uri转换。Android在4.4之后的版本(包括4.4)中，从相册中选取图片返回Uri进行了改动。所以无法通过该Uri来取得文件路径从而解码图片将其显示出来。在4.3或以下可以直接用Intent.ACTION_GET_CONTENT打开相册;在4.4或以上,官方建议用ACTION_OPEN_DOCUMENT打开相册在Android4.">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-08-16T06:12:24.500Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="根据Uri获取文档的路径">
+<meta name="twitter:description" content="根据Url获取文档的绝对路径，解决Android4.4以上版本Uri转换。Android在4.4之后的版本(包括4.4)中，从相册中选取图片返回Uri进行了改动。所以无法通过该Uri来取得文件路径从而解码图片将其显示出来。在4.3或以下可以直接用Intent.ACTION_GET_CONTENT打开相册;在4.4或以上,官方建议用ACTION_OPEN_DOCUMENT打开相册在Android4.">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-根据Uri获取文档的路径" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/16/根据Uri获取文档的路径/" class="article-date">
+  <time datetime="2018-08-16T06:11:33.000Z" itemprop="datePublished">2018-08-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      根据Uri获取文档的路径
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>根据Url获取文档的绝对路径，解决Android4.4以上版本Uri转换。<br>Android在4.4之后的版本(包括4.4)中，从相册中选取图片返回Uri进行了改动。所以无法通过该Uri来取得文件路径从而解码图片将其显示出来。<br><code>在4.3或以下可以直接用Intent.ACTION_GET_CONTENT打开相册;在4.4或以上,官方建议用ACTION_OPEN_DOCUMENT打开相册</code><br>在Android4.4之前得到的Uri为：</p>
+<ul>
+<li>content://media/external/images/media/8302  </li>
+<li>content://media/external/video/media  </li>
+<li>content://media/external/images/media  </li>
+</ul>
+<p>而在Android4.4后得到的可能是以下：</p>
+<ul>
+<li>content://com.android.providers.media.documents/document/image:8302</li>
+<li>content://com.android.providers.downloads.documents/document/5</li>
+</ul>
+<p>以下为Android4.4之后的适配：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line"> *</span><br><span class="line"> * 专为Android4.4设计的从Uri获取文件绝对路径</span><br><span class="line"> */</span><br><span class="line">@SuppressLint(&quot;NewApi&quot;)</span><br><span class="line">public static String getPath(final Context context, final Uri uri) &#123;</span><br><span class="line">    final boolean isKitKat = Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT;</span><br><span class="line">    LogUtil.d(&quot;uri:&quot; + uri);</span><br><span class="line">    // DocumentProvider</span><br><span class="line">    if (isKitKat &amp;&amp; DocumentsContract.isDocumentUri(context, uri)) &#123;</span><br><span class="line">        // ExternalStorageProvider</span><br><span class="line">        if (isExternalStorageDocument(uri)) &#123;</span><br><span class="line">            final String docId = DocumentsContract.getDocumentId(uri);</span><br><span class="line">            final String[] split = docId.split(&quot;:&quot;);</span><br><span class="line">            final String type = split[0];</span><br><span class="line"></span><br><span class="line">            if (&quot;primary&quot;.equalsIgnoreCase(type)) &#123;</span><br><span class="line">                return Environment.getExternalStorageDirectory() + &quot;/&quot; + split[1];</span><br><span class="line">            &#125;</span><br><span class="line">            // TODO handle non-primary volumes</span><br><span class="line">        &#125;</span><br><span class="line">        // DownloadsProvider</span><br><span class="line">        else if (isDownloadsDocument(uri)) &#123;</span><br><span class="line"></span><br><span class="line">            final String id = DocumentsContract.getDocumentId(uri);</span><br><span class="line">            final Uri contentUri = ContentUris.withAppendedId(Uri.parse(&quot;content://downloads/public_downloads&quot;), Long.valueOf(id));</span><br><span class="line"></span><br><span class="line">            return getDataColumn(context, contentUri, null, null);</span><br><span class="line">        &#125;</span><br><span class="line">        // MediaProvider</span><br><span class="line">        else if (isMediaDocument(uri)) &#123;</span><br><span class="line">            final String docId = DocumentsContract.getDocumentId(uri);</span><br><span class="line">            final String[] split = docId.split(&quot;:&quot;);</span><br><span class="line">            final String type = split[0];</span><br><span class="line"></span><br><span class="line">            Uri contentUri = null;</span><br><span class="line">            if (&quot;image&quot;.equals(type)) &#123;</span><br><span class="line">                contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;</span><br><span class="line">            &#125; else if (&quot;video&quot;.equals(type)) &#123;</span><br><span class="line">                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;</span><br><span class="line">            &#125; else if (&quot;audio&quot;.equals(type)) &#123;</span><br><span class="line">                contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            final String selection = &quot;_id=?&quot;;</span><br><span class="line">            final String[] selectionArgs = new String[]&#123;split[1]&#125;;</span><br><span class="line">            LogUtil.d(&quot;format uri:&quot; + contentUri);</span><br><span class="line">            return getDataColumn(context, contentUri, selection, selectionArgs);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // MediaStore (and general)</span><br><span class="line">    else if (&quot;content&quot;.equalsIgnoreCase(uri.getScheme())) &#123;</span><br><span class="line">        return getDataColumn(context, uri, null, null);</span><br><span class="line">    &#125;</span><br><span class="line">    // File</span><br><span class="line">    else if (&quot;file&quot;.equalsIgnoreCase(uri.getScheme())) &#123;</span><br><span class="line">        return uri.getPath();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Get the value of the data column for this Uri. This is useful for</span><br><span class="line"> * MediaStore Uris, and other file-based ContentProviders.</span><br><span class="line"> *</span><br><span class="line"> * @param context       The context.</span><br><span class="line"> * @param uri           The Uri to query.</span><br><span class="line"> * @param selection     (Optional) Filter used in the query.</span><br><span class="line"> * @param selectionArgs (Optional) Selection arguments used in the query.</span><br><span class="line"> * @return The value of the _data column, which is typically a file path.</span><br><span class="line"> */</span><br><span class="line">public static String getDataColumn(Context context, Uri uri, String selection,</span><br><span class="line">                                   String[] selectionArgs) &#123;</span><br><span class="line"></span><br><span class="line">    Cursor cursor = null;</span><br><span class="line">    final String column = &quot;_data&quot;;</span><br><span class="line">    final String[] projection = &#123;column&#125;;</span><br><span class="line"></span><br><span class="line">    try &#123;</span><br><span class="line">        cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,</span><br><span class="line">                null);</span><br><span class="line">        if (cursor != null &amp;&amp; cursor.moveToFirst()) &#123;</span><br><span class="line">            final int column_index = cursor.getColumnIndexOrThrow(column);</span><br><span class="line">            return cursor.getString(column_index);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        if (cursor != null)</span><br><span class="line">            cursor.close();</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line">  * @param uri The Uri to check.</span><br><span class="line">  * @return Whether the Uri authority is ExternalStorageProvider.</span><br><span class="line">  */</span><br><span class="line"> public static boolean isExternalStorageDocument(Uri uri) &#123;</span><br><span class="line">     return &quot;com.android.externalstorage.documents&quot;.equals(uri.getAuthority());</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> /**</span><br><span class="line">  * @param uri The Uri to check.</span><br><span class="line">  * @return Whether the Uri authority is DownloadsProvider.</span><br><span class="line">  */</span><br><span class="line"> public static boolean isDownloadsDocument(Uri uri) &#123;</span><br><span class="line">     return &quot;com.android.providers.downloads.documents&quot;.equals(uri.getAuthority());</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> /**</span><br><span class="line">  * @param uri The Uri to check.</span><br><span class="line">  * @return Whether the Uri authority is MediaProvider.</span><br><span class="line">  */</span><br><span class="line"> public static boolean isMediaDocument(Uri uri) &#123;</span><br><span class="line">     return &quot;com.android.providers.media.documents&quot;.equals(uri.getAuthority());</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>首先我们看一个获取Mp3文档的Uri，其格式类似：content://com.android.providers.media.documents/document/audio%3A39，<br>然后我根据代码进一步分析，首先看判断条件：isKitKat &amp;&amp; DocumentsContract.isDocumentUri(context, uri)，<br>这里判断了版本号和该Uri是否是文档类Uri，之所以要判断版本号是Uri的生成在Api19以后发送变化，通过官方文档DocumentsContract，我们也可以验证这点，DocumentsContract是在Api19加入的，其定义就是定义文档提供者与平台之间的协议，其主要作用就是关于文档Uri的一系列操作。<br>下面是其内部实现代码（代码都是在DocumentsContract类中）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">private static final String PATH_DOCUMENT = &quot;document&quot;;</span><br><span class="line">private static final String PATH_TREE = &quot;tree&quot;;</span><br><span class="line">public static final String PROVIDER_INTERFACE = &quot;android.content.action.DOCUMENTS_PROVIDER&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">   * Test if the given URI represents a &#123;@link Document&#125; backed by a</span><br><span class="line">   * &#123;@link DocumentsProvider&#125;.</span><br><span class="line">   *</span><br><span class="line">   * @see #buildDocumentUri(String, String)</span><br><span class="line">   * @see #buildDocumentUriUsingTree(Uri, String)</span><br><span class="line">   */</span><br><span class="line">  public static boolean isDocumentUri(Context context, @Nullable Uri uri) &#123;</span><br><span class="line">      if (isContentUri(uri) &amp;&amp; isDocumentsProvider(context, uri.getAuthority())) &#123;</span><br><span class="line">          final List&lt;String&gt; paths = uri.getPathSegments();</span><br><span class="line">          if (paths.size() == 2) &#123;</span><br><span class="line">              return PATH_DOCUMENT.equals(paths.get(0));</span><br><span class="line">          &#125; else if (paths.size() == 4) &#123;</span><br><span class="line">              return PATH_TREE.equals(paths.get(0)) &amp;&amp; PATH_DOCUMENT.equals(paths.get(2));</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return false;</span><br><span class="line">  &#125;</span><br><span class="line">  /** &#123;@hide&#125; */</span><br><span class="line">   public static boolean isContentUri(@Nullable Uri uri) &#123;</span><br><span class="line">      // public static final String SCHEME_CONTENT = &quot;content&quot;;     !!add by custom</span><br><span class="line">       return uri != null &amp;&amp; ContentResolver.SCHEME_CONTENT.equals(uri.getScheme());</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private static boolean isDocumentsProvider(Context context, String authority) &#123;</span><br><span class="line">    final Intent intent = new Intent(PROVIDER_INTERFACE);</span><br><span class="line">    final List&lt;ResolveInfo&gt; infos = context.getPackageManager()</span><br><span class="line">            .queryIntentContentProviders(intent, 0);</span><br><span class="line">    for (ResolveInfo info : infos) &#123;</span><br><span class="line">        if (authority.equals(info.providerInfo.authority)) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里我们可以看出，前提条件是判断是否是contentUri&amp;&amp;documentProvider，然后在进一步判断其pathSegments<br>是否是document/或者tree/document/开头。其中isDocumentsProvider方法不是特别理解，希望大神指点下。</p>
+<p>参考地址：<br>[1] 解决Android4.4以上版本Uri转换  <a href="https://blog.csdn.net/q445697127/article/details/40537945" target="_blank" rel="noopener">https://blog.csdn.net/q445697127/article/details/40537945</a><br>[2] <a href="https://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework" target="_blank" rel="noopener">https://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/08/16/根据Uri获取文档的路径/" data-id="cjkw64a590046gms66cpmmjuw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Uri/">Uri</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/12/LinearLayout源码解读/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LinearLayout源码解读</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/16/根据Uri获取文档的路径/">根据Uri获取文档的路径</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/12/LinearLayout源码解读/">LinearLayout源码解读</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/android-camera2预览拍照录制/">android-camera2预览拍照录制</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/17/http之head解析/">http之head解析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/17/okhttp使用记录/">okhttp使用记录</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
