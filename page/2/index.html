@@ -62,6 +62,86 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-flutter-配置编辑器" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/12/flutter-配置编辑器/" class="article-date">
+  <time datetime="2018-07-12T06:52:32.000Z" itemprop="datePublished">2018-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/12/flutter-配置编辑器/">flutter-配置编辑器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>你可以使用任意一款文本编辑器结合我们提供的命令行工具来构建 Flutter 应用程序。当然，我们更推荐的是使用我们开发的文本编辑器插件之一，来优化开发的使用体验。安装好编辑器插件之后，你会获得代码自动补全，关键词高亮，组件编辑助手，运行&amp;调试的支持等一系列实用的功能。</p>
+<p>请跟随下面的步骤来为你的编辑器添加这些插件，我们支持 Android Studio, IntelliJ 以及 VS Code。如果你使用的是另外的编辑器，也没有问题，跳过这一步，直接进入 <a href="http://doc.flutter-dev.cn/get-started/test-drive/" target="_blank" rel="noopener">下一步：创建并运行你的第一个应用程序</a>。</p>
+<h3 id="Android-Studio-配置"><a href="#Android-Studio-配置" class="headerlink" title="Android Studio 配置"></a>Android Studio 配置</h3><p>Android Studio: 一个完整的，高度集成的 Flutter 开发编辑器。</p>
+<h4 id="安装-Android-Studio"><a href="#安装-Android-Studio" class="headerlink" title="安装 Android Studio"></a>安装 Android Studio</h4><ul>
+<li>Android Studio, 3.0 或者更高的版本。</li>
+</ul>
+<p>当然，你也可以选择使用 IntelliJ：</p>
+<ul>
+<li>IntelliJ IDEA 社区版, 2017.1 或者更高的版本。</li>
+<li>IntelliJ IDEA 高级版, 2017.1 或者更高的版本。</li>
+</ul>
+<h4 id="安装-Flutter-和-Dart-插件"><a href="#安装-Flutter-和-Dart-插件" class="headerlink" title="安装 Flutter 和 Dart 插件"></a>安装 Flutter 和 Dart 插件</h4><p>Flutter 的开发支持需要安装 2 个插件：</p>
+<ul>
+<li>Flutter 插件可以提高 Flutter 在开发过程中的开发效率（运行，调试，热重载等等）。</li>
+<li>Dart 插件提提升了代码层面的开发效率（在你敲代码的同时进行代码校验，代码自动补全等等）。</li>
+</ul>
+<p>安装步骤：</p>
+<ol>
+<li>启动 Android Studio。</li>
+<li>打开插件设置（在 macOS 上路径为<br><strong>Preferences&gt;Plugins</strong>，在 Windows 和 Linux 上路径为 <strong>File&gt;Settings&gt;Plugins</strong>）。</li>
+<li>选择 <strong>Browse repositories…</strong>，找到或者在搜索栏输入 Flutter，然后点击 install。</li>
+<li>当弹出对话框提示要安装 Dart 插件的时候，点击 Yes 接受。</li>
+<li>如果弹出 <strong>Restart</strong> 需要重启编辑器的时候，点击 Yes 接受。</li>
+</ol>
+<h3 id="Visual-Studio-Code-VS-Code-配置"><a href="#Visual-Studio-Code-VS-Code-配置" class="headerlink" title="Visual Studio Code (VS Code) 配置"></a>Visual Studio Code (VS Code) 配置</h3><p><strong>VS Code</strong>: 包含了运行和调试 Flutter 应用程序的轻量级编辑器。</p>
+<h4 id="安装-VS-Code"><a href="#安装-VS-Code" class="headerlink" title="安装 VS Code"></a>安装 VS Code</h4><ul>
+<li><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VS Code</a>,   <ol>
+<li>20.1 或更高版本。</li>
+</ol>
+</li>
+</ul>
+<h4 id="安装-Dart-Code-插件"><a href="#安装-Dart-Code-插件" class="headerlink" title="安装 Dart Code 插件"></a>安装 Dart Code 插件</h4><ol>
+<li>启动 VS Code</li>
+<li>依次执行 View&gt;Command Palette…</li>
+<li>在扩展插件安装面板的输入框输入 dart code 关键词，在显示的列表中选择 ‘Dart Code’ 插件，然后点击 Install</li>
+<li>点击 ‘OK’ 重新加载 VS Code</li>
+</ol>
+<h4 id="使用-Flutter-Doctor-来验证你的配置"><a href="#使用-Flutter-Doctor-来验证你的配置" class="headerlink" title="使用 Flutter Doctor 来验证你的配置"></a>使用 Flutter Doctor 来验证你的配置</h4><ol>
+<li>依次执行 View&gt;Command Palette…</li>
+<li>输入 ‘doctor’, 然后选择 ‘Flutter: Run Flutter Doctor’ 命令</li>
+<li>在日志打印窗口的 ‘OUTPUT’ 标签中查看打印出的日志信息，看看有没有报错</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-配置编辑器/" data-id="cjl6atndi00127ls633mn0yqb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ide/">ide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/install/">install</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-flutter-install" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/07/12/flutter-install/" class="article-date">
@@ -215,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-install/" data-id="cjkw64a3x000wgms6vypmfgrv" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-install/" data-id="cjl6atndg000x7ls69hykmab6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/install/">install</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macOS/">macOS</a></li></ul>
@@ -295,7 +375,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/05/Android音视频点知识/" data-id="cjkw64a3n000dgms6cwlqpp3z" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/05/Android音视频点知识/" data-id="cjl6atncz00087ls6qo7uh31h" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li></ul>
@@ -564,7 +644,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaExtractor译文/" data-id="cjkw64a3s000mgms6wtfqpe74" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaExtractor译文/" data-id="cjl6atndb000o7ls6r0yoo2x3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li></ul>
@@ -1173,7 +1253,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/" data-id="cjkw64a5b004bgms6kyo1g1en" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/" data-id="cjl6atnfg00547ls6tqyfanaj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li></ul>
@@ -1206,7 +1286,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/02/Android音视频操作使用到的类/" data-id="cjkw64a3h0008gms60aiwccqq" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/02/Android音视频操作使用到的类/" data-id="cjl6atncx00067ls6ae6qjo10" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1291,7 +1371,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/28/Android音视频处理之MediaExtractor/" data-id="cjkw64a3i0009gms6tvdv1ld1" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/28/Android音视频处理之MediaExtractor/" data-id="cjl6atnd7000j7ls63lgka65g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
@@ -1375,10 +1455,85 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/27/Android_o_notification/" data-id="cjkw64a3c0002gms6oo2d7au0" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/27/Android_o_notification/" data-id="cjl6atncv00047ls6gz0kwoqi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Notification/">Notification</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Activity启动模式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/22/Activity启动模式/" class="article-date">
+  <time datetime="2018-06-22T05:39:38.000Z" itemprop="datePublished">2018-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/22/Activity启动模式/">android启动模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>任务<br>任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈<br>（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 <strong>任务栈（task stack）</strong> 的概念，<br>用于记录activity开启的先后顺序，帮助维护好的用户体验。<strong>栈的特性是：先进后出</strong>。</li>
+<li>如何查看当前系统的任务栈  <ul>
+<li>手机中，长按 <strong>home或者多任务键</strong> 会进入到概览屏幕的一个界面；</li>
+<li>命令行中，adb shell dumpsys activity；</li>
+</ul>
+</li>
+<li><p>Activity启动模式<br>Activity启动模式在AndroidMainifest.xml文件里面的activity标签设置，属性名为android:launchMode，示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    android:name=&quot;.FirstActivity&quot;</span><br><span class="line">    android:launchMode=&quot;singleTop&quot;</span><br><span class="line">    android:label=&quot;This is FirstActivity&quot; &gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>standard:标准模式，也是系统默认的，每次都会创建新的Activity覆盖在原Activity上。<br><img src="/images/ActivityStandard.jpg" alt="标准模式示意图">    </li>
+<li>singleTop：栈顶复用模式，首先判断栈顶Activity是否是要启动的Activity，如果是则不创建新的<br>Activity而直接引用这个Activity；如果不是则创建新的Activity。<br><img src="/images/ActivitySingleTop.jpg" alt="栈顶复用模式示意图">  </li>
+<li>singleTask：栈内复用模式，检测整个Activity栈中是否存在当前需要启动的Activity，如果存在<br>则将该Activity置于栈顶，并销毁其上所有Activity，如果不存在则创建新的Activity置于栈顶。<br><img src="/images/ActivitySingleTask.jpg" alt="栈内复用模式示意图">   </li>
+<li>singleInstance：单实例模式，创建新的任务栈，且该任务栈仅有一个Activity。<br><img src="/images/ActivitySingleInstance.png" alt="单实例模式示意图">     </li>
+</ul>
+</li>
+<li><p>其他   </p>
+<ul>
+<li>为Activity设置新的任务栈<br>taskAffinity，任务相关性。xml中的一个属性，标识了一个Activity所需要的任务栈的名字。默认是包名。如果设置了其他的名字如com.test.task1，那启动它的时候就会新建一个名为com.test.task1的任务栈。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">"com.test.task0.MainActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"standard"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">andorid:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.SecondActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.ThirdActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"> ```  </span><br><span class="line"> 如果从MainActivity启动SecondActivity，然后再启动ThirdActivity，那么任务栈如下：</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Blockquotes com.test.task0 MainActivity<br>Blockquotes com.test.task1 SecondActivity ThirdActivity<br>若再从ThirdActivity启动MainActivity，那么任务栈如下：<br>com.test.task0 MainActivity<br>com.test.task1 SecondActivity ThirdActivity MainActivit<br>总结：通过设置 TaskAffinity 属性更改任务栈属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 回退栈和通知  </span><br><span class="line">通过通知进入Activity存在的问题，默认情况下，从通知启动一个Activity，按返回键会回到主屏幕。但某些时候有按返回键仍然留在当前应用的需求。从通知打开的某个深层次Activity。在此Acitivity中点回退，若不做处理，将会直接返回到AndroidLaunch界面。这是因为在Notification中的PendingIntent会默认开启新的任务栈。当回退的时候此任务栈没有其他新的Activity，默认在PendingIntent 的Activity是任务栈中唯一的 Activity.</span><br></pre></td></tr></table></figure>
+<p>举例： HomeActiy=&gt;Step1Activity=&gt;Step2Acitity<br>某个通知 默认在PendingIntent 指定了Step2Acitity。通过通知栏进入到Step2Acitity。点回退。正常的顺序为：<br>Step2Activity=&gt;Step1Acitivity=&gt;HomeActivity但是如果通过通知栏这样进入Step2Activity 点回退 会直接退回到Android 桌面。就是因为 PendingIntent会默认开启新的任务栈</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">解决方法：通过TaskStackBuilder设置具体的回退路径,在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Android 4.0.3 及更早版本</p>
+<p><activity android:name=".ResultActivity"><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"><br></meta-data></activity><br>Android 4.1 及更高版本</p>
+<p><activity android:name=".ResultActivity" android:parentactivityname=".MainActivity"><br></activity><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中做如下处理：</span><br></pre></td></tr></table></figure></p>
+<p>Intent intent = new Intent(MainActivity.this, ResultActivity.class);<br>TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);<br>taskStackBuilder.addParentStack(ResultActivity.class);<br>taskStackBuilder.addNextIntent(intent);<br>PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);<br>NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);<br>notificationBuilder.setContentIntent(pendingIntent);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这样从Notification进入到指定的ResultActivity中。回退到正常的MainActivity中。   </span><br><span class="line">**TaskStackBuilder 扩展应用**  </span><br><span class="line">也可以单独使用TaskStackBuilder，让某个二级Acitivity启动的时候启动它的一级Acitity.</span><br><span class="line">在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure></p>
+<p>&lt;activity<br>    android:name=”com.example.app.ChildActivity<br>    android:parentActivityName=”com.example.app.ParentActivity” &gt;<br>    <!-- 下面这段用来兼容API 16之前的版本 --><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.app.MainActivity"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中申明：</span><br></pre></td></tr></table></figure></meta-data></p>
+<p>Intent intent = new Intent(this, ChildActivity.class);<br>TaskStackBuilder.create(this)<br>                .addNextIntentWithParentStack(intent)<br>                .startActivities();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过启动一个无任何层级关系的Acitity 激活应用（目前Lianlian3.0应用采用此方法）</span><br></pre></td></tr></table></figure></p>
+<p>public class SimpleLaunchAppActivity extends Activity {<br>    @Override<br>    protected void onCreate(Bundle savedInstanceState) {<br>        super.onCreate(savedInstanceState);<br>        // Now finish, which will drop the user in to the activity that was at the top<br>        //  of the task stack<br>        finish();<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原理：若通过Notification打开Acitivity后此Acitivy会位于要启动的App的栈顶。自动finish()后，app恢复到切换到后台之前的状态。SimpleLaunchAppActivity不得设置android:taskAffinity。taskAffinity和默认App的包名一致就不会新建任务栈。若设置了taskAffinity为新的任务栈，点回退后 将会回到android launch页面。  </span><br><span class="line">联连wifi的解决方案:</span><br></pre></td></tr></table></figure></p>
+<p>过启动一个无任何层级关系的TransparentSwitchActivity 激活应用**<br>目前存在的问题是TransparentSwitchActivity里面会根据参数判断 通过通知进入后还有部分逻辑不太人性化和完善。需要提高用户体验。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 关于系统默认的清空返回栈  </span><br><span class="line">如何用户将任务切换到后台之后过了很长一段时间，系统会将这个任务中除了最底层的那个Activity之外的其它所有Activity全部清除掉。当用户重新回到这个任务的时候，最底层的那个Activity将得到恢复。这个是系统默认的行为，因为既然过了这么长的一段时间，用户很有可能早就忘记了当时正在做什么，那么重新回到这个任务的时候，基本上应该是要去做点新的事情了。当然，既然说是默认的行为，那就说明我们肯定是有办法来改变的，在Manifest中 元素中设置以下几种属性就可以改变系统这一默认行为：</span><br></pre></td></tr></table></figure></p>
+<p>alwaysRetainTaskState<br>如果将最底层的那个Activity的这个属性设置为true，那么上面所描述的默认行为就将不会发生，任务中所有的Activity即使过了很长一段时间之后仍然会被继续保留。<br>clearTaskOnLaunch<br>如果将最底层的那个Activity的这个属性设置为true，那么只要用户离开了当前任务，再次返回的时候就会将最底层Activity之上的所有其它Activity全部清除掉。简单来讲，就是一种和alwaysRetainTaskState完全相反的工作模式，它保证每次返回任务的时候都会是一种初始化状态，即使用户仅仅离开了很短的一段时间。<br>finishOnTaskLaunch<br>这个属性和clearTaskOnLaunch是比较类似的，不过它不是作用于整个任务上的，而是作用于单个Activity上。如果某个Activity将这个属性设置成true，那么用户一旦离开了当前任务，再次返回时这个Activity就会被清除掉。<br> ```</p>
+<p>参考：<br>[1]. Activity启动模式 <a href="https://blog.csdn.net/lixiaodaoaaa/article/details/51700981" target="_blank" rel="noopener">https://blog.csdn.net/lixiaodaoaaa/article/details/51700981</a>  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/22/Activity启动模式/" data-id="cjl6atncq00017ls6igqk1ebh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
 
     </footer>
   </div>
@@ -1490,156 +1645,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/22/androidCamera2使用/" data-id="cjkw64a3w000tgms6durhgnsd" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/22/androidCamera2使用/" data-id="cjl6atndf000v7ls6wfb0turg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Activity启动模式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/06/22/Activity启动模式/" class="article-date">
-  <time datetime="2018-06-22T05:39:38.000Z" itemprop="datePublished">2018-06-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/22/Activity启动模式/">android启动模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>任务<br>任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈<br>（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 <strong>任务栈（task stack）</strong> 的概念，<br>用于记录activity开启的先后顺序，帮助维护好的用户体验。<strong>栈的特性是：先进后出</strong>。</li>
-<li>如何查看当前系统的任务栈  <ul>
-<li>手机中，长按 <strong>home或者多任务键</strong> 会进入到概览屏幕的一个界面；</li>
-<li>命令行中，adb shell dumpsys activity；</li>
-</ul>
-</li>
-<li><p>Activity启动模式<br>Activity启动模式在AndroidMainifest.xml文件里面的activity标签设置，属性名为android:launchMode，示例如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    android:name=&quot;.FirstActivity&quot;</span><br><span class="line">    android:launchMode=&quot;singleTop&quot;</span><br><span class="line">    android:label=&quot;This is FirstActivity&quot; &gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>standard:标准模式，也是系统默认的，每次都会创建新的Activity覆盖在原Activity上。<br><img src="/images/ActivityStandard.jpg" alt="标准模式示意图">    </li>
-<li>singleTop：栈顶复用模式，首先判断栈顶Activity是否是要启动的Activity，如果是则不创建新的<br>Activity而直接引用这个Activity；如果不是则创建新的Activity。<br><img src="/images/ActivitySingleTop.jpg" alt="栈顶复用模式示意图">  </li>
-<li>singleTask：栈内复用模式，检测整个Activity栈中是否存在当前需要启动的Activity，如果存在<br>则将该Activity置于栈顶，并销毁其上所有Activity，如果不存在则创建新的Activity置于栈顶。<br><img src="/images/ActivitySingleTask.jpg" alt="栈内复用模式示意图">   </li>
-<li>singleInstance：单实例模式，创建新的任务栈，且该任务栈仅有一个Activity。<br><img src="/images/ActivitySingleInstance.png" alt="单实例模式示意图">     </li>
-</ul>
-</li>
-<li><p>其他   </p>
-<ul>
-<li>为Activity设置新的任务栈<br>taskAffinity，任务相关性。xml中的一个属性，标识了一个Activity所需要的任务栈的名字。默认是包名。如果设置了其他的名字如com.test.task1，那启动它的时候就会新建一个名为com.test.task1的任务栈。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">"com.test.task0.MainActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"standard"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">andorid:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.SecondActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.ThirdActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"> ```  </span><br><span class="line"> 如果从MainActivity启动SecondActivity，然后再启动ThirdActivity，那么任务栈如下：</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>Blockquotes com.test.task0 MainActivity<br>Blockquotes com.test.task1 SecondActivity ThirdActivity<br>若再从ThirdActivity启动MainActivity，那么任务栈如下：<br>com.test.task0 MainActivity<br>com.test.task1 SecondActivity ThirdActivity MainActivit<br>总结：通过设置 TaskAffinity 属性更改任务栈属性。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 回退栈和通知  </span><br><span class="line">通过通知进入Activity存在的问题，默认情况下，从通知启动一个Activity，按返回键会回到主屏幕。但某些时候有按返回键仍然留在当前应用的需求。从通知打开的某个深层次Activity。在此Acitivity中点回退，若不做处理，将会直接返回到AndroidLaunch界面。这是因为在Notification中的PendingIntent会默认开启新的任务栈。当回退的时候此任务栈没有其他新的Activity，默认在PendingIntent 的Activity是任务栈中唯一的 Activity.</span><br></pre></td></tr></table></figure>
-<p>举例： HomeActiy=&gt;Step1Activity=&gt;Step2Acitity<br>某个通知 默认在PendingIntent 指定了Step2Acitity。通过通知栏进入到Step2Acitity。点回退。正常的顺序为：<br>Step2Activity=&gt;Step1Acitivity=&gt;HomeActivity但是如果通过通知栏这样进入Step2Activity 点回退 会直接退回到Android 桌面。就是因为 PendingIntent会默认开启新的任务栈</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">解决方法：通过TaskStackBuilder设置具体的回退路径,在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>Android 4.0.3 及更早版本</p>
-<p><activity android:name=".ResultActivity"><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"><br></meta-data></activity><br>Android 4.1 及更高版本</p>
-<p><activity android:name=".ResultActivity" android:parentactivityname=".MainActivity"><br></activity><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中做如下处理：</span><br></pre></td></tr></table></figure></p>
-<p>Intent intent = new Intent(MainActivity.this, ResultActivity.class);<br>TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);<br>taskStackBuilder.addParentStack(ResultActivity.class);<br>taskStackBuilder.addNextIntent(intent);<br>PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);<br>NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);<br>notificationBuilder.setContentIntent(pendingIntent);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这样从Notification进入到指定的ResultActivity中。回退到正常的MainActivity中。   </span><br><span class="line">**TaskStackBuilder 扩展应用**  </span><br><span class="line">也可以单独使用TaskStackBuilder，让某个二级Acitivity启动的时候启动它的一级Acitity.</span><br><span class="line">在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure></p>
-<p>&lt;activity<br>    android:name=”com.example.app.ChildActivity<br>    android:parentActivityName=”com.example.app.ParentActivity” &gt;<br>    <!-- 下面这段用来兼容API 16之前的版本 --><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.app.MainActivity"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中申明：</span><br></pre></td></tr></table></figure></meta-data></p>
-<p>Intent intent = new Intent(this, ChildActivity.class);<br>TaskStackBuilder.create(this)<br>                .addNextIntentWithParentStack(intent)<br>                .startActivities();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过启动一个无任何层级关系的Acitity 激活应用（目前Lianlian3.0应用采用此方法）</span><br></pre></td></tr></table></figure></p>
-<p>public class SimpleLaunchAppActivity extends Activity {<br>    @Override<br>    protected void onCreate(Bundle savedInstanceState) {<br>        super.onCreate(savedInstanceState);<br>        // Now finish, which will drop the user in to the activity that was at the top<br>        //  of the task stack<br>        finish();<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原理：若通过Notification打开Acitivity后此Acitivy会位于要启动的App的栈顶。自动finish()后，app恢复到切换到后台之前的状态。SimpleLaunchAppActivity不得设置android:taskAffinity。taskAffinity和默认App的包名一致就不会新建任务栈。若设置了taskAffinity为新的任务栈，点回退后 将会回到android launch页面。  </span><br><span class="line">联连wifi的解决方案:</span><br></pre></td></tr></table></figure></p>
-<p>过启动一个无任何层级关系的TransparentSwitchActivity 激活应用**<br>目前存在的问题是TransparentSwitchActivity里面会根据参数判断 通过通知进入后还有部分逻辑不太人性化和完善。需要提高用户体验。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 关于系统默认的清空返回栈  </span><br><span class="line">如何用户将任务切换到后台之后过了很长一段时间，系统会将这个任务中除了最底层的那个Activity之外的其它所有Activity全部清除掉。当用户重新回到这个任务的时候，最底层的那个Activity将得到恢复。这个是系统默认的行为，因为既然过了这么长的一段时间，用户很有可能早就忘记了当时正在做什么，那么重新回到这个任务的时候，基本上应该是要去做点新的事情了。当然，既然说是默认的行为，那就说明我们肯定是有办法来改变的，在Manifest中 元素中设置以下几种属性就可以改变系统这一默认行为：</span><br></pre></td></tr></table></figure></p>
-<p>alwaysRetainTaskState<br>如果将最底层的那个Activity的这个属性设置为true，那么上面所描述的默认行为就将不会发生，任务中所有的Activity即使过了很长一段时间之后仍然会被继续保留。<br>clearTaskOnLaunch<br>如果将最底层的那个Activity的这个属性设置为true，那么只要用户离开了当前任务，再次返回的时候就会将最底层Activity之上的所有其它Activity全部清除掉。简单来讲，就是一种和alwaysRetainTaskState完全相反的工作模式，它保证每次返回任务的时候都会是一种初始化状态，即使用户仅仅离开了很短的一段时间。<br>finishOnTaskLaunch<br>这个属性和clearTaskOnLaunch是比较类似的，不过它不是作用于整个任务上的，而是作用于单个Activity上。如果某个Activity将这个属性设置成true，那么用户一旦离开了当前任务，再次返回时这个Activity就会被清除掉。<br> ```</p>
-<p>参考：<br>[1]. Activity启动模式 <a href="https://blog.csdn.net/lixiaodaoaaa/article/details/51700981" target="_blank" rel="noopener">https://blog.csdn.net/lixiaodaoaaa/article/details/51700981</a>  </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/22/Activity启动模式/" data-id="cjkw64a3b0001gms6gq99wf9j" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webpack4安装使用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/06/15/webpack4安装使用/" class="article-date">
-  <time datetime="2018-06-15T08:07:35.000Z" itemprop="datePublished">2018-06-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/15/webpack4安装使用/">webpack4安装使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;官网手册为<a href="https://webpack.js.org/guides/getting-started/，但是在最后一步会出现npx" target="_blank" rel="noopener">https://webpack.js.org/guides/getting-started/，但是在最后一步会出现npx</a> webpack可能会出现错误，官网说是npx是在node 8.2或更高版本才行，但我的已经是v8.11.3。</p>
-<p>其中dist为最终文件输出目录，src为需要编译打包的源文件；</p>
-<ol>
-<li><p>webpack安装：<br>webpack安装分两种模式：</p>
-<ul>
-<li>全局安装<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install --global webpack</span><br><span class="line">npm install --global webpack-cli</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>上面主要安装了webpakc基础库和webpack控制台（主要作用是命令行处理），通过上面那安装后在终端<br>运行webpack -v会显示webpack版本号，如果没有安装webpack-cli，此时会有提示让安装webpack-cli或者webpack-command两个中的一个,如果两个都安装了此时会提示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You have installed webpack-cli and webpack-command together. To work with the &quot;webpack&quot; command you need only one CLI package, please remove one of them or use them directly via their binary.</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>此时需要移除其中一个即可，执行npm remove  webpack-cli 或者 npm remove webpack-command移除当前项目的， 全局的话使用npm remove –global webpack-cli。  </p>
-<ul>
-<li>安装到你的项目目录：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install webpack --save-dev</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>!!! 全局安装了webpack后在npm脚本配置时，需要在当前目录安装npm install  –save-dev webpack-command，否则会报错误显示找不到webpack的module。</p>
-<ol>
-<li><p>项目包结构：<br><img src="images/webpack_package_struct.png" alt="包结构"><br>其中dist为webpack <strong>默认</strong> 的打包后最终输出的文件所在目录，src为webpack <strong>默认</strong> 的编写的js所在目录，main.js为webpack将src下的js打包集成的 <strong>默认</strong> 文件。<br>此时package.json中的依赖应该是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;webpack&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;private&quot;: true,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">  &quot;dependencies&quot;: &#123;</span><br><span class="line">    &quot;lodash&quot;: &quot;^4.17.10&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;webpack&quot;: &quot;^4.12.0&quot;,</span><br><span class="line">    &quot;webpack-command&quot;: &quot;^0.2.1&quot;,</span><br><span class="line">    &quot;webpack-dev-server&quot;: &quot;^2.9.7&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>webpack配置：<br>webpack配置的文件名称 <strong>默认</strong> 为：webpack.config.js</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    entry:  &quot;./src/index.js&quot;, //入口文件,使用相对路径</span><br><span class="line">    output: &#123;</span><br><span class="line">      path: __dirname + &quot;/dist&quot;,   //打包后的文件存放的地方，使用绝对路径</span><br><span class="line">      filename: &quot;bundle.js&quot;   //打包后输出文件的文件名</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>此时打包命令为：webpack –config webpack.config.js，也可以不加config参数。</p>
-<ol>
-<li>npm脚本化：<br>通过npm实现打包编译则需要对package.json文件处理：主要是在scripts下添加build属性：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;webpack-demo&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">    &quot;build&quot;: &quot;webpack&quot;   //脚本化的命令和执行者</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;webpack&quot;: &quot;^4.0.1&quot;,</span><br><span class="line">    &quot;webpack-cli&quot;: &quot;^2.0.9&quot;,</span><br><span class="line">    &quot;lodash&quot;: &quot;^4.17.5&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后打包命令则为 <strong>npm run build</strong>。</p>
-<p>参考地址：<br>[1].  官网 <a href="https://webpack.js.org/guides/getting-started/" target="_blank" rel="noopener">https://webpack.js.org/guides/getting-started/</a><br>[2].  webpack入门 <a href="https://segmentfault.com/a/1190000006178770" target="_blank" rel="noopener">https://segmentfault.com/a/1190000006178770</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/15/webpack4安装使用/" data-id="cjkw64a580043gms63k7wcz4x" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
 
     </footer>
   </div>
@@ -1664,7 +1673,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
     </div>
   </div>
 
@@ -1674,7 +1683,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
     </div>
   </div>
 
@@ -1696,6 +1705,10 @@
       <ul>
         
           <li>
+            <a href="/2018/08/23/NIO-Buffer解析/">NIO-Buffer解析</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/16/根据Uri获取文档的路径/">根据Uri获取文档的路径</a>
           </li>
         
@@ -1709,10 +1722,6 @@
         
           <li>
             <a href="/2018/07/17/http之head解析/">http之head解析</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/17/okhttp使用记录/">okhttp使用记录</a>
           </li>
         
       </ul>

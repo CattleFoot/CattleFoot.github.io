@@ -62,6 +62,108 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Bitmap压缩" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/21/Bitmap压缩/" class="article-date">
+  <time datetime="2017-06-21T15:44:41.000Z" itemprop="datePublished">2017-06-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/21/Bitmap压缩/">Bitmap压缩</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="知识准备"><a href="#知识准备" class="headerlink" title="知识准备"></a>知识准备</h3><p>&ensp;&ensp;要做图片压缩首先我们的了解bitmap占用内存的计算方式：<br>bitmap大小=图片长度X图片宽度X一个像素点占用的字节数<br>&ensp;&ensp;而像素点占用的字节数通过压缩格式来指定：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">来源</th>
+<th style="text-align:center">格式</th>
+<th style="text-align:center">所占字节数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Bitmap.Config</td>
+<td style="text-align:center">ALPHA_8</td>
+<td style="text-align:center">表示8位Alpha位图,即A=8,一个像素点占用1个字节,它没有颜色,只有透明度</td>
+</tr>
+<tr>
+<td style="text-align:center">Bitmap.Config</td>
+<td style="text-align:center">ARGB_4444</td>
+<td style="text-align:center">表示16位ARGB位图，即A=4,R=4,G=4,B=4,一个像素点占4+4+4+4=16位，2个字节</td>
+</tr>
+<tr>
+<td style="text-align:center">Bitmap.Config</td>
+<td style="text-align:center">ARGB_8888</td>
+<td style="text-align:center">表示32位ARGB位图，即A=8,R=8,G=8,B=8,一个像素点占8+8+8+8=32位，4个字节</td>
+</tr>
+<tr>
+<td style="text-align:center">Bitmap.Config</td>
+<td style="text-align:center">RGB_565</td>
+<td style="text-align:center">表示16位RGB位图,即R=5,G=6,B=5,它没有透明度,一个像素点占5+6+5=16位，2个字节</td>
+</tr>
+</tbody>
+</table>
+<h3 id="压缩方法介绍"><a href="#压缩方法介绍" class="headerlink" title="压缩方法介绍"></a>压缩方法介绍</h3><p>&ensp;&ensp;下面我们开始介绍几种压缩方式：</p>
+<ol>
+<li>质量压缩<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> quality = Integer.valueOf(editText.getText().toString());</span><br><span class="line">            <span class="comment">//quality-压缩率：1~100的整数，越小压缩出的图片越小质量越差，100则不压缩。</span></span><br><span class="line">            bit.compress(CompressFormat.JPEG, quality, baos);</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = baos.toByteArray();</span><br><span class="line">            bm = BitmapFactory.decodeByteArray(bytes, <span class="number">0</span>, bytes.length);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight()</span><br><span class="line">                    + <span class="string">"bytes.length=  "</span> + (bytes.length / <span class="number">1024</span>) + <span class="string">"KB"</span></span><br><span class="line">                    + <span class="string">"quality="</span> + quality)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;其中quality是从edittext获取的数字或自己制定，可以从1–100改变，100表示百分百，也就是不压缩，原型输出，数字越小表示质量越差当然内存也就越小。<strong>注意</strong>bit.compress(CompressFormat.PNG, quality, baos);<em>设定png格式，quality就没有作用了，bytes.length不会变化，因为png图片是无损的?(待验证，网上资料都是通过减小这个值来减少内存)</em>，不能进行压缩，CompressFormat还有一个属性是，CompressFormat.WEBP格式，该格式是google自己推出来一个图片格式。</p>
+<ol>
+<li>采样率压缩<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//如果把options.inJustDecodeBounds 设置成true,表示只返回宽高。</span></span><br><span class="line">BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">            options.inSampleSize = <span class="number">2</span>;</span><br><span class="line">            bm = BitmapFactory.decodeFile(Environment</span><br><span class="line">                    .getExternalStorageDirectory().getAbsolutePath()</span><br><span class="line">                    + <span class="string">"/DCIM/Camera/test.jpg"</span>, options);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;设置inSampleSize的值(int类型)后，假如设为2，则宽和高都为原来的1/2，宽高都减少了，自然内存也降低了。上面的代码没用过options.inJustDecodeBounds = true; 因为我是固定来取样的数据，为什么这个压缩方法叫采样率压缩，是因为配合inJustDecodeBounds，先获取图片的宽、高【这个过程就是取样】，然后通过获取的宽高，动态的设置inSampleSize的值，当inJustDecodeBounds设置为true的时候，BitmapFactory通过decodeResource或者decodeFile解码图片时，将会返回空(null)的Bitmap对象，这样可以避免Bitmap的内存分配，但是它可以返回Bitmap的宽度、高度以及MimeType。</p>
+<ol>
+<li>缩放法压缩(martix)<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">            matrix.setScale(<span class="number">0.5f</span>, <span class="number">0.5f</span>);</span><br><span class="line">            bm = Bitmap.createBitmap(bit, <span class="number">0</span>, <span class="number">0</span>, bit.getWidth(),</span><br><span class="line">                    bit.getHeight(), matrix, <span class="keyword">true</span>);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;通过scale的设定，bitmap的长度和宽度分别缩小了一半，图片大小缩小了四分之一。</p>
+<ol>
+<li>RGB_565法<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BitmapFactory.Options options2 = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">            options2.inPreferredConfig = Bitmap.Config.RGB_565;</span><br><span class="line"></span><br><span class="line">            bm = BitmapFactory.decodeFile(Environment</span><br><span class="line">                    .getExternalStorageDirectory().getAbsolutePath()</span><br><span class="line">                    + <span class="string">"/DCIM/Camera/test.jpg"</span>, options2);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;图片大小会直接缩小了一半，长度和宽度也没有变，相比argb_8888减少了一半的内存。</p>
+<p><strong>注意</strong>：由于ARGB_4444的画质惨不忍睹，一般假如对图片没有透明度要求的话，可以改成RGB_565，相比ARGB_8888将节省一半的内存开销。</p>
+<ol>
+<li>createScaleBitmap<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bm = Bitmap.createScaledBitmap(bit, <span class="number">150</span>, <span class="number">150</span>, <span class="keyword">true</span>);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span>) + <span class="string">"KB宽度为"</span></span><br><span class="line">                    + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;这里是将图片压缩成用户所期望的长度和宽度，但是这里要说，如果用户期望的长度和宽度和原图长度宽度相差太多的话，图片会很不清晰。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>&ensp;&ensp;以上就是5种图片压缩的方法，需要强调的是他们的压缩仅仅只是对android中的bitmap来说的。如果将这些压缩后的bitmap另存为sd中，他们的内存大小并不一样。android手机中，图片的所占的内存大小和很多因素相关，计算起来也很麻烦。为了计算出一个图片的内存大小，可以将图片当做一个文件来间接计算，用如下的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">File file = <span class="keyword">new</span> File(Environment.getExternalStorageDirectory()</span><br><span class="line">         .getAbsolutePath() + <span class="string">"/DCIM/Camera/test.jpg"</span>);</span><br><span class="line">         Log.i(<span class="string">"wechat"</span>, <span class="string">"file.length()="</span> + file.length() / <span class="number">1024</span>);</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream fis = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fis = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"fis.available()="</span> + fis.available() / <span class="number">1024</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;上面两个方法计算的结果是一样的。其实说白了，Bitmap压缩都是围绕公式：Bitmap所占用的内存 = 图片长度 x 图片宽度 x 一个像素点占用的字节数 ，3个参数，任意减少一个的值，就达到了压缩的效果。</p>
+<p><strong>注意</strong> 当我们通过BitmapFactory来decode网络或者本地图片是需要提前计算出压缩出来的图片大小，如果不提前处理会出现OOM，举个栗子：从本地读取一个4M的图片到bitmap时，bitmap的内存占用可能是20M，而系统分配给app的内存最大空间可能为16M，结果就是OOM了，-^-。</p>
+<p>来源：<a href="http://blog.csdn.net/harryweasley/article/details/51955467" target="_blank" rel="noopener">http://blog.csdn.net/harryweasley/article/details/51955467</a><br>参考：<br>Android Bitmap 优化(1) - 图片压缩 <a href="http://anany.me/2015/10/15/bitmap1/" target="_blank" rel="noopener">http://anany.me/2015/10/15/bitmap1/</a><br>多图比较谷歌WebP和JPEG图像格式<a href="http://www.win7china.com/html/8668.html" target="_blank" rel="noopener">http://www.win7china.com/html/8668.html</a><br>Android-使用Matrix对Bitmap进行处理<a href="http://blog.csdn.net/nupt123456789/article/details/24600055" target="_blank" rel="noopener">http://blog.csdn.net/nupt123456789/article/details/24600055</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/06/21/Bitmap压缩/" data-id="cjl6atnd3000d7ls6k8ecc7q3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Options/">Options</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-android-download-manager使用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/06/19/android-download-manager使用/" class="article-date">
@@ -163,7 +265,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/19/android-download-manager使用/" data-id="cjkw64a3u000ogms64637li64" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/19/android-download-manager使用/" data-id="cjl6atndh00107ls6nzo0sbvy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li></ul>
@@ -464,7 +566,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/03/rxjava2基础/" data-id="cjkw64a570041gms643g4jzg9" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/03/rxjava2基础/" data-id="cjl6atndz00227ls6u96j2d6m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -535,7 +637,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/20/python爬虫/" data-id="cjkw64a51003pgms6vxls22bb" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/20/python爬虫/" data-id="cjl6atndw001u7ls6r4lp7tim" class="article-share-link">Share</a>
       
       
     </footer>
@@ -586,7 +688,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/10/raspberryWithPython/" data-id="cjkw64a55003ygms6y4ncb88h" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/10/raspberryWithPython/" data-id="cjl6atndv001t7ls6k7qmixbf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1145,7 +1247,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/08/python第三方库beatifulSoup使用/" data-id="cjkw64a5p004xgms6o1o2stcj" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/08/python第三方库beatifulSoup使用/" data-id="cjl6atnfh00557ls6mxyuwdyv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1297,7 +1399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/07/python的List与tuple操作方法详解/" data-id="cjkw64a54003vgms6528emp0p" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/07/python的List与tuple操作方法详解/" data-id="cjl6atndu001s7ls64r8npj00" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1346,7 +1448,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cjkw64a53003ugms6db3tcav4" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python编码中问题/" data-id="cjl6atndx001x7ls6wrvxcqpd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1401,7 +1503,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python切片/" data-id="cjkw64a4y003kgms68jmltmz8" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python切片/" data-id="cjl6atnds001o7ls6an10p44t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1451,55 +1553,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cjkw64a52003sgms6o8t75aki" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-python" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/05/06/python/" class="article-date">
-  <time datetime="2017-05-06T02:44:28.000Z" itemprop="datePublished">2017-05-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/06/python/">python中@的作用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&ensp;&ensp;在python2.4以上的函数中经常看到函数定义上一行有@functionName的修饰，注意下这个语法细节，有点像c语言中带参数的宏操作，当解释器读到这样的修饰之后，会先解析@后的内容，直接把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象。<br>例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">funa</span><span class="params">(a)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"funa"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">funb</span><span class="params">(b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"funB"</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@funa</span></span><br><span class="line"><span class="meta">@funb</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(c)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"funC"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    func</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;最后得到的结果是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">funB  </span><br><span class="line">funA</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;通过结果我们可以认为:return funa(funb(func))，也即第一个函数修饰符开始，自下而上做参数传递，这样实际是使用了约定的函数修饰符达到函数嵌套的目的。记得没错Java中SSH也有这样的用法哦。<br>其他例子：<br>1.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sayspam</span><span class="params">(*args)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></span><br><span class="line">    <span class="keyword">return</span> sayspam</span><br><span class="line">    </span><br><span class="line"><span class="meta">@spamrun</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br><span class="line">   </span><br><span class="line">useful(<span class="number">3</span>,<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
-<p>结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spam，spam，spam</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;解释:只是将函数useful传递给spamrun，并没用使用，因此最终返回的是spamrun函数的结果。<br>2.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></span><br><span class="line">        </span><br><span class="line"><span class="meta">@spamrun</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
-<p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spam，spam，spam</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;解释:只是将函数useful传递给spamrun，并没用使用，因此最终返回的是spamrun函数的结果。<br>3.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(*args)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"My god!"</span>*<span class="number">3</span></span><br><span class="line">        <span class="keyword">return</span> fn(*args)</span><br><span class="line">    <span class="keyword">return</span> test</span><br><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">other</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</span><br><span class="line">    other(<span class="number">4</span>,<span class="number">3</span>)</span><br><span class="line">    other(<span class="number">3</span>,<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
-<p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">My god!My god!My god!</span><br><span class="line">25</span><br><span class="line">My god!My god!My god!</span><br><span class="line">25</span><br></pre></td></tr></table></figure></p>
-<p>注释掉//return fn(*args)，结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">My god!My god!My god!</span><br><span class="line">My god!My god!My god!</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;解释：要想使other函数能正常运行（即调用other函数并将其参数继续往下传），必须加返回值，@decorator是一个statement,会将other函数当作参数传入来执行test方法。</p>
-<p>&ensp;&ensp;总结：’@’符号用作函数修饰符是python2.4新增加的功能，修饰符必须出现在函数定义前一行，不允许和函数定义在同一行。也就是说＠A def f(): 是非法的。 只可以在模块或类定义层内对函数进行修饰，不允许修修饰一个类。一个修饰符就是一个函数，它将被修饰的函数做为参数，并返回修饰后的同名函数或其它可调用的东西。</p>
-<p>&ensp;&ensp;<strong>感悟</strong>：@的作用有点像代理模式，即@functionName修饰的函数是由functionName函数管理。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cjkw64a50003ngms6y9josmgn" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cjl6atndt001q7ls62mscvlcv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1525,7 +1579,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
     </div>
   </div>
 
@@ -1535,7 +1589,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
     </div>
   </div>
 
@@ -1557,6 +1611,10 @@
       <ul>
         
           <li>
+            <a href="/2018/08/23/NIO-Buffer解析/">NIO-Buffer解析</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/16/根据Uri获取文档的路径/">根据Uri获取文档的路径</a>
           </li>
         
@@ -1570,10 +1628,6 @@
         
           <li>
             <a href="/2018/07/17/http之head解析/">http之head解析</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/17/okhttp使用记录/">okhttp使用记录</a>
           </li>
         
       </ul>

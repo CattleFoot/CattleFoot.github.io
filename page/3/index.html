@@ -62,6 +62,77 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-webpack4安装使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/15/webpack4安装使用/" class="article-date">
+  <time datetime="2018-06-15T08:07:35.000Z" itemprop="datePublished">2018-06-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/15/webpack4安装使用/">webpack4安装使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;官网手册为<a href="https://webpack.js.org/guides/getting-started/，但是在最后一步会出现npx" target="_blank" rel="noopener">https://webpack.js.org/guides/getting-started/，但是在最后一步会出现npx</a> webpack可能会出现错误，官网说是npx是在node 8.2或更高版本才行，但我的已经是v8.11.3。</p>
+<p>其中dist为最终文件输出目录，src为需要编译打包的源文件；</p>
+<ol>
+<li><p>webpack安装：<br>webpack安装分两种模式：</p>
+<ul>
+<li>全局安装<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install --global webpack</span><br><span class="line">npm install --global webpack-cli</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>上面主要安装了webpakc基础库和webpack控制台（主要作用是命令行处理），通过上面那安装后在终端<br>运行webpack -v会显示webpack版本号，如果没有安装webpack-cli，此时会有提示让安装webpack-cli或者webpack-command两个中的一个,如果两个都安装了此时会提示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You have installed webpack-cli and webpack-command together. To work with the &quot;webpack&quot; command you need only one CLI package, please remove one of them or use them directly via their binary.</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>此时需要移除其中一个即可，执行npm remove  webpack-cli 或者 npm remove webpack-command移除当前项目的， 全局的话使用npm remove –global webpack-cli。  </p>
+<ul>
+<li>安装到你的项目目录：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install webpack --save-dev</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>!!! 全局安装了webpack后在npm脚本配置时，需要在当前目录安装npm install  –save-dev webpack-command，否则会报错误显示找不到webpack的module。</p>
+<ol>
+<li><p>项目包结构：<br><img src="images/webpack_package_struct.png" alt="包结构"><br>其中dist为webpack <strong>默认</strong> 的打包后最终输出的文件所在目录，src为webpack <strong>默认</strong> 的编写的js所在目录，main.js为webpack将src下的js打包集成的 <strong>默认</strong> 文件。<br>此时package.json中的依赖应该是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;webpack&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;private&quot;: true,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">  &quot;dependencies&quot;: &#123;</span><br><span class="line">    &quot;lodash&quot;: &quot;^4.17.10&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;webpack&quot;: &quot;^4.12.0&quot;,</span><br><span class="line">    &quot;webpack-command&quot;: &quot;^0.2.1&quot;,</span><br><span class="line">    &quot;webpack-dev-server&quot;: &quot;^2.9.7&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>webpack配置：<br>webpack配置的文件名称 <strong>默认</strong> 为：webpack.config.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    entry:  &quot;./src/index.js&quot;, //入口文件,使用相对路径</span><br><span class="line">    output: &#123;</span><br><span class="line">      path: __dirname + &quot;/dist&quot;,   //打包后的文件存放的地方，使用绝对路径</span><br><span class="line">      filename: &quot;bundle.js&quot;   //打包后输出文件的文件名</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>此时打包命令为：webpack –config webpack.config.js，也可以不加config参数。</p>
+<ol>
+<li>npm脚本化：<br>通过npm实现打包编译则需要对package.json文件处理：主要是在scripts下添加build属性：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;webpack-demo&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">    &quot;build&quot;: &quot;webpack&quot;   //脚本化的命令和执行者</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;webpack&quot;: &quot;^4.0.1&quot;,</span><br><span class="line">    &quot;webpack-cli&quot;: &quot;^2.0.9&quot;,</span><br><span class="line">    &quot;lodash&quot;: &quot;^4.17.5&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后打包命令则为 <strong>npm run build</strong>。</p>
+<p>参考地址：<br>[1].  官网 <a href="https://webpack.js.org/guides/getting-started/" target="_blank" rel="noopener">https://webpack.js.org/guides/getting-started/</a><br>[2].  webpack入门 <a href="https://segmentfault.com/a/1190000006178770" target="_blank" rel="noopener">https://segmentfault.com/a/1190000006178770</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/06/15/webpack4安装使用/" data-id="cjl6atndz00217ls6k6nk64mg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-AndroidSupport库-AsynListUtil" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/06/14/AndroidSupport库-AsynListUtil/" class="article-date">
@@ -119,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/14/AndroidSupport库-AsynListUtil/" data-id="cjkw64a3f0005gms6nfi7odvr" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/14/AndroidSupport库-AsynListUtil/" data-id="cjl6atncs00027ls6lqwhtk3z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li></ul>
@@ -235,7 +306,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/13/java单例模式/" data-id="cjkw64a4t003cgms6722gyg1m" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/13/java单例模式/" data-id="cjl6atndo001c7ls6pi7o2law" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Singleton/">Singleton</a></li></ul>
@@ -318,7 +389,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cjkw64a3o000ggms6esfnnnas" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/06/DDComponent原理剖析/" data-id="cjl6atnd2000b7ls6alvm4s6c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li></ul>
@@ -430,7 +501,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/05/29/Android自定义注解处理器/" data-id="cjkw64a3g0006gms6qtqq9hiq" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/05/29/Android自定义注解处理器/" data-id="cjl6atnd000097ls670ehvpi9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Annotation/">Annotation</a></li></ul>
@@ -481,7 +552,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/" data-id="cjkw64a4u003dgms6pym57qiq" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/04/15/mvc-mvp和mvvm理解/" data-id="cjl6atndq001j7ls6zra7yqcr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li></ul>
@@ -643,7 +714,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/28/插件化种种和思考/" data-id="cjkw64a5a0049gms6epz8vqxl" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/28/插件化种种和思考/" data-id="cjl6atne200267ls642ke5th8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Small/">Small</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tool/">Tool</a></li></ul>
@@ -725,7 +796,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/" data-id="cjkw64a4x003igms6wp5e9ule" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/28/nestedscollin原理/" data-id="cjl6atndo001f7ls6rs4vbh4c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li></ul>
@@ -856,7 +927,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/24/downloadManagerSupport7-0/" data-id="cjkw64a3v000rgms6nh9w78rg" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/24/downloadManagerSupport7-0/" data-id="cjl6atndd000s7ls6nfc6xq81" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/7/">7</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Support/">Support</a></li></ul>
@@ -1475,112 +1546,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/24/git命令和使用/" data-id="cjkw64a5q004ygms6jwa5zl2h" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/06/24/git命令和使用/" data-id="cjl6atnfj00577ls6s9mf2bli" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tool/">Tool</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Bitmap压缩" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/06/21/Bitmap压缩/" class="article-date">
-  <time datetime="2017-06-21T15:44:41.000Z" itemprop="datePublished">2017-06-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/21/Bitmap压缩/">Bitmap压缩</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="知识准备"><a href="#知识准备" class="headerlink" title="知识准备"></a>知识准备</h3><p>&ensp;&ensp;要做图片压缩首先我们的了解bitmap占用内存的计算方式：<br>bitmap大小=图片长度X图片宽度X一个像素点占用的字节数<br>&ensp;&ensp;而像素点占用的字节数通过压缩格式来指定：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">来源</th>
-<th style="text-align:center">格式</th>
-<th style="text-align:center">所占字节数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Bitmap.Config</td>
-<td style="text-align:center">ALPHA_8</td>
-<td style="text-align:center">表示8位Alpha位图,即A=8,一个像素点占用1个字节,它没有颜色,只有透明度</td>
-</tr>
-<tr>
-<td style="text-align:center">Bitmap.Config</td>
-<td style="text-align:center">ARGB_4444</td>
-<td style="text-align:center">表示16位ARGB位图，即A=4,R=4,G=4,B=4,一个像素点占4+4+4+4=16位，2个字节</td>
-</tr>
-<tr>
-<td style="text-align:center">Bitmap.Config</td>
-<td style="text-align:center">ARGB_8888</td>
-<td style="text-align:center">表示32位ARGB位图，即A=8,R=8,G=8,B=8,一个像素点占8+8+8+8=32位，4个字节</td>
-</tr>
-<tr>
-<td style="text-align:center">Bitmap.Config</td>
-<td style="text-align:center">RGB_565</td>
-<td style="text-align:center">表示16位RGB位图,即R=5,G=6,B=5,它没有透明度,一个像素点占5+6+5=16位，2个字节</td>
-</tr>
-</tbody>
-</table>
-<h3 id="压缩方法介绍"><a href="#压缩方法介绍" class="headerlink" title="压缩方法介绍"></a>压缩方法介绍</h3><p>&ensp;&ensp;下面我们开始介绍几种压缩方式：</p>
-<ol>
-<li>质量压缩<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> quality = Integer.valueOf(editText.getText().toString());</span><br><span class="line">            <span class="comment">//quality-压缩率：1~100的整数，越小压缩出的图片越小质量越差，100则不压缩。</span></span><br><span class="line">            bit.compress(CompressFormat.JPEG, quality, baos);</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = baos.toByteArray();</span><br><span class="line">            bm = BitmapFactory.decodeByteArray(bytes, <span class="number">0</span>, bytes.length);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight()</span><br><span class="line">                    + <span class="string">"bytes.length=  "</span> + (bytes.length / <span class="number">1024</span>) + <span class="string">"KB"</span></span><br><span class="line">                    + <span class="string">"quality="</span> + quality)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>&ensp;&ensp;其中quality是从edittext获取的数字或自己制定，可以从1–100改变，100表示百分百，也就是不压缩，原型输出，数字越小表示质量越差当然内存也就越小。<strong>注意</strong>bit.compress(CompressFormat.PNG, quality, baos);<em>设定png格式，quality就没有作用了，bytes.length不会变化，因为png图片是无损的?(待验证，网上资料都是通过减小这个值来减少内存)</em>，不能进行压缩，CompressFormat还有一个属性是，CompressFormat.WEBP格式，该格式是google自己推出来一个图片格式。</p>
-<ol>
-<li>采样率压缩<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//如果把options.inJustDecodeBounds 设置成true,表示只返回宽高。</span></span><br><span class="line">BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">            options.inSampleSize = <span class="number">2</span>;</span><br><span class="line">            bm = BitmapFactory.decodeFile(Environment</span><br><span class="line">                    .getExternalStorageDirectory().getAbsolutePath()</span><br><span class="line">                    + <span class="string">"/DCIM/Camera/test.jpg"</span>, options);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>&ensp;&ensp;设置inSampleSize的值(int类型)后，假如设为2，则宽和高都为原来的1/2，宽高都减少了，自然内存也降低了。上面的代码没用过options.inJustDecodeBounds = true; 因为我是固定来取样的数据，为什么这个压缩方法叫采样率压缩，是因为配合inJustDecodeBounds，先获取图片的宽、高【这个过程就是取样】，然后通过获取的宽高，动态的设置inSampleSize的值，当inJustDecodeBounds设置为true的时候，BitmapFactory通过decodeResource或者decodeFile解码图片时，将会返回空(null)的Bitmap对象，这样可以避免Bitmap的内存分配，但是它可以返回Bitmap的宽度、高度以及MimeType。</p>
-<ol>
-<li>缩放法压缩(martix)<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">            matrix.setScale(<span class="number">0.5f</span>, <span class="number">0.5f</span>);</span><br><span class="line">            bm = Bitmap.createBitmap(bit, <span class="number">0</span>, <span class="number">0</span>, bit.getWidth(),</span><br><span class="line">                    bit.getHeight(), matrix, <span class="keyword">true</span>);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>&ensp;&ensp;通过scale的设定，bitmap的长度和宽度分别缩小了一半，图片大小缩小了四分之一。</p>
-<ol>
-<li>RGB_565法<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BitmapFactory.Options options2 = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">            options2.inPreferredConfig = Bitmap.Config.RGB_565;</span><br><span class="line"></span><br><span class="line">            bm = BitmapFactory.decodeFile(Environment</span><br><span class="line">                    .getExternalStorageDirectory().getAbsolutePath()</span><br><span class="line">                    + <span class="string">"/DCIM/Camera/test.jpg"</span>, options2);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span> / <span class="number">1024</span>)</span><br><span class="line">                    + <span class="string">"M宽度为"</span> + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>&ensp;&ensp;图片大小会直接缩小了一半，长度和宽度也没有变，相比argb_8888减少了一半的内存。</p>
-<p><strong>注意</strong>：由于ARGB_4444的画质惨不忍睹，一般假如对图片没有透明度要求的话，可以改成RGB_565，相比ARGB_8888将节省一半的内存开销。</p>
-<ol>
-<li>createScaleBitmap<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bm = Bitmap.createScaledBitmap(bit, <span class="number">150</span>, <span class="number">150</span>, <span class="keyword">true</span>);</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"压缩后图片的大小"</span> + (bm.getByteCount() / <span class="number">1024</span>) + <span class="string">"KB宽度为"</span></span><br><span class="line">                    + bm.getWidth() + <span class="string">"高度为"</span> + bm.getHeight());</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>&ensp;&ensp;这里是将图片压缩成用户所期望的长度和宽度，但是这里要说，如果用户期望的长度和宽度和原图长度宽度相差太多的话，图片会很不清晰。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>&ensp;&ensp;以上就是5种图片压缩的方法，需要强调的是他们的压缩仅仅只是对android中的bitmap来说的。如果将这些压缩后的bitmap另存为sd中，他们的内存大小并不一样。android手机中，图片的所占的内存大小和很多因素相关，计算起来也很麻烦。为了计算出一个图片的内存大小，可以将图片当做一个文件来间接计算，用如下的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">File file = <span class="keyword">new</span> File(Environment.getExternalStorageDirectory()</span><br><span class="line">         .getAbsolutePath() + <span class="string">"/DCIM/Camera/test.jpg"</span>);</span><br><span class="line">         Log.i(<span class="string">"wechat"</span>, <span class="string">"file.length()="</span> + file.length() / <span class="number">1024</span>);</span><br></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream fis = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fis = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Log.i(<span class="string">"wechat"</span>, <span class="string">"fis.available()="</span> + fis.available() / <span class="number">1024</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;上面两个方法计算的结果是一样的。其实说白了，Bitmap压缩都是围绕公式：Bitmap所占用的内存 = 图片长度 x 图片宽度 x 一个像素点占用的字节数 ，3个参数，任意减少一个的值，就达到了压缩的效果。</p>
-<p><strong>注意</strong> 当我们通过BitmapFactory来decode网络或者本地图片是需要提前计算出压缩出来的图片大小，如果不提前处理会出现OOM，举个栗子：从本地读取一个4M的图片到bitmap时，bitmap的内存占用可能是20M，而系统分配给app的内存最大空间可能为16M，结果就是OOM了，-^-。</p>
-<p>来源：<a href="http://blog.csdn.net/harryweasley/article/details/51955467" target="_blank" rel="noopener">http://blog.csdn.net/harryweasley/article/details/51955467</a><br>参考：<br>Android Bitmap 优化(1) - 图片压缩 <a href="http://anany.me/2015/10/15/bitmap1/" target="_blank" rel="noopener">http://anany.me/2015/10/15/bitmap1/</a><br>多图比较谷歌WebP和JPEG图像格式<a href="http://www.win7china.com/html/8668.html" target="_blank" rel="noopener">http://www.win7china.com/html/8668.html</a><br>Android-使用Matrix对Bitmap进行处理<a href="http://blog.csdn.net/nupt123456789/article/details/24600055" target="_blank" rel="noopener">http://blog.csdn.net/nupt123456789/article/details/24600055</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/06/21/Bitmap压缩/" data-id="cjkw64a3l000bgms6is35irav" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Options/">Options</a></li></ul>
 
     </footer>
   </div>
@@ -1605,7 +1574,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
     </div>
   </div>
 
@@ -1615,7 +1584,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
     </div>
   </div>
 
@@ -1637,6 +1606,10 @@
       <ul>
         
           <li>
+            <a href="/2018/08/23/NIO-Buffer解析/">NIO-Buffer解析</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/16/根据Uri获取文档的路径/">根据Uri获取文档的路径</a>
           </li>
         
@@ -1650,10 +1623,6 @@
         
           <li>
             <a href="/2018/07/17/http之head解析/">http之head解析</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/17/okhttp使用记录/">okhttp使用记录</a>
           </li>
         
       </ul>
