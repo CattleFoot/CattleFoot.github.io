@@ -62,6 +62,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-python字符串连接的N种方式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/06/python字符串连接的N种方式/" class="article-date">
+  <time datetime="2017-05-06T05:46:34.000Z" itemprop="datePublished">2017-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/06/python字符串连接的N种方式/">python字符串连接的N种方式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p> &ensp;&ensp;python中有很多字符串连接方式，今天在写代码，顺便总结一下：</p>
+<ul>
+<li>最原始的字符串连接方式：str1 + str2</li>
+<li>python 新字符串连接语法：str1, str2</li>
+<li>奇怪的字符串方式：str1 str2</li>
+<li>% 连接字符串：‘name:%s; sex: ’ % (‘tom’, ‘male’)</li>
+<li>字符串列表连接：str.join(some_list)</li>
+</ul>
+<p><strong>第一种</strong>&ensp;&ensp;想必只要是有编程经验的人，估计都知道，直接用 “+” 来连接两个字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'Jim'</span> + <span class="string">'Green'</span> <span class="comment">#结果：'JimGreen'</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>第二种</strong>&ensp;&ensp;比较特殊，如果两个字符串用“逗号”隔开，那么这两个字符串将被连接，但是，字符串之间会多出一个空格：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'Jim'</span>, <span class="string">'Green'</span> <span class="comment">#结果： 'Jim Green'</span></span><br></pre></td></tr></table></figure></p>
+<p> <strong>第三种</strong>&ensp;&ensp; python 独有的，只要把两个字符串放在一起，中间有空白或者没有空白：两个字符串自动连接为一个字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'Jim'</span><span class="string">'Green'</span>   <span class="comment">#结果： 'JimGreen'</span></span><br><span class="line"><span class="string">'Jim'</span>  <span class="string">'Green'</span> <span class="comment">#结果： 'JimGreen'</span></span><br></pre></td></tr></table></figure></p>
+<p>  <strong>第四种</strong>&ensp;&ensp;功能比较强大，借鉴了C语言中 printf 函数的功能，如果你有C语言基础，看下文档就知道了。这种方式用符号“%”连接一个字符串和一组变量，字符串中的特殊标记会被自动用右边变量组中的变量替换：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'%s, %s'</span> % (<span class="string">'Jim'</span>, <span class="string">'Green'</span>) <span class="comment">#结果： 'Jim, Green'</span></span><br></pre></td></tr></table></figure></p>
+<p>  <strong>第五种</strong>&ensp;&ensp;就属于技巧了，利用字符串的函数 join 。这个函数接受一个列表，然后用字符串依次连接列表中每一个元素：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var_list = [<span class="string">'tom'</span>, <span class="string">'david'</span>, <span class="string">'john'</span>]</span><br><span class="line">a = <span class="string">'###'</span></span><br><span class="line">a.join(var_list) <span class="comment">#结果： 'tom###david###john'</span></span><br></pre></td></tr></table></figure></p>
+<p>   <strong>其实</strong>&ensp;&ensp;python 中还有一种字符串连接方式，不过用的不多，就是字符串乘法，如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="string">'abc'</span></span><br><span class="line">a * <span class="number">3</span> <span class="comment">#结果 'abcabcabc'</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python字符串连接的N种方式/" data-id="cjlc1dmtu001qa4s6l9hf1gk1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-python" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/05/06/python/" class="article-date">
@@ -100,7 +150,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cjl6atndr001l7ls65r928eb2" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/05/06/python/" data-id="cjlc1dmtt001la4s6i07hlkw0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -192,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cjl6atnd6000h7ls6tikmnqtq" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/26/LeastRecentlyUsed-最近最少使用/" data-id="cjlc1dmtd000na4s679d2gu5c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -229,7 +279,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cjl6atndy001z7ls6522fqo6c" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/reactNative/" data-id="cjlc1dmu1001za4s6wf9pcx5i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -386,7 +436,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cjl6atndn001a7ls6jbfk5bwu" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/linux系统磁盘挂载/" data-id="cjlc1dmtp001ca4s613zc0ww6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -518,7 +568,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cjl6atndk00167ls6921tlbt2" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/hexo写blog/" data-id="cjlc1dmtn0017a4s6ov07di71" class="article-share-link">Share</a>
       
       
     </footer>
@@ -596,7 +646,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cjl6atne100247ls6pucn26yx" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2017/04/22/使用hexo向github发布自己的blog/" data-id="cjlc1dmus004ea4s6s4m82jy7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -622,7 +672,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/boolen/">boolen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/byte/">byte</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/char/">char</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/double/">double</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/int/">int</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/long/">long</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/short/">short</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
     </div>
   </div>
 
@@ -632,7 +682,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/boolen/" style="font-size: 10px;">boolen</a> <a href="/tags/byte/" style="font-size: 10px;">byte</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/char/" style="font-size: 10px;">char</a> <a href="/tags/double/" style="font-size: 10px;">double</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/int/" style="font-size: 10px;">int</a> <a href="/tags/java/" style="font-size: 12.5px;">java</a> <a href="/tags/long/" style="font-size: 10px;">long</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/short/" style="font-size: 10px;">short</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
     </div>
   </div>
 
@@ -654,6 +704,10 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
       <ul>
         
           <li>
+            <a href="/2018/08/27/基础数据与byte间的转化/">基础数据与byte间的转化</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/23/NIO-Buffer解析/">NIO-Buffer解析</a>
           </li>
         
@@ -667,10 +721,6 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
         
           <li>
             <a href="/2018/07/22/android-camera2预览拍照录制/">android-camera2预览拍照录制</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/17/http之head解析/">http之head解析</a>
           </li>
         
       </ul>

@@ -62,6 +62,124 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-flutter-开发记录" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/12/flutter-开发记录/" class="article-date">
+  <time datetime="2018-07-12T07:04:29.000Z" itemprop="datePublished">2018-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/12/flutter-开发记录/">flutter-开发记录（错误或技巧）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h3><ol>
+<li>flutter doctor 显示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Android licenses not accepted.  To resolve this, run: flutter doctor --android-licenses</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>方案一：<br>根据提示运行flutter doctor –android-licenses 一路y就好了。</p>
+<ol>
+<li>Row中包含TextField时在弹出软键盘时会overflow（TextField inside of Row causes layout exception: Unable to calculate size）</li>
+</ol>
+<p>解决：在TextField外层在包一个Flexible组件即可；</p>
+<p>参考：<a href="https://stackoverflow.com/questions/45986093/textfield-inside-of-row-causes-layout-exception-unable-to-calculate-size" target="_blank" rel="noopener">https://stackoverflow.com/questions/45986093/textfield-inside-of-row-causes-layout-exception-unable-to-calculate-size</a> （译文：（假设您正在使用Row，因为您希望将来在TextField旁边放置其他小部件。）Row小部件想要确定其非灵活子节点的内在大小，以便它知道它为灵活子节点留下了多少空间。 但是，TextField没有固有宽度; 它只知道如何将自身大小调整到其父容器的整个宽度。 尝试将其包装在Flexible或Expanded中，告诉Row您希望TextField占用剩余空间：）</p>
+<ol>
+<li>Keyboard overflows TextField creating yellow/black stripes<br>文本域获取焦点时，弹出软键盘，导致overflowed错误，<br>修正：通过设置Scaffold的属性resizeToAvoidBottomPadding: false即可，</li>
+</ol>
+<p>原因：猜测（可能键盘的弹出导致，内容视图的高度+键盘的高度超出了一个屏幕的高度从而产生了overflowed）。</p>
+<p>参考网址：<a href="https://github.com/flutter/flutter/issues/13339" target="_blank" rel="noopener">https://github.com/flutter/flutter/issues/13339</a> （译文：当你点击文本字段键盘显示白色内容溢出整个脚手架区域时，是的还有同样的问题。 使用resizeToAvoidBottomPadding它确实有效但我认为禁用此选项键盘不会尊重焦点文本字段，也不会将内容滚动到适当的焦点框<br>）</p>
+<ol>
+<li>使用cipher时报如下错误：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The parameter &apos;m&apos; of the method &apos;BigIntegerV8::modPowInt&apos; has type bignum::BigIntegerV8, which does not match the corresponding type in the overridden method (dynamic).</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这个时我在使用依赖cipher: ^0.7.1时遇到的，后来查看Dart版本，和cipher的发布日志发现，cipher: ^0.7.1只使用与Dart 1，而开发当前用的时Dart 2，因此出现该错误，加密/解密依赖目前开发用的是 <a href="https://pub.dartlang.org/packages/crypto#-readme-tab-" target="_blank" rel="noopener">crypto</a>.</p>
+<h3 id="技巧"><a href="#技巧" class="headerlink" title="技巧"></a>技巧</h3><p>!!! 谨记：Flutter 中是基于数据驱动，Java中是基于事件驱动。</p>
+<ol>
+<li>Dart中字符串转换为字节数组或列表（How do I convert a UTF-8 String into an array of bytes in Dart?）</li>
+</ol>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import &apos;dart:convert&apos;;</span><br><span class="line">List&lt;int&gt; bytes = utf8.encode(&quot;Some data&quot;);   //UTF8 is deprecated sind Dart 2. But it was just renamed to utf8: List&lt;int&gt; bytes = utf8.encode(&quot;Some data&quot;);</span><br><span class="line">print(bytes) //[115, 111, 109, 101, 32, 100, 97, 116, 97]</span><br></pre></td></tr></table></figure></p>
+<p>参考：<a href="https://stackoverflow.com/questions/10404147/how-do-i-convert-a-utf-8-string-into-an-array-of-bytes-in-dart" target="_blank" rel="noopener">https://stackoverflow.com/questions/10404147/how-do-i-convert-a-utf-8-string-into-an-array-of-bytes-in-dart</a></p>
+<ol>
+<li>Dart json操作：<br>在Dart中json的构建和将对象转换为json字符很简单，麻烦在将json转换为一个对象,关于json的操作依赖于dart:convert；</li>
+</ol>
+<ul>
+<li><p>构建一个json字符串：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;John Smith&quot;,</span><br><span class="line">  &quot;email&quot;: &quot;john@example.com&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将对象转换为一个字符串</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String json = json.encode(user);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>序列化json对象：</p>
+<ul>
+<li><p>序列化JSON内联  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, dynamic&gt; user = json.decode(json);</span><br><span class="line">print(&apos;Howdy, $&#123;user[&apos;name&apos;]&#125;!&apos;);</span><br><span class="line">print(&apos;We sent the verification link to $&#123;user[&apos;email&apos;]&#125;.&apos;);</span><br></pre></td></tr></table></figure>
+<p>通过上面我们知道，json.decode（）只返回一个Map <string，dynamic>，这意味着我们直到运行时才知道值的类型。 使用这种方法，我们失去了大多数静态类型语言功能：类型安全，自动完成以及最重要的编译时异常。 我们的代码可能会立即变得更容易出错。<br>例如，每当我们访问名称或电子邮件字段时，我们都会很快引入拼写错误。 由于我们的整个JSON仅存在于地图结构中，因此我们的编译器不知道这是一个错字。</string，dynamic></p>
+</li>
+<li><p>在模型类中序列化JSON</p>
+<p>我们可以通过引入一个普通的模型类来解决前面提到的问题，我们称之为User。 在User类中，我们有：<br> User.fromJson构造函数，用于从地图结构构造新的User实例<br>一个toJson方法，它将User实例转换为map。<br>这样，调用代码现在可以具有类型安全性，名称和电子邮件字段的自动完成以及编译时异常。 如果我们使用拼写错误或将字段视为int而不是字符串，我们的应用程序甚至不会编译，而不是在运行时崩溃。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  final String name;</span><br><span class="line">  final String email;</span><br><span class="line"></span><br><span class="line">  User(this.name, this.email);</span><br><span class="line"></span><br><span class="line">  User.fromJson(Map&lt;String, dynamic&gt; json)</span><br><span class="line">      : name = json[&apos;name&apos;],</span><br><span class="line">        email = json[&apos;email&apos;];</span><br><span class="line"></span><br><span class="line">  Map&lt;String, dynamic&gt; toJson() =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      &apos;name&apos;: name,</span><br><span class="line">      &apos;email&apos;: email,</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，序列化逻辑的责任在模型本身内部移动。 通过这种新方法，我们可以非常轻松地反序列化用户。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Map userMap = json.decode(json);</span><br><span class="line">var user = new User.fromJson(userMap);</span><br><span class="line"></span><br><span class="line">print(&apos;Howdy, $&#123;user.name&#125;!&apos;);</span><br><span class="line">print(&apos;We sent the verification link to $&#123;user.email&#125;.&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>参考地址：  </p>
+<ul>
+<li><a href="https://flutter.io/json/" target="_blank" rel="noopener">https://flutter.io/json/</a></li>
+</ul>
+<ol>
+<li>Flutter中获取设备信息：</li>
+</ol>
+<p>依赖于 import ‘dart:io’;和 device_info : ^0.2.0；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DeviceInfoPlugin deviceInfo = new DeviceInfoPlugin();</span><br><span class="line">if(Platform.isIOS)&#123;</span><br><span class="line">  IosDeviceInfo iosInfo = await deviceInfo.iosInfo;</span><br><span class="line">  print(&apos;Running on $&#123;iosInfo.utsname.machine&#125;&apos;);  // e.g. &quot;iPod7,1&quot;</span><br><span class="line">      //ios相关代码</span><br><span class="line">    &#125;else if(Platform.isAndroid)&#123;</span><br><span class="line">      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;</span><br><span class="line">      print(&apos;Running on $&#123;androidInfo.model&#125;&apos;);  // e.g. &quot;Moto G (4)&quot;</span><br><span class="line">      //android相关代码</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>参考地址：  </p>
+<ul>
+<li>官网参考：<a href="https://github.com/flutter/plugins/tree/master/packages/device_info" target="_blank" rel="noopener">https://github.com/flutter/plugins/tree/master/packages/device_info</a></li>
+<li><a href="https://segmentfault.com/a/1190000014913010?utm_source=index-hottest" target="_blank" rel="noopener">https://segmentfault.com/a/1190000014913010?utm_source=index-hottest</a></li>
+<li>网络请求简单示例 <a href="https://segmentfault.com/a/1190000013712168" target="_blank" rel="noopener">https://segmentfault.com/a/1190000013712168</a></li>
+<li>列表操作 list、map、set <a href="https://blog.csdn.net/hekaiyou/article/details/51374093" target="_blank" rel="noopener">https://blog.csdn.net/hekaiyou/article/details/51374093</a></li>
+<li>下拉刷新、加载更多  <a href="https://www.jianshu.com/p/0a64d84b0937" target="_blank" rel="noopener">https://www.jianshu.com/p/0a64d84b0937</a></li>
+<li>flutter导航 <a href="https://blog.csdn.net/hekaiyou/article/details/72853738" target="_blank" rel="noopener">https://blog.csdn.net/hekaiyou/article/details/72853738</a></li>
+</ul>
+<ol>
+<li>Flutter加载本地资源</li>
+</ol>
+<p>通过异步加载本地Json资源，需要先在pubspec.yaml文件添加资源文件，然后再通过异步加载资源文件，以下为实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dependencies:</span><br><span class="line">  flutter:</span><br><span class="line">    sdk: flutter</span><br><span class="line">flutter:</span><br><span class="line">  uses-material-design: true</span><br><span class="line">  assets:</span><br><span class="line">    - assets/config.json     //资源所在位置</span><br></pre></td></tr></table></figure></p>
+<p>使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import &apos;dart:convert&apos;;</span><br><span class="line">import &apos;dart:async&apos; show Future;</span><br><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line">import &apos;package:flutter/services.dart&apos; show rootBundle;</span><br><span class="line">Future&lt;String&gt; loadAsset() async &#123;</span><br><span class="line">  return await rootBundle.loadString(&apos;assets/config.json&apos;);</span><br><span class="line">&#125;</span><br><span class="line">void _loadJson() &#123;</span><br><span class="line">  loadAsset().then((value)&#123;</span><br><span class="line">    JsonDecoder decoder = new JsonDecoder();</span><br><span class="line">    List&lt;List&lt;String&gt;&gt; json = decoder.convert(value);</span><br><span class="line">    print(&apos;姓名：&apos;+json[0][0]+&apos;，年龄：&apos;+json[0][1]);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>参考地址：  </p>
+<ul>
+<li><a href="https://blog.csdn.net/hekaiyou/article/details/54602103" target="_blank" rel="noopener">https://blog.csdn.net/hekaiyou/article/details/54602103</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-开发记录/" data-id="cjlc1dmtf000sa4s6d9gsvka9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Error/">Error</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-flutter-配置编辑器" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/07/12/flutter-配置编辑器/" class="article-date">
@@ -130,7 +248,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-配置编辑器/" data-id="cjl6atndi00127ls633mn0yqb" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-配置编辑器/" data-id="cjlc1dmth000va4s6nxefuiix" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ide/">ide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/install/">install</a></li></ul>
@@ -295,7 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-install/" data-id="cjl6atndg000x7ls69hykmab6" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/12/flutter-install/" data-id="cjlc1dmti000ya4s6q8f76be4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/install/">install</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macOS/">macOS</a></li></ul>
@@ -375,7 +493,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/05/Android音视频点知识/" data-id="cjl6atncz00087ls6qo7uh31h" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/05/Android音视频点知识/" data-id="cjlc1dmta000ga4s645n0c2p9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li></ul>
@@ -644,7 +762,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaExtractor译文/" data-id="cjl6atndb000o7ls6r0yoo2x3" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaExtractor译文/" data-id="cjlc1dmtc000ja4s6xtlaj0cd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li></ul>
@@ -1253,7 +1371,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/" data-id="cjl6atnfg00547ls6tqyfanaj" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/05/MediaCodec译文/" data-id="cjlc1dmux004ja4s6qky3d4n8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li></ul>
@@ -1286,7 +1404,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/07/02/Android音视频操作使用到的类/" data-id="cjl6atncx00067ls6ae6qjo10" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/07/02/Android音视频操作使用到的类/" data-id="cjlc1dmt70009a4s6gmds0zqo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1371,7 +1489,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/28/Android音视频处理之MediaExtractor/" data-id="cjl6atnd7000j7ls63lgka65g" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/28/Android音视频处理之MediaExtractor/" data-id="cjlc1dmt60008a4s6mw6drq4i" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Media/">Media</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
@@ -1455,85 +1573,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/27/Android_o_notification/" data-id="cjl6atncv00047ls6gz0kwoqi" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/27/Android_o_notification/" data-id="cjlc1dmt40005a4s63sstzquh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Notification/">Notification</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Activity启动模式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/06/22/Activity启动模式/" class="article-date">
-  <time datetime="2018-06-22T05:39:38.000Z" itemprop="datePublished">2018-06-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/22/Activity启动模式/">android启动模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>任务<br>任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈<br>（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 <strong>任务栈（task stack）</strong> 的概念，<br>用于记录activity开启的先后顺序，帮助维护好的用户体验。<strong>栈的特性是：先进后出</strong>。</li>
-<li>如何查看当前系统的任务栈  <ul>
-<li>手机中，长按 <strong>home或者多任务键</strong> 会进入到概览屏幕的一个界面；</li>
-<li>命令行中，adb shell dumpsys activity；</li>
-</ul>
-</li>
-<li><p>Activity启动模式<br>Activity启动模式在AndroidMainifest.xml文件里面的activity标签设置，属性名为android:launchMode，示例如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    android:name=&quot;.FirstActivity&quot;</span><br><span class="line">    android:launchMode=&quot;singleTop&quot;</span><br><span class="line">    android:label=&quot;This is FirstActivity&quot; &gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>standard:标准模式，也是系统默认的，每次都会创建新的Activity覆盖在原Activity上。<br><img src="/images/ActivityStandard.jpg" alt="标准模式示意图">    </li>
-<li>singleTop：栈顶复用模式，首先判断栈顶Activity是否是要启动的Activity，如果是则不创建新的<br>Activity而直接引用这个Activity；如果不是则创建新的Activity。<br><img src="/images/ActivitySingleTop.jpg" alt="栈顶复用模式示意图">  </li>
-<li>singleTask：栈内复用模式，检测整个Activity栈中是否存在当前需要启动的Activity，如果存在<br>则将该Activity置于栈顶，并销毁其上所有Activity，如果不存在则创建新的Activity置于栈顶。<br><img src="/images/ActivitySingleTask.jpg" alt="栈内复用模式示意图">   </li>
-<li>singleInstance：单实例模式，创建新的任务栈，且该任务栈仅有一个Activity。<br><img src="/images/ActivitySingleInstance.png" alt="单实例模式示意图">     </li>
-</ul>
-</li>
-<li><p>其他   </p>
-<ul>
-<li>为Activity设置新的任务栈<br>taskAffinity，任务相关性。xml中的一个属性，标识了一个Activity所需要的任务栈的名字。默认是包名。如果设置了其他的名字如com.test.task1，那启动它的时候就会新建一个名为com.test.task1的任务栈。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">"com.test.task0.MainActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"standard"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">andorid:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.SecondActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">andorid:name</span>=<span class="string">"com.test.ThirdActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.test.task1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span>/&gt;</span></span><br><span class="line"> ```  </span><br><span class="line"> 如果从MainActivity启动SecondActivity，然后再启动ThirdActivity，那么任务栈如下：</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>Blockquotes com.test.task0 MainActivity<br>Blockquotes com.test.task1 SecondActivity ThirdActivity<br>若再从ThirdActivity启动MainActivity，那么任务栈如下：<br>com.test.task0 MainActivity<br>com.test.task1 SecondActivity ThirdActivity MainActivit<br>总结：通过设置 TaskAffinity 属性更改任务栈属性。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 回退栈和通知  </span><br><span class="line">通过通知进入Activity存在的问题，默认情况下，从通知启动一个Activity，按返回键会回到主屏幕。但某些时候有按返回键仍然留在当前应用的需求。从通知打开的某个深层次Activity。在此Acitivity中点回退，若不做处理，将会直接返回到AndroidLaunch界面。这是因为在Notification中的PendingIntent会默认开启新的任务栈。当回退的时候此任务栈没有其他新的Activity，默认在PendingIntent 的Activity是任务栈中唯一的 Activity.</span><br></pre></td></tr></table></figure>
-<p>举例： HomeActiy=&gt;Step1Activity=&gt;Step2Acitity<br>某个通知 默认在PendingIntent 指定了Step2Acitity。通过通知栏进入到Step2Acitity。点回退。正常的顺序为：<br>Step2Activity=&gt;Step1Acitivity=&gt;HomeActivity但是如果通过通知栏这样进入Step2Activity 点回退 会直接退回到Android 桌面。就是因为 PendingIntent会默认开启新的任务栈</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">解决方法：通过TaskStackBuilder设置具体的回退路径,在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>Android 4.0.3 及更早版本</p>
-<p><activity android:name=".ResultActivity"><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"><br></meta-data></activity><br>Android 4.1 及更高版本</p>
-<p><activity android:name=".ResultActivity" android:parentactivityname=".MainActivity"><br></activity><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中做如下处理：</span><br></pre></td></tr></table></figure></p>
-<p>Intent intent = new Intent(MainActivity.this, ResultActivity.class);<br>TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);<br>taskStackBuilder.addParentStack(ResultActivity.class);<br>taskStackBuilder.addNextIntent(intent);<br>PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);<br>NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);<br>notificationBuilder.setContentIntent(pendingIntent);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这样从Notification进入到指定的ResultActivity中。回退到正常的MainActivity中。   </span><br><span class="line">**TaskStackBuilder 扩展应用**  </span><br><span class="line">也可以单独使用TaskStackBuilder，让某个二级Acitivity启动的时候启动它的一级Acitity.</span><br><span class="line">在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure></p>
-<p>&lt;activity<br>    android:name=”com.example.app.ChildActivity<br>    android:parentActivityName=”com.example.app.ParentActivity” &gt;<br>    <!-- 下面这段用来兼容API 16之前的版本 --><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.app.MainActivity"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中申明：</span><br></pre></td></tr></table></figure></meta-data></p>
-<p>Intent intent = new Intent(this, ChildActivity.class);<br>TaskStackBuilder.create(this)<br>                .addNextIntentWithParentStack(intent)<br>                .startActivities();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过启动一个无任何层级关系的Acitity 激活应用（目前Lianlian3.0应用采用此方法）</span><br></pre></td></tr></table></figure></p>
-<p>public class SimpleLaunchAppActivity extends Activity {<br>    @Override<br>    protected void onCreate(Bundle savedInstanceState) {<br>        super.onCreate(savedInstanceState);<br>        // Now finish, which will drop the user in to the activity that was at the top<br>        //  of the task stack<br>        finish();<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原理：若通过Notification打开Acitivity后此Acitivy会位于要启动的App的栈顶。自动finish()后，app恢复到切换到后台之前的状态。SimpleLaunchAppActivity不得设置android:taskAffinity。taskAffinity和默认App的包名一致就不会新建任务栈。若设置了taskAffinity为新的任务栈，点回退后 将会回到android launch页面。  </span><br><span class="line">联连wifi的解决方案:</span><br></pre></td></tr></table></figure></p>
-<p>过启动一个无任何层级关系的TransparentSwitchActivity 激活应用**<br>目前存在的问题是TransparentSwitchActivity里面会根据参数判断 通过通知进入后还有部分逻辑不太人性化和完善。需要提高用户体验。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 关于系统默认的清空返回栈  </span><br><span class="line">如何用户将任务切换到后台之后过了很长一段时间，系统会将这个任务中除了最底层的那个Activity之外的其它所有Activity全部清除掉。当用户重新回到这个任务的时候，最底层的那个Activity将得到恢复。这个是系统默认的行为，因为既然过了这么长的一段时间，用户很有可能早就忘记了当时正在做什么，那么重新回到这个任务的时候，基本上应该是要去做点新的事情了。当然，既然说是默认的行为，那就说明我们肯定是有办法来改变的，在Manifest中 元素中设置以下几种属性就可以改变系统这一默认行为：</span><br></pre></td></tr></table></figure></p>
-<p>alwaysRetainTaskState<br>如果将最底层的那个Activity的这个属性设置为true，那么上面所描述的默认行为就将不会发生，任务中所有的Activity即使过了很长一段时间之后仍然会被继续保留。<br>clearTaskOnLaunch<br>如果将最底层的那个Activity的这个属性设置为true，那么只要用户离开了当前任务，再次返回的时候就会将最底层Activity之上的所有其它Activity全部清除掉。简单来讲，就是一种和alwaysRetainTaskState完全相反的工作模式，它保证每次返回任务的时候都会是一种初始化状态，即使用户仅仅离开了很短的一段时间。<br>finishOnTaskLaunch<br>这个属性和clearTaskOnLaunch是比较类似的，不过它不是作用于整个任务上的，而是作用于单个Activity上。如果某个Activity将这个属性设置成true，那么用户一旦离开了当前任务，再次返回时这个Activity就会被清除掉。<br> ```</p>
-<p>参考：<br>[1]. Activity启动模式 <a href="https://blog.csdn.net/lixiaodaoaaa/article/details/51700981" target="_blank" rel="noopener">https://blog.csdn.net/lixiaodaoaaa/article/details/51700981</a>  </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/22/Activity启动模式/" data-id="cjl6atncq00017ls6igqk1ebh" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
 
     </footer>
   </div>
@@ -1645,7 +1688,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://cattlefoot.github.io/2018/06/22/androidCamera2使用/" data-id="cjl6atndf000v7ls6wfb0turg" class="article-share-link">Share</a>
+      <a data-url="https://cattlefoot.github.io/2018/06/22/androidCamera2使用/" data-id="cjlc1dmtl0015a4s6k9l2il7c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/andrid/">andrid</a></li></ul>
@@ -1673,7 +1716,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/boolen/">boolen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/byte/">byte</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/char/">char</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/double/">double</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/int/">int</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/long/">long</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/short/">short</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
     </div>
   </div>
 
@@ -1683,7 +1726,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/boolen/" style="font-size: 10px;">boolen</a> <a href="/tags/byte/" style="font-size: 10px;">byte</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/char/" style="font-size: 10px;">char</a> <a href="/tags/double/" style="font-size: 10px;">double</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/int/" style="font-size: 10px;">int</a> <a href="/tags/java/" style="font-size: 12.5px;">java</a> <a href="/tags/long/" style="font-size: 10px;">long</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/short/" style="font-size: 10px;">short</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
     </div>
   </div>
 
@@ -1705,6 +1748,10 @@
       <ul>
         
           <li>
+            <a href="/2018/08/27/基础数据与byte间的转化/">基础数据与byte间的转化</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/23/NIO-Buffer解析/">NIO-Buffer解析</a>
           </li>
         
@@ -1718,10 +1765,6 @@
         
           <li>
             <a href="/2018/07/22/android-camera2预览拍照录制/">android-camera2预览拍照录制</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/17/http之head解析/">http之head解析</a>
           </li>
         
       </ul>

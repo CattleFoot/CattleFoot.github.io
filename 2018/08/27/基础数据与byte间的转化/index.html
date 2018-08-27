@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>基础数据与byte间的转化 | CallteFoot&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="基础知识   计算机中存储是用补码！！，同时注意一下计算省略了高位不变部分和 字节大小端问题   基础数据 byte：有符号，在网络传输中都是会用到byte的，它占1个字节，共8位，比如说11111111就可以用1个byte表示，转化为10进制：- （2的6次+2的5次+2的4次+2的3次+2的2次+2的1次+2的0次） = -127。其中前7位表示数字，最高位表示符号，0为正，1为负。范围是 （">
+<meta name="keywords" content="java,byte,long,short,int,boolen,double,char">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础数据与byte间的转化">
+<meta property="og:url" content="https://cattlefoot.github.io/2018/08/27/基础数据与byte间的转化/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="基础知识   计算机中存储是用补码！！，同时注意一下计算省略了高位不变部分和 字节大小端问题   基础数据 byte：有符号，在网络传输中都是会用到byte的，它占1个字节，共8位，比如说11111111就可以用1个byte表示，转化为10进制：- （2的6次+2的5次+2的4次+2的3次+2的2次+2的1次+2的0次） = -127。其中前7位表示数字，最高位表示符号，0为正，1为负。范围是 （">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-08-27T08:44:02.418Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基础数据与byte间的转化">
+<meta name="twitter:description" content="基础知识   计算机中存储是用补码！！，同时注意一下计算省略了高位不变部分和 字节大小端问题   基础数据 byte：有符号，在网络传输中都是会用到byte的，它占1个字节，共8位，比如说11111111就可以用1个byte表示，转化为10进制：- （2的6次+2的5次+2的4次+2的3次+2的2次+2的1次+2的0次） = -127。其中前7位表示数字，最高位表示符号，0为正，1为负。范围是 （">
+  
+    <link rel="alternate" href="/atom.xml" title="CallteFoot&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CallteFoot&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://cattlefoot.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-基础数据与byte间的转化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/27/基础数据与byte间的转化/" class="article-date">
+  <time datetime="2018-08-27T08:42:52.000Z" itemprop="datePublished">2018-08-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      基础数据与byte间的转化
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><p>   <strong>计算机中存储是用补码！！，同时注意一下计算省略了高位不变部分和 字节大小端问题</strong>  </p>
+<h4 id="基础数据"><a href="#基础数据" class="headerlink" title="基础数据"></a>基础数据</h4><ul>
+<li>byte：有符号，在网络传输中都是会用到byte的，它占1个字节，共8位，比如说11111111就可以用1个<br>byte表示，转化为10进制：- （2的6次+2的5次+2的4次+2的3次+2的2次+2的1次+2的0次） = -127。<br>其中前7位表示数字，最高位表示符号，0为正，1为负。范围是 （-2的7次 ~ 2的7次 - 1），那为什么前<br>面最小是-127，范围最小又是-128呢？因为规定-0（10000000）为-128。</li>
+<li>short：有符号，占2个字节，共16位。同byte一样，它的取值范围就是 （-2的15次 ~ 2的15次 - 1）。</li>
+<li>int：有符号，占4个字节，共32位。它的取值范围就是（-2的31次 ~ 2的31次）。</li>
+<li>long：有符号，占8个字节，共64位，它的取值范围就是（-2的63次 ~ 2的63次）。</li>
+</ul>
+<h4 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h4><ul>
+<li>^：表示异或位运算，两者相同则为0，两者不同则为1。比如说15^2，15用二进制表示就是1111，2用2<br>进制表示就是0010，两者进行异或运算，结果就是1101，转换为十进制就是13。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">A</th>
+<th style="text-align:left">B</th>
+<th style="text-align:left">A^B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">0</td>
+</tr>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>|：表示或运算，两者只有有一个为1就为1， 比如说13|2，13用二进制表示就是1101，2用二进制表示<br>就是0010，两者进行或运算，那么结果就是1111，转换为十进制就是15。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">A</th>
+<th style="text-align:left">B</th>
+<th style="text-align:left">A &#124; B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>&amp;：表示与运算，两者都为1就为1，其余都为0，比如说15&amp;2， 13用二进制表示就是1111，2用二进制<br>表示就是0010， 两者进行与运算，那么结果就是0010，转换为十进制就是2。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">A</th>
+<th style="text-align:left">B</th>
+<th style="text-align:left">A&amp;B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>~：取反，就是本来是0变成1，本来是1变成0。<br>| A    |  ～A     |<br>| :————- | :————- |<br>| 1     | 0    |<br>| 0     | 1    |</p>
+</li>
+<li><p>&lt;&lt;:左移运算符，不需要考虑符号位，因为在后面补0，把二进制的数字向左移动，低位补0。比如说 3&lt;&lt;2。<br>3的二进制码为11，向左移动2位就是1100，那么结果就是12。</p>
+</li>
+<li><p>>&gt;：右移运算符，带符号位。根据这个要移动的数字决定正负，如果是正数，那么就在前面补0，如果是<br>负数就在前面补1。比如说 3&gt;&gt;2，3的二进制码为00000011，向右移动2位，就变成00000000，转化为十<br>进制就是0了（3是正数所以在高位补0）。再比如说-3&gt;&gt;2，-3的二进制码为10000011，转化为补码<br>（只要涉及到负数，就需要转换到补码计算，正数之所以不用转化，是因为他们的补码和原码是一致的）<br>11111101，进行位移运算，就是11111111，这个是补码，需要再转回原码。那么就是取反+1，结果就是<br>10000001，转化为十进制就是-1。</p>
+</li>
+<li><p>>&gt;&gt;：右移运算符，与上面的区别就是这个运算符是 <strong>无符号的</strong>。不论正负，高位都补0。如果要用<br>-3&gt;&gt;2来验证，因为高位补0，就需要把所有的位数都写全了。如果是int，那就要写成32位来运算。切记切记。<br>上面很多因为高位的变化“取反再取反”会导致前面所有的位都没变所以我就简化了，但是这个&gt;&gt;&gt;运算符不行哦，<br>它会把负数变为正数。</p>
+</li>
+</ul>
+<p>栗子（eg）：<br>比如说-15|3等于多少呢？有些人会觉得-15转化为二进制就是10001111，而3转化为二进制就是00000011，<br>那么结果应该是10001111呀，转换为十进制就是-15呀？大家可以自己写个demo就会发现是不对的。要注意<br>在计算机中所有的都是用补码的形式存储的，之所以上面介绍两个正数是对的，因为 <strong>正数的反码和补码都是一样的。而负数求补码应该是除去符号位取反+1</strong>，我们再来看看这个题-15|3，其中-15的原码为10001111，反码为11110000，那么补码就是11110001，然后3的补码为00000011，两者进行或操作就是11110011，你以为结束了么？还没有，再又要求它的原码了，<strong>原码就是补码再求补码再+1</strong>（是不是已经晕掉了？），也就是<br>10001101，结果就是-13。为了大家都好理解，我这里用算式整理一下：</p>
+<p>求 -15|3</p>
+<p>[-15]原码 = 10001111<br>[-15]反码 = 11110000 //原码求反码符号位不变<br>[-15]补码 = 11110001 //反码+1等于补码</p>
+<p>[3]原码 = 00000011<br>[3]反码 = 00000011 //正数都一致<br>[3]补码 = 00000011 //正数都一致</p>
+<p>-15|3 = 11110011 //两个补码进行或操作</p>
+<p>[结果]补码 = 11110011 //上面求得的值<br>[结果]反码 = 10001100 //符号位不变<br>[结果]原码 = 10001101 //反码+1</p>
+<p>100001101 转化为十进制就是-13。<br>不知道我这么解释会不会更加清楚一些呢？同理的，上面那些（尤其是求反‘~’我故意没写例子，大家自己去试试吧）。</p>
+<p>在说一次，正数的原码，补码，反码都一样，如果一定要说为什么一样，我就举个例子。有这么一个等式7+（-7）=0。<br>我们知道<br>[-7]原 = 10000111<br>[-7]反 = 11111000<br>[-7]补 = 11111001</p>
+<p>那么如果要存在一个值和[-7]补码相加等于0，是不是就是00000111！！所以正数的补码和原码是一致的。<br>这样解释虽然怪怪的，但是可以知道的确是这样的。</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p>基本步骤：<br>① 分析转化和代转化之间位数的关系<br>② 计算偏移量。每次都取最后8位<br>③ 把最后8位和0xff进行&amp;操作<br>④ 得出结果。  </p>
+<p>有人会问，为什么要和0xff进行&amp;操作？这里解释下，因为再分割的时候，我们要保证最后8位是一致的，更高位都要置0，这样才能保证数据的一致性。比如说由byte转化成short。位数从8位变成了16位，那么在计算机自己看来，它会把前面多出来的8位置1。而&amp;0xff就可以把前面所有的位数都置0。</p>
+<ol>
+<li>short与byte的相互转化</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  /**</span><br><span class="line">    * 前提：在计算机中所有的都是用补码的形式存储的。</span><br><span class="line">    * 将short转换为字节</span><br><span class="line">    *</span><br><span class="line">    * 例如 8的补码为0000 0000 0000 1000，所以要将转换为两个字节，第一个字节是将8右移8位然后和0x00ff求与，</span><br><span class="line">    * 而第二个字节则是右移0位，然后求与</span><br><span class="line">    */</span><br><span class="line">public static byte[] short2byte(short s)&#123;</span><br><span class="line">        byte[] b = new byte[2];</span><br><span class="line">        for(int i = 0; i &lt; 2; i++)&#123;</span><br><span class="line">            int offset = 16 - (i+1)*8;          //因为byte占1个字节，所以要计算偏移量</span><br><span class="line">            b[i] = (byte)((s &gt;&gt; offset)&amp;0xff); //把16位分为2个8位进行分别存储</span><br><span class="line">        &#125;</span><br><span class="line">        return b;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public static short byte2short(byte[] b)&#123;</span><br><span class="line">       short l = 0;</span><br><span class="line">       for (int i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">           l&lt;&lt;=8;               //&lt;&lt;=和 +=是一样的，意思就是 l = l &lt;&lt; 8</span><br><span class="line">           l |= (b[i] &amp; 0xff); //和上面也是一样的  l = l | (b[i]&amp;0xff)</span><br><span class="line">       &#125;</span><br><span class="line">       return l;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>int与byte的相互转化</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static byte[] int2byte(int s)&#123;</span><br><span class="line">         byte[] b = new byte[2];</span><br><span class="line">         for(int i = 0; i &lt; 4; i++)&#123;</span><br><span class="line">             int offset = 16 - (i+1)*8;         //因为byte占1个字节，所以要计算偏移量</span><br><span class="line">             b[i] = (byte)((s &gt;&gt; offset)&amp;0xff); //把32位分为4个8位进行分别存储</span><br><span class="line">         &#125;</span><br><span class="line">         return b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static int byte2int(byte[] b)&#123;</span><br><span class="line">        int l = 0;</span><br><span class="line">        for (int i = 0; i &lt; 4; i++) &#123;</span><br><span class="line">            l&lt;&lt;=8;              //&lt;&lt;=和 +=是一样的，意思就是 l = l &lt;&lt; 8</span><br><span class="line">            l |= (b[i] &amp; 0xff); //和上面也是一样的  l = l | (b[i]&amp;0xff)</span><br><span class="line">        &#125;</span><br><span class="line">        return l;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>long与byte的相互转化   </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">	 * @方法功能 字节数组和长整型的转换</span><br><span class="line">	 * @param 字节数组</span><br><span class="line">	 * @return 长整型</span><br><span class="line">	 */</span><br><span class="line">	public static byte[] longToByte(long number) &#123;</span><br><span class="line">		long temp = number;</span><br><span class="line">		byte[] b = new byte[8];</span><br><span class="line">		for (int i = 0; i &lt; b.length; i++) &#123;</span><br><span class="line">			b[i] = new Long(temp &amp; 0xff).byteValue();</span><br><span class="line">			// 将最低位保存在最低位</span><br><span class="line">			temp = temp &gt;&gt; 8;</span><br><span class="line">			// 向右移8位</span><br><span class="line">		&#125;</span><br><span class="line">		return b;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * @方法功能 字节数组和长整型的转换</span><br><span class="line">	 * @param 字节数组</span><br><span class="line">	 * @return 长整型</span><br><span class="line">	 */</span><br><span class="line">	public static long byteToLong(byte[] b) &#123;</span><br><span class="line">		long s = 0;</span><br><span class="line">		long s0 = b[0] &amp; 0xff;// 最低位</span><br><span class="line">		long s1 = b[1] &amp; 0xff;</span><br><span class="line">		long s2 = b[2] &amp; 0xff;</span><br><span class="line">		long s3 = b[3] &amp; 0xff;</span><br><span class="line">		long s4 = b[4] &amp; 0xff;// 最低位</span><br><span class="line">		long s5 = b[5] &amp; 0xff;</span><br><span class="line">		long s6 = b[6] &amp; 0xff;</span><br><span class="line">		long s7 = b[7] &amp; 0xff; // s0不变</span><br><span class="line">		s1 &lt;&lt;= 8;</span><br><span class="line">		s2 &lt;&lt;= 16;</span><br><span class="line">		s3 &lt;&lt;= 24;</span><br><span class="line">		s4 &lt;&lt;= 8 * 4;</span><br><span class="line">		s5 &lt;&lt;= 8 * 5;</span><br><span class="line">		s6 &lt;&lt;= 8 * 6;</span><br><span class="line">		s7 &lt;&lt;= 8 * 7;</span><br><span class="line">		s = s0 | s1 | s2 | s3 | s4 | s5 | s6 | s7;</span><br><span class="line">		return s;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>char与byte的转化</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">	 * 字符到字节转换</span><br><span class="line">	 *</span><br><span class="line">	 * @param ch</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public static void putChar(byte[] bb, char ch, int index) &#123;</span><br><span class="line">		int temp = (int) ch;</span><br><span class="line">		// byte[] b = new byte[2];</span><br><span class="line">		for (int i = 0; i &lt; 2; i ++ ) &#123;</span><br><span class="line">			bb[index + i] = new Integer(temp &amp; 0xff).byteValue(); // 将最高位保存在最低位</span><br><span class="line">			temp = temp &gt;&gt; 8; // 向右移8位</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 字节到字符转换</span><br><span class="line">	 *</span><br><span class="line">	 * @param b</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public static char getChar(byte[] b, int index) &#123;</span><br><span class="line">		int s = 0;</span><br><span class="line">		if (b[index + 1] &gt; 0)</span><br><span class="line">			s += b[index + 1];</span><br><span class="line">		else</span><br><span class="line">			s += 256 + b[index + 0];</span><br><span class="line">		s *= 256;</span><br><span class="line">		if (b[index + 0] &gt; 0)</span><br><span class="line">			s += b[index + 1];</span><br><span class="line">		else</span><br><span class="line">			s += 256 + b[index + 0];</span><br><span class="line">		char ch = (char) s;</span><br><span class="line">		return ch;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>float与byte的转化</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * float转换byte</span><br><span class="line"> *</span><br><span class="line"> * @param bb</span><br><span class="line"> * @param x</span><br><span class="line"> * @param index</span><br><span class="line"> */</span><br><span class="line">public static void putFloat(byte[] bb, float x, int index) &#123;</span><br><span class="line">	// byte[] b = new byte[4];</span><br><span class="line">	int l = Float.floatToIntBits(x);</span><br><span class="line">	for (int i = 0; i &lt; 4; i++) &#123;</span><br><span class="line">		bb[index + i] = new Integer(l).byteValue();</span><br><span class="line">		l = l &gt;&gt; 8;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 通过byte数组取得float</span><br><span class="line"> *</span><br><span class="line"> * @param bb</span><br><span class="line"> * @param index</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">public static float getFloat(byte[] b, int index) &#123;</span><br><span class="line">	int l;</span><br><span class="line">	l = b[index + 0];</span><br><span class="line">	l &amp;= 0xff;</span><br><span class="line">	l |= ((long) b[index + 1] &lt;&lt; 8);</span><br><span class="line">	l &amp;= 0xffff;</span><br><span class="line">	l |= ((long) b[index + 2] &lt;&lt; 16);</span><br><span class="line">	l &amp;= 0xffffff;</span><br><span class="line">	l |= ((long) b[index + 3] &lt;&lt; 24);</span><br><span class="line">	return Float.intBitsToFloat(l);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>double与byte的转化   </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">	 * double转换byte</span><br><span class="line">	 *</span><br><span class="line">	 * @param bb</span><br><span class="line">	 * @param x</span><br><span class="line">	 * @param index</span><br><span class="line">	 */</span><br><span class="line">	public static void putDouble(byte[] bb, double x, int index) &#123;</span><br><span class="line">		// byte[] b = new byte[8];</span><br><span class="line">		long l = Double.doubleToLongBits(x);</span><br><span class="line">		for (int i = 0; i &lt; 4; i++) &#123;</span><br><span class="line">			bb[index + i] = new Long(l).byteValue();</span><br><span class="line">			l = l &gt;&gt; 8;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 通过byte数组取得float</span><br><span class="line">	 *</span><br><span class="line">	 * @param bb</span><br><span class="line">	 * @param index</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public static double getDouble(byte[] b, int index) &#123;</span><br><span class="line">		long l;</span><br><span class="line">		l = b[0];</span><br><span class="line">		l &amp;= 0xff;</span><br><span class="line">		l |= ((long) b[1] &lt;&lt; 8);</span><br><span class="line">		l &amp;= 0xffff;</span><br><span class="line">		l |= ((long) b[2] &lt;&lt; 16);</span><br><span class="line">		l &amp;= 0xffffff;</span><br><span class="line">		l |= ((long) b[3] &lt;&lt; 24);</span><br><span class="line">		l &amp;= 0xffffffffl;</span><br><span class="line">		l |= ((long) b[4] &lt;&lt; 32);</span><br><span class="line">		l &amp;= 0xffffffffffl;</span><br><span class="line">		l |= ((long) b[5] &lt;&lt; 40);</span><br><span class="line">		l &amp;= 0xffffffffffffl;</span><br><span class="line">		l |= ((long) b[6] &lt;&lt; 48);</span><br><span class="line">		l &amp;= 0xffffffffffffffl;</span><br><span class="line">		l |= ((long) b[7] &lt;&lt; 56);</span><br><span class="line">		return Double.longBitsToDouble(l);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>boolean与byte的相互转化</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 将boolean转成byte[]</span><br><span class="line">     * @param val</span><br><span class="line">     * @return byte[]</span><br><span class="line">     */  </span><br><span class="line">    public static byte[] Boolean2ByteArray(boolean val) &#123;</span><br><span class="line">        int tmp = (val == false) ? 0 : 1;</span><br><span class="line">        return ByteBuffer.allocate(4).putInt(tmp).array();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 将byte[]转成boolean</span><br><span class="line">     * @param data</span><br><span class="line">     * @return boolean</span><br><span class="line">     */</span><br><span class="line">    public static boolean ByteArray2Boolean(byte[] data) &#123;</span><br><span class="line">        if (data == null || data.length &lt; 4) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        int tmp = ByteBuffer.wrap(data, 0, 4).getInt();</span><br><span class="line">        return (tmp == 0) ? false : true;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>参考地址：<br>[1].long、shrot和int转化 <a href="https://blog.csdn.net/u012403290/article/details/68943827" target="_blank" rel="noopener">https://blog.csdn.net/u012403290/article/details/68943827</a><br>[2].long、shrot和int转化 <a href="https://blog.csdn.net/thanklife/article/details/17002641" target="_blank" rel="noopener">https://blog.csdn.net/thanklife/article/details/17002641</a><br>[3]. char、float、double与byte转化 <a href="https://blog.csdn.net/LEEtcWorks/article/details/7390731" target="_blank" rel="noopener">https://blog.csdn.net/LEEtcWorks/article/details/7390731</a><br>[4]. 通过buffer转换 <a href="https://blog.csdn.net/u010983881/article/details/60870360" target="_blank" rel="noopener">https://blog.csdn.net/u010983881/article/details/60870360</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://cattlefoot.github.io/2018/08/27/基础数据与byte间的转化/" data-id="cjlc1dmur004ca4s6s5ws4tki" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/boolen/">boolen</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/byte/">byte</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/char/">char</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/double/">double</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/int/">int</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/long/">long</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/short/">short</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/23/NIO-Buffer解析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">NIO-Buffer解析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/7/">7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Support/">Android Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Annotation/">Annotation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsynListUtil/">AsynListUtil</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-DataCallback/">AsyncListUtil.DataCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AsyncListUtil-ViewCallback/">AsyncListUtil.ViewCallback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BitmapFactory/">BitmapFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buffer/">Buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ByteBuffer/">ByteBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera2/">Camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Download-Manager/">Download Manager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DynamicLoadApk/">DynamicLoadApk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Error/">Error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/First-App/">First App</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instant-Run/">Instant Run</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Interceptors/">Interceptors</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinearLayout/">LinearLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC-MVP-MVVM/">MVC MVP MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Media/">Media</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaCodeC/">MediaCodeC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MediaExtractor/">MediaExtractor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MulitiDex/">MulitiDex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NNotificationChannelGroup/">NNotificationChannelGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NestedScrolling/">NestedScrolling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notification/">Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotificationChannel/">NotificationChannel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Options/">Options</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Small/">Small</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SourceCode/">SourceCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Support/">Support</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tool/">Tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uri/">Uri</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/andrid/">andrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/boolen/">boolen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/byte/">byte</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/camera2/">camera2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/char/">char</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/double/">double</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle-plugin/">gradle plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/head/">head</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/install/">install</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/int/">int</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/long/">long</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/okhttp/">okhttp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/short/">short</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/start/">start</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/7/" style="font-size: 10px;">7</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Android-Support/" style="font-size: 10px;">Android Support</a> <a href="/tags/Annotation/" style="font-size: 12.5px;">Annotation</a> <a href="/tags/AsynListUtil/" style="font-size: 10px;">AsynListUtil</a> <a href="/tags/AsyncListUtil-DataCallback/" style="font-size: 10px;">AsyncListUtil.DataCallback</a> <a href="/tags/AsyncListUtil-ViewCallback/" style="font-size: 10px;">AsyncListUtil.ViewCallback</a> <a href="/tags/Bitmap/" style="font-size: 10px;">Bitmap</a> <a href="/tags/BitmapFactory/" style="font-size: 10px;">BitmapFactory</a> <a href="/tags/Buffer/" style="font-size: 10px;">Buffer</a> <a href="/tags/ByteBuffer/" style="font-size: 10px;">ByteBuffer</a> <a href="/tags/Camera2/" style="font-size: 12.5px;">Camera2</a> <a href="/tags/Download-Manager/" style="font-size: 12.5px;">Download Manager</a> <a href="/tags/DynamicLoadApk/" style="font-size: 10px;">DynamicLoadApk</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/First-App/" style="font-size: 10px;">First App</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Instant-Run/" style="font-size: 10px;">Instant Run</a> <a href="/tags/Interceptors/" style="font-size: 10px;">Interceptors</a> <a href="/tags/LinearLayout/" style="font-size: 10px;">LinearLayout</a> <a href="/tags/MVC-MVP-MVVM/" style="font-size: 10px;">MVC MVP MVVM</a> <a href="/tags/Media/" style="font-size: 15px;">Media</a> <a href="/tags/MediaCodeC/" style="font-size: 10px;">MediaCodeC</a> <a href="/tags/MediaExtractor/" style="font-size: 12.5px;">MediaExtractor</a> <a href="/tags/MulitiDex/" style="font-size: 10px;">MulitiDex</a> <a href="/tags/NIO/" style="font-size: 10px;">NIO</a> <a href="/tags/NNotificationChannelGroup/" style="font-size: 10px;">NNotificationChannelGroup</a> <a href="/tags/NestedScrolling/" style="font-size: 10px;">NestedScrolling</a> <a href="/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/tags/NotificationChannel/" style="font-size: 10px;">NotificationChannel</a> <a href="/tags/Options/" style="font-size: 10px;">Options</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Small/" style="font-size: 10px;">Small</a> <a href="/tags/SourceCode/" style="font-size: 10px;">SourceCode</a> <a href="/tags/Support/" style="font-size: 10px;">Support</a> <a href="/tags/Tool/" style="font-size: 12.5px;">Tool</a> <a href="/tags/Uri/" style="font-size: 10px;">Uri</a> <a href="/tags/andrid/" style="font-size: 15px;">andrid</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/boolen/" style="font-size: 10px;">boolen</a> <a href="/tags/byte/" style="font-size: 10px;">byte</a> <a href="/tags/camera2/" style="font-size: 10px;">camera2</a> <a href="/tags/char/" style="font-size: 10px;">char</a> <a href="/tags/double/" style="font-size: 10px;">double</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gradle-plugin/" style="font-size: 10px;">gradle plugin</a> <a href="/tags/head/" style="font-size: 10px;">head</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/install/" style="font-size: 12.5px;">install</a> <a href="/tags/int/" style="font-size: 10px;">int</a> <a href="/tags/java/" style="font-size: 12.5px;">java</a> <a href="/tags/long/" style="font-size: 10px;">long</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/okhttp/" style="font-size: 10px;">okhttp</a> <a href="/tags/short/" style="font-size: 10px;">short</a> <a href="/tags/start/" style="font-size: 10px;">start</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/27/基础数据与byte间的转化/">基础数据与byte间的转化</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/23/NIO-Buffer解析/">NIO-Buffer解析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/16/根据Uri获取文档的路径/">根据Uri获取文档的路径</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/12/LinearLayout源码解读/">LinearLayout源码解读</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/android-camera2预览拍照录制/">android-camera2预览拍照录制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 CallteFoot<br>
+      Powered by <a href="https://cattlefoot.github.io" target="_blank">CallteFoot</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
