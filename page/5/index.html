@@ -262,6 +262,241 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2017/05/07/python的List与tuple操作方法详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CallteFoot">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CallteFoot's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/07/python的List与tuple操作方法详解/" itemprop="url">python的List与tuple操作方法详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-07T09:40:40+08:00">
+                2017-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>&ensp;&ensp;列表是Python中最基本的数据结构，列表是最常用的Python数据类型，列表的数据项不需要具有相同的类型。列表中的每个元素都分配一个数字 - 它的位置，或索引，第一个索引是0，第二个索引是1，依此类推。<br>&ensp;&ensp;Python有6个序列的内置类型，但最常见的是列表和元组，因为列表和元组操作基本相似，只是tuple一旦初始化就不能修改，這里只介绍列表的。序列都可以进行的操作包括索引，切片，加，乘，检查成员。此外，Python已经内置确定序列的长度以及确定最大和最小的元素的方法。</p>
+<ol>
+<li>创建一个列表<br>&ensp;&ensp;只要把逗号分隔的不同的数据项使用方括号括起来即可。如下所示:<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">list1 = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</span><br><span class="line">list2 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> ];</span><br><span class="line">list3 = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>];</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&ensp;&ensp;与字符串的索引一样，列表索引从0开始。列表可以进行截取、组合等。</p>
+<ol>
+<li>访问列表中的值<br>&ensp;&ensp;使用下标索引来访问列表中的值，同样你也可以使用方括号的形式截取字符， 如下所示:<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"></span><br><span class="line">list1 = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</span><br><span class="line">list2 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span> ];</span><br><span class="line"><span class="keyword">print</span> <span class="string">"list1[0]: "</span>, list1[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">print</span> <span class="string">"list2[1:5]: "</span>, list2[<span class="number">1</span>:<span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上实例输出结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list1[<span class="number">0</span>]:  physics</span><br><span class="line">list2[<span class="number">1</span>:<span class="number">5</span>]:  [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>更新列表<br>&ensp;&ensp;你可以对列表的数据项进行修改或更新，你也可以使用append()方法来添加列表项，如下所示：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line">list = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Value available at index 2 : "</span></span><br><span class="line"><span class="keyword">print</span> list[<span class="number">2</span>];</span><br><span class="line">list[<span class="number">2</span>] = <span class="number">2001</span>;</span><br><span class="line"><span class="keyword">print</span> <span class="string">"New value available at index 2 : "</span></span><br><span class="line"><span class="keyword">print</span> list[<span class="number">2</span>];</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上实例输出结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Value available at index <span class="number">2</span> :</span><br><span class="line"><span class="number">1997</span></span><br><span class="line">New value available at index <span class="number">2</span> :</span><br><span class="line"><span class="number">2001</span></span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>删除列表元素<br>&ensp;&ensp;可以使用 del 语句来删除列表的的元素，如下实例：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line">list1 = [<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>];</span><br><span class="line"><span class="keyword">print</span> list1;</span><br><span class="line"><span class="keyword">del</span> list1[<span class="number">2</span>];</span><br><span class="line"><span class="keyword">print</span> <span class="string">"After deleting value at index 2 : "</span></span><br><span class="line"><span class="keyword">print</span> list1;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上实例输出结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">1997</span>, <span class="number">2000</span>]</span><br><span class="line">After deleting value at index <span class="number">2</span> :</span><br><span class="line">[<span class="string">'physics'</span>, <span class="string">'chemistry'</span>, <span class="number">2000</span>]</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>Python列表脚本操作符<br>&ensp;&ensp;列表对 + 和 <em> 的操作符与字符串相似。+ 号用于组合列表，</em> 号用于重复列表。如下所示： </li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Python 表达式</th>
+<th style="text-align:left">结果</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">len([1, 2, 3])</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">长度</td>
+</tr>
+<tr>
+<td style="text-align:left">[1, 2, 3] + [4, 5, 6]</td>
+<td style="text-align:left">[1, 2, 3, 4, 5, 6]</td>
+<td style="text-align:left">组合</td>
+</tr>
+<tr>
+<td style="text-align:left">[‘Hi!’] * 4</td>
+<td style="text-align:left">[‘Hi!’, ‘Hi!’, ‘Hi!’, ‘Hi!’]</td>
+<td style="text-align:left">重复</td>
+</tr>
+<tr>
+<td style="text-align:left">3 in [1, 2, 3]</td>
+<td style="text-align:left">True</td>
+<td style="text-align:left">元素是否存在于列表中</td>
+</tr>
+<tr>
+<td style="text-align:left">for x in [1, 2, 3]: print x,</td>
+<td style="text-align:left">1 2 3</td>
+<td style="text-align:left">迭代</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Python列表截取或切片<br>Python的列表截取与字符串操作类型，如下所示：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">L = [<span class="string">'spam'</span>, <span class="string">'Spam'</span>, <span class="string">'SPAM!'</span>]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>操作：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Python 表达式</th>
+<th style="text-align:left">结果</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">L[2]</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">‘SPAM!’</td>
+<td>读取列表中第三个元素</td>
+</tr>
+<tr>
+<td style="text-align:left">L[-2]</td>
+<td style="text-align:left">‘Spam’</td>
+<td style="text-align:left">读取列表中倒数第二个元素</td>
+</tr>
+<tr>
+<td style="text-align:left">L[1:]</td>
+<td style="text-align:left">[‘Spam’, ‘SPAM!’]</td>
+<td style="text-align:left">从第二个元素开始截取列表</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Python列表操作的函数和方法<br>列表操作包含以下函数:</li>
+</ol>
+<ul>
+<li>cmp(list1, list2)：比较两个列表的元素 </li>
+<li>len(list)：列表元素个数 </li>
+<li>max(list)：返回列表元素最大值 </li>
+<li>min(list)：返回列表元素最小值 </li>
+<li>list(seq)：将元组转换为列表<br>列表操作包含以下方法:</li>
+<li>list.append(obj)：在列表末尾添加新的对象</li>
+<li>list.count(obj)：统计某个元素在列表中出现的次数</li>
+<li>list.extend(seq)：在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表）</li>
+<li>list.index(obj)：从列表中找出某个值第一个匹配项的索引位置,<strong>注意</strong>这个有个前提，obj必须在list中不然会抛异常</li>
+<li>list.insert(index, obj)：将对象插入列表</li>
+<li>list.pop(obj=list[-1])：移除列表中的一个元素（默认最后一个元素），并且返回该元素的值</li>
+<li>list.remove(obj)：移除列表中某个值的第一个匹配项</li>
+<li>list.reverse()：反向列表中元素</li>
+<li>list.sort([func])：对原列表进行排序</li>
+</ul>
+<p>参考资料：</p>
+<ul>
+<li><a href="http://www.jb51.net/article/47978.htm" target="_blank" rel="noopener">http://www.jb51.net/article/47978.htm</a></li>
+<li><a href="http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819318453af120e8751ea4d2696d8a1ffa5ffdfd7000" target="_blank" rel="noopener">http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819318453af120e8751ea4d2696d8a1ffa5ffdfd7000</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2017/05/06/python编码中问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1744,7 +1979,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1757,7 +1992,7 @@ romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat,  xenix,  xfs和其他，如�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
