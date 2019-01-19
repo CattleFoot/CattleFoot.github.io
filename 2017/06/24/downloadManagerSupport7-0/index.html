@@ -53,13 +53,13 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.svg?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=5.1.4">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="CallteFoot&#39;s blog">
 <meta property="og:description" content="DownloadManager downloadmanager概述DownloadManager是Android SDK中封装的下载文件类，可以很方便开发者使用下载文件。其具体看官方APIhttps://developer.android.com/reference/android/app/DownloadManager.html  使用DownloadManager下载 123456789101">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-06-24T13:43:03.336Z">
+<meta property="og:updated_time" content="2019-01-19T07:26:36.184Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="downloadManagerSupport7.0">
 <meta name="twitter:description" content="DownloadManager downloadmanager概述DownloadManager是Android SDK中封装的下载文件类，可以很方便开发者使用下载文件。其具体看官方APIhttps://developer.android.com/reference/android/app/DownloadManager.html  使用DownloadManager下载 123456789101">
@@ -161,7 +161,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">Victory belongs to the most persevering.</p>
+        <p class="site-subtitle">Victory belongs to the most persevering</p>
       
   </div>
 
@@ -303,6 +303,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -344,11 +366,11 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.SecurityException: COLUMN_LOCAL_FILENAME is deprecated; use ContentResolver.openFileDescriptor() instead</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>在Android 7.0中通过DownloadManager根据downId获取的uri安装apk是会得到如下错误：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Caused by: android.os.FileUriExposedException: </span><br><span class="line">file:///storage/emulated/0/Download/myApp.apk exposed beyond app through Intent.getData()</span><br></pre></td></tr></table></figure></p>
+<p>在Android 7.0中通过DownloadManager根据downId获取的uri安装apk是会得到如下错误：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Caused by: android.os.FileUriExposedException:</span><br><span class="line">file:///storage/emulated/0/Download/myApp.apk exposed beyond app through Intent.getData()</span><br></pre></td></tr></table></figure></p>
 <p>同时在7.0上通过DownloadManager根据downId获取的uri变为:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">content://downloads/all_downloads/430</span><br></pre></td></tr></table></figure></p>
 <p>这些都是由于Android7.0执行了“StrictMode API 政策禁”的原因，可以用FileProvider来解决这一问题。</p>
 <ol>
-<li>原来的代码如下：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DownloadManager manager = (DownloadManager) mContext</span><br><span class="line">    .getSystemService(Context.DOWNLOAD_SERVICE);</span><br><span class="line">Cursor downloadCursor = dm.query(myDownloadQuery);</span><br><span class="line"><span class="keyword">if</span> (myDownload != null &amp;&amp; downloadCursor.moveToFirst()) &#123;</span><br><span class="line">    int fileNameIdx = downloadCursor</span><br><span class="line">        .getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME); </span><br><span class="line">    String filePath = downloadCursor.getString(fileNameIdx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li>原来的代码如下：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DownloadManager manager = (DownloadManager) mContext</span><br><span class="line">    .getSystemService(Context.DOWNLOAD_SERVICE);</span><br><span class="line">Cursor downloadCursor = dm.query(myDownloadQuery);</span><br><span class="line"><span class="keyword">if</span> (myDownload != null &amp;&amp; downloadCursor.moveToFirst()) &#123;</span><br><span class="line">    int fileNameIdx = downloadCursor</span><br><span class="line">        .getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);</span><br><span class="line">    String filePath = downloadCursor.getString(fileNameIdx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h4 id="7-0获取文件路径"><a href="#7-0获取文件路径" class="headerlink" title="7.0获取文件路径"></a>7.0获取文件路径</h4><ol>
@@ -538,7 +560,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">CallteFoot</p>
-              <p class="site-description motion-element" itemprop="description">the blog from a anroid coder</p>
+              <p class="site-description motion-element" itemprop="description">The blog from a Android coder</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -554,6 +576,15 @@
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             

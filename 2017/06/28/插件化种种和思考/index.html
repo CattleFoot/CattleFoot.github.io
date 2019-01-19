@@ -53,13 +53,13 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.svg?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=5.1.4">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="CallteFoot&#39;s blog">
 <meta property="og:description" content="个人态度&amp;ensp;&amp;ensp;学习这项技术是关心技术后的本质，在项目中能不用就不用，因为本身这种做法是 Google 不推荐的，RN才是今后的发展方向。但是RN性能方面的优化也很重要，这方面没深入了解。 在项目中引入新技术&amp;ensp;&amp;ensp;在项目中使用新技术，哪怕是引入一个第三方库也要小心谨慎，确定是否确实需要。但是还是要对不了解的新的东西要积极学习、积极研究，这样在引入实际生产环境后也能">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-06-27T23:49:09.549Z">
+<meta property="og:updated_time" content="2019-01-19T07:36:22.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="插件化种种和思考">
 <meta name="twitter:description" content="个人态度&amp;ensp;&amp;ensp;学习这项技术是关心技术后的本质，在项目中能不用就不用，因为本身这种做法是 Google 不推荐的，RN才是今后的发展方向。但是RN性能方面的优化也很重要，这方面没深入了解。 在项目中引入新技术&amp;ensp;&amp;ensp;在项目中使用新技术，哪怕是引入一个第三方库也要小心谨慎，确定是否确实需要。但是还是要对不了解的新的东西要积极学习、积极研究，这样在引入实际生产环境后也能">
@@ -161,7 +161,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">Victory belongs to the most persevering.</p>
+        <p class="site-subtitle">Victory belongs to the most persevering</p>
       
   </div>
 
@@ -303,6 +303,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -344,7 +366,7 @@
 <li>使用了mulitDex的App在runtime期间有可能因为Dalvik linearAlloc limit (Issue 78035) Crash。该内存分配限制在 4.0版本被增大，但是5.0以下的机器上的Apps依然会存在这个限制。</li>
 <li>主dex被dalvik虚拟机执行时候，哪些类必须在主dex文件里面这个问题比较复杂。build tools 可以搞定这个问题。但是如果你代码存在反射和native的调用也不保证100%正确。</li>
 </ul>
-<p>对于 davilk 和 art 虚拟机 Mulitdex 的不同: </p>
+<p>对于 davilk 和 art 虚拟机 Mulitdex 的不同:</p>
 <ol>
 <li>ART模式相比原来的Dalvik，会在安装APK的时候，使用Android系统自带的dex2oat工具把APK里面的.dex文件转化成OAT文件。<br>这里说一下罗迪的快速加载 Mulitdex 方案：art虚拟机对dex优化需要很长时间，加载插件dex跳过优化实现加速。跳过会影响类加载的性能。</li>
 </ol>
@@ -571,7 +593,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">CallteFoot</p>
-              <p class="site-description motion-element" itemprop="description">the blog from a anroid coder</p>
+              <p class="site-description motion-element" itemprop="description">The blog from a Android coder</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -587,6 +609,15 @@
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             

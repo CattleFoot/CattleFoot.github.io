@@ -53,13 +53,13 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.svg?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=5.1.4">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Android, SpringBoot" />
 
 
 
@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="CallteFoot&#39;s blog">
 <meta property="og:description" content="&amp;ensp;&amp;ensp;在python2.4以上的函数中经常看到函数定义上一行有@functionName的修饰，注意下这个语法细节，有点像c语言中带参数的宏操作，当解释器读到这样的修饰之后，会先解析@后的内容，直接把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象。例子：123456789101112131415161718# !/usr/bin/env pyt">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-05-06T07:51:53.098Z">
+<meta property="og:updated_time" content="2019-01-19T07:31:51.856Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python中@的作用">
 <meta name="twitter:description" content="&amp;ensp;&amp;ensp;在python2.4以上的函数中经常看到函数定义上一行有@functionName的修饰，注意下这个语法细节，有点像c语言中带参数的宏操作，当解释器读到这样的修饰之后，会先解析@后的内容，直接把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象。例子：123456789101112131415161718# !/usr/bin/env pyt">
@@ -160,7 +160,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">Victory belongs to the most persevering.</p>
+        <p class="site-subtitle">Victory belongs to the most persevering</p>
       
   </div>
 
@@ -302,6 +302,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -331,9 +353,9 @@
       
         <p>&ensp;&ensp;在python2.4以上的函数中经常看到函数定义上一行有@functionName的修饰，注意下这个语法细节，有点像c语言中带参数的宏操作，当解释器读到这样的修饰之后，会先解析@后的内容，直接把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象。<br>例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">funa</span><span class="params">(a)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"funa"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">funb</span><span class="params">(b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"funB"</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@funa</span></span><br><span class="line"><span class="meta">@funb</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(c)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"funC"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    func</span><br></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp;最后得到的结果是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">funB  </span><br><span class="line">funA</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;通过结果我们可以认为:return funa(funb(func))，也即第一个函数修饰符开始，自下而上做参数传递，这样实际是使用了约定的函数修饰符达到函数嵌套的目的。记得没错Java中SSH也有这样的用法哦。<br>其他例子：<br>1.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sayspam</span><span class="params">(*args)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></span><br><span class="line">    <span class="keyword">return</span> sayspam</span><br><span class="line">    </span><br><span class="line"><span class="meta">@spamrun</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br><span class="line">   </span><br><span class="line">useful(<span class="number">3</span>,<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;通过结果我们可以认为:return funa(funb(func))，也即第一个函数修饰符开始，自下而上做参数传递，这样实际是使用了约定的函数修饰符达到函数嵌套的目的。记得没错Java中SSH也有这样的用法哦。<br>其他例子：<br>1.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sayspam</span><span class="params">(*args)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></span><br><span class="line">    <span class="keyword">return</span> sayspam</span><br><span class="line"></span><br><span class="line"><span class="meta">@spamrun</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br><span class="line"></span><br><span class="line">useful(<span class="number">3</span>,<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
 <p>结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spam，spam，spam</span><br></pre></td></tr></table></figure></p>
-<p>&ensp;&ensp;解释:只是将函数useful传递给spamrun，并没用使用，因此最终返回的是spamrun函数的结果。<br>2.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></span><br><span class="line">        </span><br><span class="line"><span class="meta">@spamrun</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>&ensp;&ensp;解释:只是将函数useful传递给spamrun，并没用使用，因此最终返回的是spamrun函数的结果。<br>2.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamrun</span><span class="params">(fn)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"spam,spam,spam"</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@spamrun</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">useful</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
 <p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spam，spam，spam</span><br></pre></td></tr></table></figure></p>
 <p>&ensp;&ensp;解释:只是将函数useful传递给spamrun，并没用使用，因此最终返回的是spamrun函数的结果。<br>3.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(*args)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"My god!"</span>*<span class="number">3</span></span><br><span class="line">        <span class="keyword">return</span> fn(*args)</span><br><span class="line">    <span class="keyword">return</span> test</span><br><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">other</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> a**<span class="number">2</span>+b**<span class="number">2</span></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</span><br><span class="line">    other(<span class="number">4</span>,<span class="number">3</span>)</span><br><span class="line">    other(<span class="number">3</span>,<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
 <p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">My god!My god!My god!</span><br><span class="line">25</span><br><span class="line">My god!My god!My god!</span><br><span class="line">25</span><br></pre></td></tr></table></figure></p>
@@ -435,7 +457,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">CallteFoot</p>
-              <p class="site-description motion-element" itemprop="description">the blog from a anroid coder</p>
+              <p class="site-description motion-element" itemprop="description">The blog from a Android coder</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -451,6 +473,15 @@
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             
