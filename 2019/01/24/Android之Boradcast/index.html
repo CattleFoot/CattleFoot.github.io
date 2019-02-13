@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,Boradcast," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Android应用可以从 Android系统 和 其他Android应用 发送或接收广播消息，类似于 发布-订阅 设计模式。当感兴趣的事件发生时，发送这些广播。例如，Android系统在发生各种系统事件时发送广播，例如系统启动或设备开始充电时。例如，应用程序还可以发送自定义广播，以通知其他应用程序他们可能感兴趣的内容（例如，已下载了一些新数据）。 应用可以注册以接收特定广播。当发送广播时，系统自动">
+<meta name="keywords" content="Android,Boradcast">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android之Boradcast">
+<meta property="og:url" content="https://cattlefoot.github.io/2019/01/24/Android之Boradcast/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="Android应用可以从 Android系统 和 其他Android应用 发送或接收广播消息，类似于 发布-订阅 设计模式。当感兴趣的事件发生时，发送这些广播。例如，Android系统在发生各种系统事件时发送广播，例如系统启动或设备开始充电时。例如，应用程序还可以发送自定义广播，以通知其他应用程序他们可能感兴趣的内容（例如，已下载了一些新数据）。 应用可以注册以接收特定广播。当发送广播时，系统自动">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-24T12:34:56.035Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android之Boradcast">
+<meta name="twitter:description" content="Android应用可以从 Android系统 和 其他Android应用 发送或接收广播消息，类似于 发布-订阅 设计模式。当感兴趣的事件发生时，发送这些广播。例如，Android系统在发生各种系统事件时发送广播，例如系统启动或设备开始充电时。例如，应用程序还可以发送自定义广播，以通知其他应用程序他们可能感兴趣的内容（例如，已下载了一些新数据）。 应用可以注册以接收特定广播。当发送广播时，系统自动">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cattlefoot.github.io/2019/01/24/Android之Boradcast/"/>
+
+
+
+
+
+  <title>Android之Boradcast | CallteFoot's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CallteFoot's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Victory belongs to the most persevering</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2019/01/24/Android之Boradcast/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CallteFoot">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CallteFoot's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android之Boradcast</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T20:30:56+08:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Android应用可以从 <strong>Android系统</strong> 和 <strong>其他Android应用</strong> 发送或接收广播消息，类似于 <strong>发<br>布-订阅</strong> 设计模式。当感兴趣的事件发生时，发送这些广播。例如，Android系统在发生各种系统事件时<br>发送广播，例如系统启动或设备开始充电时。例如，应用程序还可以发送自定义广播，以通知其他应用程序他<br>们可能感兴趣的内容（例如，已下载了一些新数据）。</p>
+<p>应用可以注册以接收特定广播。当发送广播时，系统自动将广播路由到已订阅接收该特定类型广播的应用。</p>
+<p>一般而言，广播可以用作跨应用程序和普通用户流程之外的消息传递系统。但是，您必须小心，不要滥用机会<br>响应广播并在后台运行可能导致系统性能降低的作业。</p>
+<p>通过以上介绍可以知道：在Android系统中，广播（Broadcast）是在组件之间传播数据的一种机制，这些组件<br>可以位于不同的进程中，起到进程间通信的作用。</p>
+<h3 id="关于系统广播"><a href="#关于系统广播" class="headerlink" title="关于系统广播"></a>关于系统广播</h3><p>当系统发生各种系统事件时，系统会自动发送广播，例如当系统进出飞行模式时。系统广播将发送到订阅接收<br>事件的所有应用程序。</p>
+<p>广播消息本身包装在一个 <strong>Intent</strong> 对象中，该对象的动作字符串标识发生的事件（例如 android.intent.action.AIRPLANE_MODE）。意图还可以包括捆绑到其额外字段中的附加信息。例如，<br>飞行模式意图包括一个布尔额外值，用于指示飞行模式是否打开。</p>
+<p>有关如何读取意图并从意图获取操作字符串的更多信息，请参阅<a href="https://developer.android.com/guide/components/intents-filters.html" target="_blank" rel="noopener">意图和意图过滤器</a>。</p>
+<p>有关系统广播操作的完整列表，请参阅Android SDK中的 <strong>BROADCAST_ACTIONS.TXT</strong> 文件。每个广播动作都有一个与之相关的常量字段。例如，常量的值 ACTION_AIRPLANE_MODE_CHANGED是 android.intent.action.AIRPLANE_MODE。每个广播操作的文档都在其关联的常量字段中提供。</p>
+<h4 id="系统广播的变化"><a href="#系统广播的变化" class="headerlink" title="系统广播的变化"></a>系统广播的变化</h4><p>随着Android平台的发展，它会定期更改系统广播的行为方式。如果您的应用针对Android 7.0（API级别24）或更高版本，或者如果它安装在运行Android 7.0或更高版本的设备上，请记住以下更改。</p>
+<h5 id="Android-9"><a href="#Android-9" class="headerlink" title="Android 9"></a>Android 9</h5><p>从Android 9（API级别28）开始， NETWORK_STATE_CHANGED_ACTION 广播不会收到有关 <strong>用户位置或个人身份数据的信息</strong> 。</p>
+<p>此外，如果您的应用安装在运行Android 9或更高版本的设备上，则来自Wi-Fi的系统广播不包含SSID，BSSID，连接信息或扫描结果。要获取此信息，请调用getConnectionInfo() 。</p>
+<h5 id="Android-8-0"><a href="#Android-8-0" class="headerlink" title="Android 8.0"></a>Android 8.0</h5><p>从Android 8.0（API级别26）开始，系统对清单声明的接收器施加了额外的限制。</p>
+<p>如果您的应用面向Android 8.0或更高版本，则无法使用清单为大多数隐式广播声明接收方（广告不会专门针对您的应用）。当用户主动使用您的应用时，您仍然可以使用 上下文注册的接收器。</p>
+<h5 id="Android-7-0"><a href="#Android-7-0" class="headerlink" title="Android 7.0"></a>Android 7.0</h5><p>Android 7.0（API级别24）及更高版本不发送以下系统广播：</p>
+<ul>
+<li>ACTION_NEW_PICTURE</li>
+<li>ACTION_NEW_VIDEO<br>此外，针对Android 7.0及更高版本的应用必须CONNECTIVITY_ACTION使用注册广播registerReceiver(BroadcastReceiver, IntentFilter)。在清单中声明接收器不起作用。</li>
+</ul>
+<h3 id="接收广播"><a href="#接收广播" class="headerlink" title="接收广播"></a>接收广播</h3><p>应用程序可以通过两种方式接收广播：通过 <strong>清单声明的接收器</strong> 和 <strong>上下文注册的接收器</strong>。</p>
+<h4 id="清单声明的接收器"><a href="#清单声明的接收器" class="headerlink" title="清单声明的接收器"></a>清单声明的接收器</h4><p>如果您在清单中声明了广播接收器，系统会在发送广播时启动您的应用（如果应用尚未运行）。</p>
+<p>⚠️注意：如果您的应用程序的目标是API级别26或更高级别，则不能使用清单来声明隐式广播的接收者（特定于您的应用程序的广播），除了一些<a href="https://developer.android.com/guide/components/broadcast-exceptions.html" target="_blank" rel="noopener">免于该限制</a>的隐式广播。在大多数情况下，您可以使用<a href="https://developer.android.com/topic/performance/scheduling.html" target="_blank" rel="noopener">预定作业</a>。<br>要在清单中声明广播接收器，请执行以下步骤：</p>
+<ol>
+<li><receiver> 在应用清单中指定元素。  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">receiver</span> <span class="attr">android:name</span>=<span class="string">".MyBroadcastReceiver"</span>  <span class="attr">android:exported</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.BOOT_COMPLETED"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.INPUT_METHOD_CHANGED"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">receiver</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</receiver></li>
+</ol>
+<p>intent过滤器指定接收者订阅的广播操作。</p>
+<ol>
+<li>子类BroadcastReceiver并实现onReceive(Context, Intent)。以下示例中的广播接收器记录并显示广播的内容：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">const</span> val TAG = <span class="string">"MyBroadcastReceiver"</span></span><br><span class="line"></span><br><span class="line">class MyBroadcastReceiver : BroadcastReceiver() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">override fun <span class="title">onReceive</span><span class="params">(context: Context, intent: Intent)</span> </span>&#123;</span><br><span class="line">        StringBuilder().apply &#123;</span><br><span class="line">            append(<span class="string">"Action: $&#123;intent.action&#125;\n"</span>)</span><br><span class="line">            append(<span class="string">"URI: $&#123;intent.toUri(Intent.URI_INTENT_SCHEME)&#125;\n"</span>)</span><br><span class="line">            toString().also &#123; log -&gt;</span><br><span class="line">                Log.d(TAG, log)</span><br><span class="line">                Toast.makeText(context, log, Toast.LENGTH_LONG).show()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>系统软件包管理器在安装应用程序时注册接收器。然后，接收器成为应用程序的单独入口点，这意味着如果应用程序当前未运行，系统可以启动应用程序并发送广播。</p>
+<p>系统创建一个新的BroadcastReceiver组件对象来处理它接收的每个广播。 此对象仅在调用onReceive（Context，Intent）期间有效。 一旦您的代码从此方法返回，系统会认为该组件不再处于活动状态。</p>
+<h4 id="上下文注册的接收器"><a href="#上下文注册的接收器" class="headerlink" title="上下文注册的接收器"></a>上下文注册的接收器</h4><p>要使用上下文注册接收器，请执行以下步骤：</p>
+<ol>
+<li><p>创建一个实例BroadcastReceiver。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">val br: BroadcastReceiver = MyBroadcastReceiver()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>IntentFilter通过调用registerReceiver(BroadcastReceiver, IntentFilter)以下命令创建并注册接收器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION).apply &#123;</span><br><span class="line">    addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)</span><br><span class="line">&#125;</span><br><span class="line">registerReceiver(br, filter)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>⚠️注意：要注册本地广播，请调用LocalBroadcastManager.registerReceiver(BroadcastReceiver, IntentFilter)。<br>只要注册上下文有效，上下文注册的接收器就会接收广播。例如，如果您在Activity上下文中注册 ，只要Activity未被销毁，您就会收到广播。如果您在应用程序上下文中注册，则只要应用程序正在运行，您就会收到广播。</p>
+<ol>
+<li>要停止接收广播，请调用unregisterReceiver(android.content.BroadcastReceiver)。当您不再需要接收器或上下文不再有效时，请务必取消注册接收器。</li>
+</ol>
+<p>请注意注册和取消注册接收器的位置，例如，如果使用活动的上下文在onCreate（Bundle）中注册接收器，则应在onDestroy（）中取消注册，以防止接收器泄漏到活动上下文之外。 如果在onResume（）中注册接收器，则应在onPause（）中注销它以防止多次注册（如果您不希望在暂停时接收广播，这可以减少不必要的系统开销）。 不要在onSaveInstanceState（Bundle）中取消注册，因为如果用户在历史堆栈中向后移动，则不会调用此方法。</p>
+<h3 id="对过程状态的影响"><a href="#对过程状态的影响" class="headerlink" title="对过程状态的影响"></a>对过程状态的影响</h3><p>BroadcastReceiver的状态（无论是否正在运行）会影响其包含进程的状态，从而影响其被系统杀死的可能性。例如，当进程执行接收器（即，当前在其onReceive（）方法中运行代码）时，它被认为是前台进程。除极端内存压力外，系统保持运行。</p>
+<p>但是，一旦您的代码从onReceive（）返回，BroadcastReceiver就不再处于活动状态。接收方的主机进程与其中运行的其他应用程序组件一样重要。如果该进程仅承载清单声明的接收者（用户从未或最近未与之交互的应用程序的常见情况），则从onReceive（）返回时，系统将其进程视为低优先级进程并且可能杀死它以使资源可用于其他更重要的过程。</p>
+<p>因此，您不应该从广播接收器开始长时间运行后台线程。在onReceive（）之后，系统可以随时终止进程以回收内存，并且这样做会终止在进程中运行的生成线程。要避免这种情况，您应该调用goAsync（）（如果您希望在后台线程中处理广播更多时间）或使用JobScheduler从接收器调度JobService，以便系统知道该进程继续执行活动工作。有关更多信息，请参阅<a href="https://developer.android.com/guide/topics/processes/process-lifecycle.html" target="_blank" rel="noopener">进程和应用程序生命周期</a>。</p>
+<p>以下代码段显示了一个BroadcastReceiver，它使用goAsync（）标记在onReceive（）完成后需要更多时间才能完成。 如果要在onReceive（）中完成的工作足够长，导致UI线程错过一个帧（&gt; 16ms），使其更适合后台线程，则此功能尤其有用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">private const val TAG = &quot;MyBroadcastReceiver&quot;</span><br><span class="line"></span><br><span class="line">class MyBroadcastReceiver : BroadcastReceiver() &#123;</span><br><span class="line"></span><br><span class="line">    override fun onReceive(context: Context, intent: Intent) &#123;</span><br><span class="line">        val pendingResult: PendingResult = goAsync()</span><br><span class="line">        val asyncTask = Task(pendingResult, intent)</span><br><span class="line">        asyncTask.execute()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class Task(</span><br><span class="line">            private val pendingResult: PendingResult,</span><br><span class="line">            private val intent: Intent</span><br><span class="line">    ) : AsyncTask() &#123;</span><br><span class="line"></span><br><span class="line">        override fun doInBackground(vararg params: String?): String &#123;</span><br><span class="line">            val sb = StringBuilder()</span><br><span class="line">            sb.append(&quot;Action: $&#123;intent.action&#125;\n&quot;)</span><br><span class="line">            sb.append(&quot;URI: $&#123;intent.toUri(Intent.URI_INTENT_SCHEME)&#125;\n&quot;)</span><br><span class="line">            return toString().also &#123; log -&gt;</span><br><span class="line">                Log.d(TAG, log)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        override fun onPostExecute(result: String?) &#123;</span><br><span class="line">            super.onPostExecute(result)</span><br><span class="line">            // Must call finish() so the BroadcastReceiver can be recycled.</span><br><span class="line">            pendingResult.finish()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="发送广播"><a href="#发送广播" class="headerlink" title="发送广播"></a>发送广播</h3><p>Android为应用发送广播提供了三种方式：</p>
+<ul>
+<li>sendOrderedBroadcast（Intent，String）方法一次向一个接收器发送广播。 当每个接收器依次执行时，它可以将结果传播到下一个接收器，或者它可以完全中止广播，以便它不会传递给其他接收器。 可以使用android：priority属性来控制匹配intent-filter顺序接收器; 具有相同优先级的接收器将以任意顺序运行。</li>
+<li>sendBroadcast(Intent)方法以未定义的顺序向所有接收器发送广播。这称为正常广播。这更有效，但意味着接收器无法从其他接收器读取结果，传播从广播接收的数据或中止广播。</li>
+<li>LocalBroadcastManager.sendBroadcast方法将广播发送到与发送者位于同一应用程序中的接收者。如果您不需要跨应用程序发送广播，请使用本地广播。实现效率更高（无需进程间通信），您无需担心与其他应用程序能够接收或发送广播相关的任何安全问题。</li>
+</ul>
+<p>以下代码段演示了如何通过创建Intent和调用来发送广播sendBroadcast(Intent)。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Intent().also &#123; intent -&gt;</span><br><span class="line">    intent.setAction(<span class="string">"com.example.broadcast.MY_NOTIFICATION"</span>)</span><br><span class="line">    intent.putExtra(<span class="string">"data"</span>, <span class="string">"Notice me senpai!"</span>)</span><br><span class="line">    sendBroadcast(intent)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>广播消息包含在Intent对象中。 intent的操作字符串必须提供应用程序的Java包名称语法，并唯一标识广播事件。 您可以使用putExtra（String，Bundle）将其他信息附加到intent。 您还可以通过调用intent上的setPackage（String）将广播限制为同一组织中的一组应用程序。</p>
+<p>⚠️注意：尽管意图用于发送广播和使用startActivity（Intent）启动活动，但这些操作完全不相关。 广播接收器无法查看或捕获用于启动活动的意图; 同样，当您广播意图时，您无法找到或开始活动。</p>
+<h4 id="限制具有权限的广播"><a href="#限制具有权限的广播" class="headerlink" title="限制具有权限的广播"></a>限制具有权限的广播</h4><p>权限允许您将广播限制为具有特定权限的应用程序集。您可以对广播的发送者或接收者实施限制。</p>
+<h5 id="发送权限"><a href="#发送权限" class="headerlink" title="发送权限"></a>发送权限</h5><p>当您调用sendBroadcast（Intent，String）或sendOrderedBroadcast（Intent，String，BroadcastReceiver，Handler，int，String，Bundle）时，您可以指定权限参数。 只有那些已经在其清单中请求带有标签的许可的接收者（并且如果它是危险的，则随后被授予许可）可以接收广播。 例如，以下代码发送广播：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sendBroadcast(Intent(<span class="string">"com.example.NOTIFY"</span>), Manifest.permission.SEND_SMS)</span><br></pre></td></tr></table></figure></p>
+<p>要接收广播，接收应用必须请求权限，如下所示：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.SEND_SMS"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>您可以指定现有的系统权限SEND_SMS也可以使用该<permission>元素定义自定义权限 。有关一般权限和安全性的信息，请参<a href="https://developer.android.com/guide/topics/security/permissions.html" target="_blank" rel="noopener">阅系统权限</a>。</permission></p>
+<p>⚠️注意：安装应用程序时会注册自定义权限。 必须在使用该应用程序的应用程序之前安装定义自定义权限的应用程序。</p>
+<h5 id="接收权限"><a href="#接收权限" class="headerlink" title="接收权限"></a>接收权限</h5><p>如果您在注册广播接收器时指定了权限参数（在清单中带有registerReceiver(BroadcastReceiver, IntentFilter, String, Handler)或 带有<receiver>标签），那么只有已经<uses-permission>在其清单中请求带有标签的权限的广播公司 （如果它是危险的，则随后被授予权限）可以发送对接收者的意图。</uses-permission></receiver></p>
+<p>例如，假设您的接收应用程序具有清单声明的接收器，如下所示：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">receiver</span> <span class="attr">android:name</span>=<span class="string">".MyBroadcastReceiver"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">android:permission</span>=<span class="string">"android.permission.SEND_SMS"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.AIRPLANE_MODE"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">receiver</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>或者您的接收应用程序有一个上下文注册的接收器，如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var filter = IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)</span><br><span class="line">registerReceiver(receiver, filter, Manifest.permission.SEND_SMS, <span class="keyword">null</span> )</span><br></pre></td></tr></table></figure></p>
+<p>然后，为了能够向这些接收者发送广播，发送应用必须请求许可，如下所示：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.SEND_SMS"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="安全考虑因素和最佳实践"><a href="#安全考虑因素和最佳实践" class="headerlink" title="安全考虑因素和最佳实践"></a>安全考虑因素和最佳实践</h3><p>以下是发送和接收广播的一些安全注意事项和最佳做法：</p>
+<ul>
+<li><p>如果您不需要向应用程序外部的组件发送广播，则发送和接收支持库中LocalBroadcastManager提供的 本地广播。的效率要高得多（不需要进程间通信），并可以让你避免考虑与其他应用程序能够接收或发送你的广播任何安全问题。本地广播可以在您的应用程序中用作通用发布/子事件总线，而无需系统范围广播的任何开销。LocalBroadcastManager</p>
+</li>
+<li><p>如果许多应用已注册在其清单中接收相同的广播，则可能导致系统启动大量应用，从而对设备性能和用户体验产生重大影响。为避免这种情况，请优先使用上下文注册而不是清单声 有时，Android系统本身会强制使用上下文注册的接收器。例如，CONNECTIVITY_ACTION广播仅被传送到上下文注册的接收器。</p>
+</li>
+<li><p>不要使用隐式意图广播敏感信息。任何注册接收广播的应用都可以读取该信息。有三种方法可以控制谁可以接收您的广播：</p>
+<ul>
+<li>您可以在发送广播时指定权限。</li>
+<li>在Android 4.0及更高版本，可以指定一个 包与 setPackage(String)发送广播时。系统将广播限制为与包匹配的应用程序集。</li>
+<li>您可以发送本地广播LocalBroadcastManager。</li>
+</ul>
+</li>
+<li><p>当您注册接收器时，任何应用都可以向您的应用接收器发送潜在的恶意广播。有三种方法可以限制应用收到的广播：</p>
+<ul>
+<li>您可以在注册广播接收器时指定权限。</li>
+<li>对于清单声明的接收器，您可以在清单中将 android：exported 属性设置为“false”。接收方不接收来自应用程序之外的来源的广播。</li>
+<li>您可以将自己限制为仅限本地广播LocalBroadcastManager。</li>
+</ul>
+</li>
+<li><p>广播操作的命名空间是全局的。确保操作名称和其他字符串都写在您拥有的命名空间中，否则您可能会无意中与其他应用程序发生冲突。</p>
+</li>
+<li><p>因为接收者的onReceive(Context, Intent)方法在主线程上运行，所以它应该执行并快速返回。如果需要执行长时间运行的工作，请注意生成线程或启动后台服务，因为系统可能会在onReceive()返回后终止整个进程 。有关更多信息，请参阅对进程状态的影响要执行长时间运行的工作，我们建议：</p>
+<ul>
+<li>调用goAsync()接收者的onReceive()方法并将其传递BroadcastReceiver.PendingResult给后台线程。这使得广播在返回后保持活动状态onReceive()。但是，即使采用这种方法，系统也希望您能够非常快速地完成广播（10秒以内）。它允许您将工作移动到另一个线程，以避免故障主线程。</li>
+<li>使用计划安排工作JobScheduler。有关更多信息，请参阅<a href="https://developer.android.com/topic/performance/scheduling.html" target="_blank" rel="noopener">智能作业计划</a>。</li>
+</ul>
+</li>
+<li>不要从广播接收器开始活动，因为用户体验很不稳定; 特别是如果有多个接收器。相反，请考虑<a href="https://developer.android.com/guide/topics/ui/notifiers/notifications.html" target="_blank" rel="noopener">显示通知</a>。</li>
+</ul>
+<p>原文：<br>[1]. <a href="https://developer.android.com/guide/components/broadcasts" target="_blank" rel="noopener">https://developer.android.com/guide/components/broadcasts</a><br>参考：<br>[1]. <a href="https://www.jianshu.com/p/f348f6d7fe59" target="_blank" rel="noopener">https://www.jianshu.com/p/f348f6d7fe59</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Boradcast/" rel="tag"># Boradcast</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/16/Navigation-leaning/" rel="next" title="Navigation官方译文">
+                <i class="fa fa-chevron-left"></i> Navigation官方译文
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/12/Eventbus使用及源码分析/" rel="prev" title="Eventbus使用及源码分析">
+                Eventbus使用及源码分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CallteFoot</p>
+              <p class="site-description motion-element" itemprop="description">The blog from a Android coder</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于系统广播"><span class="nav-number">1.</span> <span class="nav-text">关于系统广播</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#系统广播的变化"><span class="nav-number">1.1.</span> <span class="nav-text">系统广播的变化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Android-9"><span class="nav-number">1.1.1.</span> <span class="nav-text">Android 9</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Android-8-0"><span class="nav-number">1.1.2.</span> <span class="nav-text">Android 8.0</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Android-7-0"><span class="nav-number">1.1.3.</span> <span class="nav-text">Android 7.0</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接收广播"><span class="nav-number">2.</span> <span class="nav-text">接收广播</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#清单声明的接收器"><span class="nav-number">2.1.</span> <span class="nav-text">清单声明的接收器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#上下文注册的接收器"><span class="nav-number">2.2.</span> <span class="nav-text">上下文注册的接收器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对过程状态的影响"><span class="nav-number">3.</span> <span class="nav-text">对过程状态的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发送广播"><span class="nav-number">4.</span> <span class="nav-text">发送广播</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#限制具有权限的广播"><span class="nav-number">4.1.</span> <span class="nav-text">限制具有权限的广播</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#发送权限"><span class="nav-number">4.1.1.</span> <span class="nav-text">发送权限</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#接收权限"><span class="nav-number">4.1.2.</span> <span class="nav-text">接收权限</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全考虑因素和最佳实践"><span class="nav-number">5.</span> <span class="nav-text">安全考虑因素和最佳实践</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CallteFoot</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述日常开发当中,调用相机或者从相册中选择照片裁剪并上传是很常见的功能,虽然网上有很多框架,但是导入别人的库, 无疑会增加App的体积和后期维护难度,因此这里讲一下如何使用系统自带的相机,相册,并裁剪。这里是在Android7.0以上版本上运行。 第一步FileProvider准备 在AndroidManifest.xml中增加provider节点，代码如下： 123456789&amp;lt;provi">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android通过系统获取图片及截图">
+<meta property="og:url" content="https://cattlefoot.github.io/2019/02/12/Android通过系统获取图片及截图/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="概述日常开发当中,调用相机或者从相册中选择照片裁剪并上传是很常见的功能,虽然网上有很多框架,但是导入别人的库, 无疑会增加App的体积和后期维护难度,因此这里讲一下如何使用系统自带的相机,相册,并裁剪。这里是在Android7.0以上版本上运行。 第一步FileProvider准备 在AndroidManifest.xml中增加provider节点，代码如下： 123456789&amp;lt;provi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-12T12:26:03.264Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android通过系统获取图片及截图">
+<meta name="twitter:description" content="概述日常开发当中,调用相机或者从相册中选择照片裁剪并上传是很常见的功能,虽然网上有很多框架,但是导入别人的库, 无疑会增加App的体积和后期维护难度,因此这里讲一下如何使用系统自带的相机,相册,并裁剪。这里是在Android7.0以上版本上运行。 第一步FileProvider准备 在AndroidManifest.xml中增加provider节点，代码如下： 123456789&amp;lt;provi">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cattlefoot.github.io/2019/02/12/Android通过系统获取图片及截图/"/>
+
+
+
+
+
+  <title>Android通过系统获取图片及截图 | CallteFoot's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CallteFoot's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Victory belongs to the most persevering</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2019/02/12/Android通过系统获取图片及截图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CallteFoot">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CallteFoot's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android通过系统获取图片及截图</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-12T19:44:54+08:00">
+                2019-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Media/" itemprop="url" rel="index">
+                    <span itemprop="name">Media</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>日常开发当中,调用相机或者从相册中选择照片裁剪并上传是很常见的功能,虽然网上有很多框架,但是导入<br>别人的库, 无疑会增加App的体积和后期维护难度,因此这里讲一下如何使用系统自带的相机,相册,并裁剪。<br>这里是在Android7.0以上版本上运行。</p>
+<h3 id="第一步FileProvider准备"><a href="#第一步FileProvider准备" class="headerlink" title="第一步FileProvider准备"></a>第一步FileProvider准备</h3><ol>
+<li><p>在AndroidManifest.xml中增加provider节点，代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">"android.support.v4.content.FileProvider"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:authorities</span>=<span class="string">"一般为包名"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:grantUriPermissions</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:exported</span>=<span class="string">"false"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">"android.support.FILE_PROVIDER_PATHS"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:resource</span>=<span class="string">"@xml/filepaths"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">provider</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>android:authorities 表示授权列表，填写你的应用包名，当有多个授权时，用分号隔开；</li>
+<li>android:exported 表示该内容提供器(ContentProvider)是否能被第三方程序组件使用，必须为false，<br>否则会报异常：Java.lang.RuntimeException: Unable to get provider android.support.v4.content.FileProvider: java.lang.SecurityException: Provider must not be exported；</li>
+<li>android:grantUriPermissions=”true” 表示授予 URI 临时访问权限；</li>
+<li>android:resource 属性指向创建的xml文件的路径，文件名可以随便起；</li>
+</ul>
+</li>
+<li><p>在资源(res)目录下创建一个xml目录，并建立一个以上面名字（filepaths）为文件名的xml文件，内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">paths</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">external-path</span> <span class="attr">path</span>=<span class="string">"."</span> <span class="attr">name</span>=<span class="string">"external_path"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">paths</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>external-path 代表根目录为: Environment.getExternalStorageDirectory() ，也可以写其他的，<br>如： files-path 代表根目录为:Context.getFilesDir()<br>cache-path 代表根目录为:getCacheDir() 其path属性的值代表路径后层级名称，为空则代表就是根目录，<br>假如为“pictures”,就代表对应根目录下的pictures目录</li>
+</ul>
+</li>
+</ol>
+<h3 id="第二步使用FileProvider"><a href="#第二步使用FileProvider" class="headerlink" title="第二步使用FileProvider"></a>第二步使用FileProvider</h3><p>⚠️在使用FileProvider前需要在需要在AndroidManifest.xml中增加必要的读写权限：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.READ_EXTERNAL_STORAGE"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>通过相机获取图片</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 拍照</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">takePhoto</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//用于保存调用相机拍照后所生成的文件</span></span><br><span class="line">    <span class="keyword">if</span> (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    captureFile = <span class="keyword">new</span> File(rootFile, <span class="string">"temp.jpg"</span>);</span><br><span class="line">    <span class="comment">//跳转到调用系统相机</span></span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(MediaStore.ACTION_IMAGE_CAPTURE);</span><br><span class="line">    <span class="comment">//判断版本 如果在Android7.0以上,使用FileProvider获取Uri</span></span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.N) &#123;</span><br><span class="line">        intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);</span><br><span class="line">        Uri contentUri = FileProvider.getUriForFile(mContext, getPackageName(), captureFile);</span><br><span class="line">        intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//否则使用Uri.fromFile(file)方法获取Uri</span></span><br><span class="line">        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(captureFile));</span><br><span class="line">    &#125;</span><br><span class="line">    startActivityForResult(intent, REQUEST_PERMISSION_CAMERA);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过相册获取图片</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 从相册选择</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">choosePhoto</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   Intent photoPickerIntent = <span class="keyword">new</span> Intent(Intent.ACTION_PICK);</span><br><span class="line">   photoPickerIntent.setType(<span class="string">"image/*"</span>);</span><br><span class="line">   startActivityForResult(photoPickerIntent, REQUEST_PERMISSION_WRITE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>图片剪裁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">cropPhoto</span><span class="params">(Uri uri)</span> </span>&#123;</span><br><span class="line">    cropFile = <span class="keyword">new</span> File(rootFile, <span class="string">"avatar.jpg"</span>);</span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(<span class="string">"com.android.camera.action.CROP"</span>);</span><br><span class="line">    intent.setDataAndType(uri, <span class="string">"image/*"</span>);</span><br><span class="line">    <span class="comment">//crop=true是设置在开启的Intent中设置显示的VIEW可裁剪</span></span><br><span class="line">    intent.putExtra(<span class="string">"crop"</span>, <span class="string">"true"</span>);</span><br><span class="line">    <span class="comment">//aspectX aspectY 是宽高的比例</span></span><br><span class="line">    intent.putExtra(<span class="string">"aspectX"</span>, <span class="number">1</span>);</span><br><span class="line">    intent.putExtra(<span class="string">"aspectY"</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//outputX outputY 是裁剪图片宽高</span></span><br><span class="line">    intent.putExtra(<span class="string">"outputX"</span>, <span class="number">300</span>);</span><br><span class="line">    intent.putExtra(<span class="string">"outputY"</span>, <span class="number">300</span>);</span><br><span class="line">    intent.putExtra(<span class="string">"return-data"</span>, <span class="keyword">false</span>);<span class="comment">//注意这里返回false,因为在部分手机上获取不到返回的数据</span></span><br><span class="line">    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cropFile));</span><br><span class="line">    intent.putExtra(<span class="string">"outputFormat"</span>, Bitmap.CompressFormat.PNG.toString());</span><br><span class="line">    intent.putExtra(<span class="string">"noFaceDetection"</span>, <span class="keyword">true</span>);  <span class="comment">//人脸识别</span></span><br><span class="line">    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);</span><br><span class="line">    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);</span><br><span class="line">    startActivityForResult(intent, CROP_REQUEST_CODE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="第三部接收图片信息"><a href="#第三部接收图片信息" class="headerlink" title="第三部接收图片信息"></a>第三部接收图片信息</h3><p>在onActivityResult方法中获得返回的图片信息,在这里先调用剪裁去剪裁图片,然后对剪裁返回的图片进行设置、保存、上传等操作<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (resultCode == RESULT_OK) &#123;</span><br><span class="line">      <span class="keyword">switch</span> (requestCode) &#123;</span><br><span class="line">        <span class="comment">//拍照后逻辑</span></span><br><span class="line">          <span class="keyword">case</span> REQUEST_PERMISSION_CAMERA:</span><br><span class="line">              <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.N) &#123;</span><br><span class="line">                  Uri contentUri = FileProvider.getUriForFile(mContext, getPackageName(), captureFile);</span><br><span class="line">                  cropPhoto(contentUri);</span><br><span class="line">              &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                  cropPhoto(Uri.fromFile(captureFile));</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">//图片获取后逻辑</span></span><br><span class="line">          <span class="keyword">case</span> REQUEST_PERMISSION_WRITE:</span><br><span class="line">              cropPhoto(data.getData());</span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">//图片裁剪后逻辑</span></span><br><span class="line">          <span class="keyword">case</span> CROP_REQUEST_CODE:</span><br><span class="line">              saveImage(cropFile.getAbsolutePath());</span><br><span class="line">              ivAvatar.setImageBitmap(BitmapFactory.decodeFile(cropFile.getAbsolutePath()));</span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">default</span>:</span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>保存图片在本地<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line">Bitmap bitmap = BitmapFactory.decodeFile(path);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(cropFile);</span><br><span class="line">    bitmap.compress(Bitmap.CompressFormat.JPEG, <span class="number">100</span>, fos);</span><br><span class="line">    fos.flush();</span><br><span class="line">    fos.close();</span><br><span class="line">    <span class="keyword">return</span> cropFile.getAbsolutePath();</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>⚠️在使用相机等动态权限时要注意权限的获取</p>
+<p>参考：<br>[1] <a href="https://www.jianshu.com/p/0a2d8466fe6d" target="_blank" rel="noopener">https://www.jianshu.com/p/0a2d8466fe6d</a><br>[2]7.0FileProvider使用 <a href="http://yifeng.studio/2017/05/03/android-7-0-compat-fileprovider/" target="_blank" rel="noopener">http://yifeng.studio/2017/05/03/android-7-0-compat-fileprovider/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/12/kotlin笔记/" rel="next" title="kotlin笔记">
+                <i class="fa fa-chevron-left"></i> kotlin笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CallteFoot</p>
+              <p class="site-description motion-element" itemprop="description">The blog from a Android coder</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步FileProvider准备"><span class="nav-number">2.</span> <span class="nav-text">第一步FileProvider准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步使用FileProvider"><span class="nav-number">3.</span> <span class="nav-text">第二步使用FileProvider</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三部接收图片信息"><span class="nav-number">4.</span> <span class="nav-text">第三部接收图片信息</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CallteFoot</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

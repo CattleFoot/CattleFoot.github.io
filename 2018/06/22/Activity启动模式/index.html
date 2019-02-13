@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://cattlefoot.github.io/images/ActivitySingleTop.jpg">
 <meta property="og:image" content="https://cattlefoot.github.io/images/ActivitySingleTask.jpg">
 <meta property="og:image" content="https://cattlefoot.github.io/images/ActivitySingleInstance.png">
-<meta property="og:updated_time" content="2019-01-19T07:21:27.774Z">
+<meta property="og:updated_time" content="2019-02-13T05:22:41.652Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android启动模式">
 <meta name="twitter:description" content="任务任务是指执行特定作业时与用户交互的一系列Activity，这些Activity按照各自的打开顺序排列在堆栈（即“返回栈”）中。google为了记录用户开启了那些Activity，引入了 任务栈（task stack） 的概念，用于记录activity开启的先后顺序，帮助维护好的用户体验。栈的特性是：先进后出。 如何查看当前系统的任务栈   手机中，长按 home或者多任务键 会进入到概览屏幕">
@@ -386,13 +386,17 @@
 </ol>
 <p>Android 4.0.3 及更早版本</p>
 <p><activity android:name=".ResultActivity"><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"><br></meta-data></activity><br>Android 4.1 及更高版本</p>
-<p><activity android:name=".ResultActivity" android:parentactivityname=".MainActivity"><br></activity><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中做如下处理：</span><br></pre></td></tr></table></figure></p>
-<p>Intent intent = new Intent(MainActivity.this, ResultActivity.class);<br>TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);<br>taskStackBuilder.addParentStack(ResultActivity.class);<br>taskStackBuilder.addNextIntent(intent);<br>PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);<br>NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);<br>notificationBuilder.setContentIntent(pendingIntent);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这样从Notification进入到指定的ResultActivity中。回退到正常的MainActivity中。   </span><br><span class="line">**TaskStackBuilder 扩展应用**  </span><br><span class="line">也可以单独使用TaskStackBuilder，让某个二级Acitivity启动的时候启动它的一级Acitity.</span><br><span class="line">在 AndroidManifest.xml定义Acitivity从属关系。</span><br></pre></td></tr></table></figure></p>
-<p>&lt;activity<br>    android:name=”com.example.app.ChildActivity<br>    android:parentActivityName=”com.example.app.ParentActivity” &gt;<br>    <!-- 下面这段用来兼容API 16之前的版本 --><br>    <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.example.app.MainActivity"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在代码中申明：</span><br></pre></td></tr></table></figure></meta-data></p>
-<p>Intent intent = new Intent(this, ChildActivity.class);<br>TaskStackBuilder.create(this)<br>                .addNextIntentWithParentStack(intent)<br>                .startActivities();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过启动一个无任何层级关系的Acitity 激活应用（目前Lianlian3.0应用采用此方法）</span><br></pre></td></tr></table></figure></p>
-<p>public class SimpleLaunchAppActivity extends Activity {<br>    @Override<br>    protected void onCreate(Bundle savedInstanceState) {<br>        super.onCreate(savedInstanceState);<br>        // Now finish, which will drop the user in to the activity that was at the top<br>        //  of the task stack<br>        finish();<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原理：若通过Notification打开Acitivity后此Acitivy会位于要启动的App的栈顶。自动finish()后，app恢复到切换到后台之前的状态。SimpleLaunchAppActivity不得设置android:taskAffinity。taskAffinity和默认App的包名一致就不会新建任务栈。若设置了taskAffinity为新的任务栈，点回退后 将会回到android launch页面。  </span><br><span class="line">联连wifi的解决方案:</span><br></pre></td></tr></table></figure></p>
-<p>过启动一个无任何层级关系的TransparentSwitchActivity 激活应用**<br>目前存在的问题是TransparentSwitchActivity里面会根据参数判断 通过通知进入后还有部分逻辑不太人性化和完善。需要提高用户体验。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 关于系统默认的清空返回栈  </span><br><span class="line">如何用户将任务切换到后台之后过了很长一段时间，系统会将这个任务中除了最底层的那个Activity之外的其它所有Activity全部清除掉。当用户重新回到这个任务的时候，最底层的那个Activity将得到恢复。这个是系统默认的行为，因为既然过了这么长的一段时间，用户很有可能早就忘记了当时正在做什么，那么重新回到这个任务的时候，基本上应该是要去做点新的事情了。当然，既然说是默认的行为，那就说明我们肯定是有办法来改变的，在Manifest中 元素中设置以下几种属性就可以改变系统这一默认行为：</span><br></pre></td></tr></table></figure></p>
-<p>alwaysRetainTaskState<br>如果将最底层的那个Activity的这个属性设置为true，那么上面所描述的默认行为就将不会发生，任务中所有的Activity即使过了很长一段时间之后仍然会被继续保留。<br>clearTaskOnLaunch<br>如果将最底层的那个Activity的这个属性设置为true，那么只要用户离开了当前任务，再次返回的时候就会将最底层Activity之上的所有其它Activity全部清除掉。简单来讲，就是一种和alwaysRetainTaskState完全相反的工作模式，它保证每次返回任务的时候都会是一种初始化状态，即使用户仅仅离开了很短的一段时间。<br>finishOnTaskLaunch<br>这个属性和clearTaskOnLaunch是比较类似的，不过它不是作用于整个任务上的，而是作用于单个Activity上。如果某个Activity将这个属性设置成true，那么用户一旦离开了当前任务，再次返回时这个Activity就会被清除掉。<br> ```</p>
+<p><activity android:name=".ResultActivity" android:parentactivityname=".MainActivity"><br></activity><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">在代码中做如下处理：</span><br><span class="line">```java</span><br><span class="line">Intent intent = new Intent(MainActivity.this, ResultActivity.class);</span><br><span class="line">TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);</span><br><span class="line">taskStackBuilder.addParentStack(ResultActivity.class);</span><br><span class="line">taskStackBuilder.addNextIntent(intent);</span><br><span class="line">PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);</span><br><span class="line">NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);</span><br><span class="line">notificationBuilder.setContentIntent(pendingIntent);</span><br></pre></td></tr></table></figure></p>
+<p>这样从Notification进入到指定的ResultActivity中。回退到正常的MainActivity中。<br><strong>TaskStackBuilder 扩展应用</strong><br>也可以单独使用TaskStackBuilder，让某个二级Acitivity启动的时候启动它的一级Acitity.<br>在 AndroidManifest.xml定义Acitivity从属关系。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    android:name=&quot;com.example.app.ChildActivity</span><br><span class="line">    android:parentActivityName=&quot;com.example.app.ParentActivity&quot;&gt;</span><br><span class="line">    &lt;!-- 下面这段用来兼容API 16之前的版本 --&gt;</span><br><span class="line">    &lt;meta-data</span><br><span class="line">        android:name=&quot;android.support.PARENT_ACTIVITY&quot;</span><br><span class="line">        android:value=&quot;com.example.app.MainActivity&quot;/&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+<p>在代码中申明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, ChildActivity.class);</span><br><span class="line">TaskStackBuilder.create(<span class="keyword">this</span>)</span><br><span class="line">                .addNextIntentWithParentStack(intent)</span><br><span class="line">                .startActivities();</span><br></pre></td></tr></table></figure>
+<p>通过启动一个无任何层级关系的Acitity 激活应用（目前Lianlian3.0应用采用此方法）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleLaunchAppActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        <span class="comment">// Now finish, which will drop the user in to the activity that was at the top</span></span><br><span class="line">        <span class="comment">//  of the task stack</span></span><br><span class="line">        finish();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>原理：若通过Notification打开Acitivity后此Acitivy会位于要启动的App的栈顶。自动finish()后，app恢复到切换到后台之前的状态。SimpleLaunchAppActivity不得设置android:taskAffinity。taskAffinity和默认App的包名一致就不会新建任务栈。若设置了taskAffinity为新的任务栈，点回退后 将会回到android launch页面。<br>联连wifi的解决方案:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">过启动一个无任何层级关系的TransparentSwitchActivity 激活应用**</span><br><span class="line">目前存在的问题是TransparentSwitchActivity里面会根据参数判断 通过通知进入后还有部分逻辑不太人性化和完善。需要提高用户体验。</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>关于系统默认的清空返回栈<br>如何用户将任务切换到后台之后过了很长一段时间，系统会将这个任务中除了最底层的那个Activity之外的其它所有Activity全部清除掉。当用户重新回到这个任务的时候，最底层的那个Activity将得到恢复。这个是系统默认的行为，因为既然过了这么长的一段时间，用户很有可能早就忘记了当时正在做什么，那么重新回到这个任务的时候，基本上应该是要去做点新的事情了。当然，既然说是默认的行为，那就说明我们肯定是有办法来改变的，在Manifest中 元素中设置以下几种属性就可以改变系统这一默认行为：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">alwaysRetainTaskState   </span><br><span class="line">如果将最底层的那个Activity的这个属性设置为true，那么上面所描述的默认行为就将不会发生，任务中所有的Activity即使过了很长一段时间之后仍然会被继续保留。</span><br><span class="line">clearTaskOnLaunch   </span><br><span class="line">如果将最底层的那个Activity的这个属性设置为true，那么只要用户离开了当前任务，再次返回的时候就会将最底层Activity之上的所有其它Activity全部清除掉。简单来讲，就是一种和alwaysRetainTaskState完全相反的工作模式，它保证每次返回任务的时候都会是一种初始化状态，即使用户仅仅离开了很短的一段时间。</span><br><span class="line">finishOnTaskLaunch   </span><br><span class="line">这个属性和clearTaskOnLaunch是比较类似的，不过它不是作用于整个任务上的，而是作用于单个Activity上。如果某个Activity将这个属性设置成true，那么用户一旦离开了当前任务，再次返回时这个Activity就会被清除掉。</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <p>参考：<br>[1]. Activity启动模式 <a href="https://blog.csdn.net/lixiaodaoaaa/article/details/51700981" target="_blank" rel="noopener">https://blog.csdn.net/lixiaodaoaaa/article/details/51700981</a>  </p>
 
       
@@ -426,8 +430,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/22/androidCamera2使用/" rel="next" title="androidCamera2使用">
-                <i class="fa fa-chevron-left"></i> androidCamera2使用
+              <a href="/2018/06/15/webpack4安装使用/" rel="next" title="webpack4安装使用">
+                <i class="fa fa-chevron-left"></i> webpack4安装使用
               </a>
             
           </div>
@@ -436,8 +440,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/27/Android_o_notification/" rel="prev" title="Android o 中Notification使用">
-                Android o 中Notification使用 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/22/androidCamera2使用/" rel="prev" title="androidCamera2使用">
+                androidCamera2使用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -506,7 +510,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -517,7 +521,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -528,7 +532,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

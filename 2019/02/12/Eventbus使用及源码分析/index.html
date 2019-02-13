@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="EventBus基础何为EventBusEventBus是Android和Java的publish/subscribe事件总线。 EventBus框架对于EventBus除了greenrobot的EventBus，实际上还有Google出品的Guava以及square的otto（修改自Guava），Guava是一个庞大的库，EventBus只是它附带的一个小功能，实际项目使用较少。用的最多的是gr">
+<meta name="keywords" content="Android,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eventbus使用及源码分析">
+<meta property="og:url" content="https://cattlefoot.github.io/2019/02/12/Eventbus使用及源码分析/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="EventBus基础何为EventBusEventBus是Android和Java的publish/subscribe事件总线。 EventBus框架对于EventBus除了greenrobot的EventBus，实际上还有Google出品的Guava以及square的otto（修改自Guava），Guava是一个庞大的库，EventBus只是它附带的一个小功能，实际项目使用较少。用的最多的是gr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cattlefoot.github.io/2019/02/12/Eventbus使用及源码分析/images/EventBus-Publish-Subscribe.png">
+<meta property="og:updated_time" content="2019-02-12T11:40:31.744Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Eventbus使用及源码分析">
+<meta name="twitter:description" content="EventBus基础何为EventBusEventBus是Android和Java的publish/subscribe事件总线。 EventBus框架对于EventBus除了greenrobot的EventBus，实际上还有Google出品的Guava以及square的otto（修改自Guava），Guava是一个庞大的库，EventBus只是它附带的一个小功能，实际项目使用较少。用的最多的是gr">
+<meta name="twitter:image" content="https://cattlefoot.github.io/2019/02/12/Eventbus使用及源码分析/images/EventBus-Publish-Subscribe.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cattlefoot.github.io/2019/02/12/Eventbus使用及源码分析/"/>
+
+
+
+
+
+  <title>Eventbus使用及源码分析 | CallteFoot's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CallteFoot's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Victory belongs to the most persevering</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2019/02/12/Eventbus使用及源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CallteFoot">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CallteFoot's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Eventbus使用及源码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-12T19:37:04+08:00">
+                2019-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="EventBus基础"><a href="#EventBus基础" class="headerlink" title="EventBus基础"></a>EventBus基础</h2><h3 id="何为EventBus"><a href="#何为EventBus" class="headerlink" title="何为EventBus"></a>何为EventBus</h3><p>EventBus是Android和Java的publish/subscribe事件总线。</p>
+<h4 id="EventBus框架"><a href="#EventBus框架" class="headerlink" title="EventBus框架"></a>EventBus框架</h4><p>对于EventBus除了greenrobot的EventBus，实际上还有Google出品的Guava以及square的otto（修改自Guava），<br>Guava是一个庞大的库，EventBus只是它附带的一个小功能，实际项目使用较少。用的最多的是greenrobot<br>的EventBus，该库优点是接口简洁、集成方便。</p>
+<h3 id="EventBus基本使用"><a href="#EventBus基本使用" class="headerlink" title="EventBus基本使用"></a>EventBus基本使用</h3><p>本文主要讨论greenrobot的EventBus（3.1.1）库。</p>
+<h4 id="EventBus中的三个主要角色"><a href="#EventBus中的三个主要角色" class="headerlink" title="EventBus中的三个主要角色"></a>EventBus中的三个主要角色</h4><ol>
+<li>Event：事件，它可以是任意类型，EventBus会根据事件类型进行全局的通知；</li>
+<li>Subscribe：事件订阅者，而在3.0之后事件处理的方法名可以随意取，不过需要加上注解@subscribe，<br>并且指定线程模型，默认是POSTING。</li>
+<li>Publisher：事件的发布者，可以在任意线程里发布事件。一般情况下，使用 EventBus.getDefault()<br>就可以得到一个EventBus对象，然后再调用 post(Object) 方法发布事件即可。<br>各角色协作流程如下：<br><img src="./images/EventBus-Publish-Subscribe.png" alt="角色协作"><h4 id="EventBus的5种线程模型，分别是"><a href="#EventBus的5种线程模型，分别是" class="headerlink" title="EventBus的5种线程模型，分别是:"></a>EventBus的5种线程模型，分别是:</h4></li>
+<li><strong>POSTING</strong> ：订阅者将直接在同一个线程中调用，该线程将发布该事件，这是默认值。事件传递意<br>味着开销最小，因为它完全避免了线程切换。 因此，这是已知在很短的时间内完成而不需要主线程的简单任<br>务的推荐模式。 使用此模式的事件处理程序必须快速返回以避免阻止发布线程，这可能是主线程；</li>
+<li><strong>MAIN</strong>：在Android上，将在Android的主线程（UI线程）中调用订阅者。 如果发布线程是主线程，<br>订阅者方法将直接调用，阻止发布线程。 否则事件排队等待交付（非阻塞）。 使用此模式的订户必须快速返<br>回以避免阻止主线程。如果不在Android上，则行为与{@link #POSTING}相同；</li>
+<li><strong>MAIN_ORDERED</strong>：在Android上，将在Android的主线程（UI线程）中调用订阅者。 与{@link<br>#MAIN}不同，该事件将始终排队等待传递。 这可确保后置调用是非阻塞的；</li>
+<li><strong>BACKGROUND</strong>：在Android上，将在后台线程中调用订阅者。 如果发布线程不是主线程，则将在发<br>布线程中直接调用订阅者方法。 如果发布线程是主线程，则EventBus使用单个后台线程，该线程将按顺序传<br>递其所有事件。 使用此模式的订阅者应尝试快速返回以避免阻止后台线程。 如果不在Android上，则始终使<br>用后台线程。</li>
+<li><strong>ASYNC</strong>： 订阅者将在单独的线程中调用。 这始终独立于发布线程和主线程。 发布事件永远不会等<br>待使用此模式的订阅者方法。 订阅者方法如果执行可能需要一些时间，则应使用此模式，例如 用于网络访问。<br>避免同时触发大量长时间运行的异步订阅者方法以限制并发线程数。 EventBus使用线程池从已完成的异步订<br>阅者通知中有效地重用线程;</li>
+</ol>
+<h4 id="具体使用"><a href="#具体使用" class="headerlink" title="具体使用"></a>具体使用</h4><ol>
+<li><p>在项目中引入依赖  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation &apos;org.greenrobot:eventbus:3.1.1&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>订阅/解除订阅</p>
+<ul>
+<li><p>订阅   </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().register(<span class="keyword">this</span>);<span class="comment">//订阅</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解除订阅  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().unregister(<span class="keyword">this</span>);<span class="comment">//解除订阅</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>发布事件</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//事件是POJO（普通旧Java对象），没有任何特定要求。如此处的BeanObject。</span></span><br><span class="line">EventBus.getDefault().post(<span class="keyword">new</span> BeanObject());</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>订阅事件处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BeanObject为发布的对象，这个要对应发布的对象（或称事件）</span></span><br><span class="line"><span class="meta">@Subscribe</span>(threadMode = ThreadMode.MAIN) <span class="comment">//在ui线程执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDataSynEvent</span><span class="params">(BeanObject event)</span> </span>&#123;</span><br><span class="line">       Log.e(TAG, <span class="string">"event----&gt;"</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>订阅事件的优先级<br>事件的优先级类似广播的优先级，优先级越高优先获得消息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Subscribe</span>(threadMode = ThreadMode.MAIN,priority = <span class="number">100</span>) <span class="comment">//在ui线程执行 优先级100</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDataSynEvent</span><span class="params">(BeanObject event)</span> </span>&#123;</span><br><span class="line">      Log.e(TAG, <span class="string">"event----&gt;"</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>中止事件往下传递<br>发送有序广播可以终止广播的继续往下传递，EventBus也实现了此功能  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().cancelEventDelivery(event) ;<span class="comment">//优先级高的订阅者可以终止事件往下传递</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码混淆</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-keepattributes *Annotation*</span><br><span class="line">-keepclassmembers class ** &#123;</span><br><span class="line">    @org.greenrobot.eventbus.Subscribe &lt;methods&gt;;</span><br><span class="line">&#125;</span><br><span class="line">-keep enum org.greenrobot.eventbus.ThreadMode &#123; *; &#125;</span><br><span class="line"></span><br><span class="line"># Only required if you use AsyncExecutor</span><br><span class="line">-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent &#123;</span><br><span class="line">    &lt;init&gt;(java.lang.Throwable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="EventBus黏性事件"><a href="#EventBus黏性事件" class="headerlink" title="EventBus黏性事件"></a>EventBus黏性事件</h4><p>EventBus除了普通事件也支持粘性事件，这个有点类似广播分类中的粘性广播。本身粘性广播用的就比较少，为了方便理解成订阅在发布事件之后，但同样可以收到事件。订阅/解除订阅和普通事件一样，但是处理订阅函数有所不同，需要注解中添加sticky = true<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Subscribe</span>(threadMode = ThreadMode.MAIN,sticky = <span class="keyword">true</span>) <span class="comment">//在ui线程执行</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDataSynEvent</span><span class="params">(BeanObject event)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">"event----&gt;"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>发送粘性事件  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().postSticky(<span class="keyword">new</span> BeanObject());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取消粘性事件<br>对于 <strong>粘性广播其属于常驻广播（事件一直会保留，除非用户主动移除，且只要有新的订阅者订阅就会把这个事件发送给新的订阅者）</strong> ，对于EventBus粘性事件也类似，因此如果不再需要该粘性事件时可以移除</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//⚠️一般在订阅者消费过该事件后调用，其还有一个参数为class的方法，取消class这类事件</span></span><br><span class="line">EventBus.getDefault().removeStickyEvent(<span class="keyword">new</span> DataSynEvent());</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>或者移除所有粘性事件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().removeAllStickyEvents();</span><br></pre></td></tr></table></figure></p>
+<h4 id="EventBus-processor使用"><a href="#EventBus-processor使用" class="headerlink" title="EventBus processor使用"></a>EventBus processor使用</h4><p>EventBus提供了一个EventBusAnnotationProcessor注解处理器来在编译期通过读取@Subscribe()注解并解析,<br>处理其中所包含的信息,然后生成java类来保存所有订阅者关于订阅的信息,这样就 <strong>比在运行时使用反射来获得这些订阅者的<br>信息速度要快</strong>.</p>
+<ol>
+<li><p>具体使用：在模块下的build.gradle文件中加入（以下针对Android Gradle Plugin version 2.2.0 及更高版本）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        javaCompileOptions &#123;</span><br><span class="line">            annotationProcessorOptions &#123;</span><br><span class="line">                arguments = [ eventBusIndex : &apos;项目包名.MyEventBusIndex&apos; ]   //参数设置</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation &apos;org.greenrobot:eventbus:3.1.1&apos;</span><br><span class="line">    annotationProcessor &apos;org.greenrobot:eventbus-annotation-processor:3.1.1&apos;  //注解</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用索引</p>
+</li>
+</ol>
+<p>此时编译一次，自动生成生成索引类。在\build\generated\source\apt\debug(或release)\PakageName\下看到通过注解分析生成的索引类，这样便可以在初始化EventBus时应用已经生成的索引了。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** This class is generated by EventBus, do not edit. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyEventBusIndex</span> <span class="keyword">implements</span> <span class="title">SubscriberInfoIndex</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, SubscriberInfo&gt; SUBSCRIBER_INDEX;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        SUBSCRIBER_INDEX = <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, SubscriberInfo&gt;();</span><br><span class="line"></span><br><span class="line">        putIndex(<span class="keyword">new</span> SimpleSubscriberInfo(com.mugwort.lockscreen.ui.BaseActivity.class, <span class="keyword">true</span>,</span><br><span class="line">                <span class="keyword">new</span> SubscriberMethodInfo[] &#123;</span><br><span class="line">            <span class="keyword">new</span> SubscriberMethodInfo(<span class="string">"doEventMessage"</span>, com.mugwort.lockscreen.entities.EventMessage.class,</span><br><span class="line">                    ThreadMode.MAIN),</span><br><span class="line">        &#125;));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">putIndex</span><span class="params">(SubscriberInfo info)</span> </span>&#123;</span><br><span class="line">        SUBSCRIBER_INDEX.put(info.getSubscriberClass(), info);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> SubscriberInfo <span class="title">getSubscriberInfo</span><span class="params">(Class&lt;?&gt; subscriberClass)</span> </span>&#123;</span><br><span class="line">        SubscriberInfo info = SUBSCRIBER_INDEX.get(subscriberClass);</span><br><span class="line">        <span class="keyword">if</span> (info != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> info;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>添加索引到EventBus默认的单例中<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBus.builder().addIndex(<span class="keyword">new</span> MyEventBusIndex()).installDefaultEventBus();</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>添加后注册效率会得到很大提升。</li>
+</ol>
+<h3 id="EventBus优缺点"><a href="#EventBus优缺点" class="headerlink" title="EventBus优缺点"></a>EventBus优缺点</h3><ul>
+<li>优点：简化组件之间的通信方式，实现解耦让业务代码更加简洁，可以动态设置事件处理线程以及优先级</li>
+<li>缺点：目前发现唯一的缺点就是类似之前策略模式一样的诟病，每个事件都必须自定义一个事件类，造成事件类太多，无形中加大了维护成本</li>
+</ul>
+<p>参考：<br>[0]. 官网文档 <a href="http://greenrobot.org/eventbus/documentation/" target="_blank" rel="noopener">http://greenrobot.org/eventbus/documentation/</a><br>[1]. <a href="https://www.cnblogs.com/whoislcj/p/5595714.html" target="_blank" rel="noopener">https://www.cnblogs.com/whoislcj/p/5595714.html</a><br>[2]. <a href="https://juejin.im/post/5b6859706fb9a04fbc2218d2" target="_blank" rel="noopener">https://juejin.im/post/5b6859706fb9a04fbc2218d2</a></p>
+<h2 id="EventBus源码解析"><a href="#EventBus源码解析" class="headerlink" title="EventBus源码解析"></a>EventBus源码解析</h2><h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> EventBusBuilder DEFAULT_BUILDER = <span class="keyword">new</span> EventBusBuilder();</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Convenience singleton for apps using a process-wide EventBus instance. */</span></span><br><span class="line"><span class="comment">/** 通过使用一个进程范围的实例生成一个便捷单例*/</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> EventBus <span class="title">getDefault</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (defaultInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">synchronized</span> (EventBus.class) &#123;</span><br><span class="line">              <span class="keyword">if</span> (defaultInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                  defaultInstance = <span class="keyword">new</span> EventBus();</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> defaultInstance;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Creates a new EventBus instance; each instance is a separate scope in which events are delivered. To use a</span></span><br><span class="line"><span class="comment">    * central bus, consider &#123;<span class="doctag">@link</span> #getDefault()&#125;.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">EventBus</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>(DEFAULT_BUILDER);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   EventBus(EventBusBuilder builder) &#123;</span><br><span class="line">       logger = builder.getLogger();</span><br><span class="line">       subscriptionsByEventType = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">       typesBySubscriber = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">       stickyEvents = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line">       mainThreadSupport = builder.getMainThreadSupport();</span><br><span class="line">       mainThreadPoster = mainThreadSupport != <span class="keyword">null</span> ? mainThreadSupport.createPoster(<span class="keyword">this</span>) : <span class="keyword">null</span>;</span><br><span class="line">       backgroundPoster = <span class="keyword">new</span> BackgroundPoster(<span class="keyword">this</span>);</span><br><span class="line">       asyncPoster = <span class="keyword">new</span> AsyncPoster(<span class="keyword">this</span>);</span><br><span class="line">       indexCount = builder.subscriberInfoIndexes != <span class="keyword">null</span> ? builder.subscriberInfoIndexes.size() : <span class="number">0</span>;</span><br><span class="line">       subscriberMethodFinder = <span class="keyword">new</span> SubscriberMethodFinder(builder.subscriberInfoIndexes,</span><br><span class="line">               builder.strictMethodVerification, builder.ignoreGeneratedIndex);</span><br><span class="line">       logSubscriberExceptions = builder.logSubscriberExceptions;</span><br><span class="line">       logNoSubscriberMessages = builder.logNoSubscriberMessages;</span><br><span class="line">       sendSubscriberExceptionEvent = builder.sendSubscriberExceptionEvent;</span><br><span class="line">       sendNoSubscriberEvent = builder.sendNoSubscriberEvent;</span><br><span class="line">       throwSubscriberException = builder.throwSubscriberException;</span><br><span class="line">       eventInheritance = builder.eventInheritance;</span><br><span class="line">       executorService = builder.executorService;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>EventBus 初始化的三个步骤，直观上看用到 <strong>单例模式和Builder模式</strong> ，将构造参数给分离了出来，实际上还用到了 <strong>策略模式</strong> ，其中 <strong>Builder</strong> 中有些参数用于代码执行的策略，即传的参数不一样，执行的方式也就不一样，像 <strong>ignoreGeneratedIndex</strong> 作用就是让 <strong>EventBus</strong> 如何查找出订阅方法的策略。这些布尔类型的参数，在分析代码中可以逐步的了解到，先了解一些缓存对象，以更容易的了解源码：</p>
+<ul>
+<li><strong>subscriptionsByEventType</strong>: 内部是一个Map集合，可以根据 <strong>EventType</strong> 查找订阅事件。</li>
+<li><strong>typesBySubscriber</strong>: 根据订阅对象找到 <strong>EventType</strong>。</li>
+<li><strong>stickyEvents</strong>: 粘性事件的并发缓存。</li>
+<li><strong>事件投递者</strong> : <strong>mainThreadPoster</strong>, <strong>backgroundPoster</strong>, <strong>asyncPoster</strong> 根据订阅注解 ThreadMode 去选择不同的投递者，不同投递者投递事件，接收函数会执行在不同的线程中。</li>
+<li><strong>subscriberMethodFinder</strong>：查找方法用的，内部维护了一个订阅方法的集合。</li>
+</ul>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Registers the given subscriber to receive events. Subscribers must call &#123;<span class="doctag">@link</span> #unregister(Object)&#125; once they</span></span><br><span class="line"><span class="comment">    * are no longer interested in receiving events.</span></span><br><span class="line"><span class="comment">    * &lt;p/&gt;</span></span><br><span class="line"><span class="comment">    * Subscribers have event handling methods that must be annotated by &#123;<span class="doctag">@link</span> Subscribe&#125;.</span></span><br><span class="line"><span class="comment">    * The &#123;<span class="doctag">@link</span> Subscribe&#125; annotation also allows configuration like &#123;<span class="doctag">@link</span></span></span><br><span class="line"><span class="comment">    * ThreadMode&#125; and priority.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object subscriber)</span> </span>&#123;</span><br><span class="line">       Class&lt;?&gt; subscriberClass = subscriber.getClass();</span><br><span class="line">       List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriberClass);</span><br><span class="line">       <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">           <span class="keyword">for</span> (SubscriberMethod subscriberMethod : subscriberMethods) &#123;</span><br><span class="line">               subscribe(subscriber, subscriberMethod);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>调用 <strong>register(this)</strong> 的时候就把订阅者给传了进来，代码量很少，主要就两个步骤，第一个 <strong>findSubscriberMethods</strong> 找出一个 <strong>SubscriberMethod</strong> 的集合，然后就遍历 <strong>SubscriberMethod</strong> 去订阅事件，先看看 <strong>findSubscriberMethods()</strong> 里面到底做了什么，返回的是什么。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;SubscriberMethod&gt; <span class="title">findSubscriberMethods</span><span class="params">(Class&lt;?&gt; subscriberClass)</span> </span>&#123;</span><br><span class="line">    List&lt;SubscriberMethod&gt; subscriberMethods = METHOD_CACHE.get(subscriberClass);</span><br><span class="line">    <span class="keyword">if</span> (subscriberMethods != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> subscriberMethods;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ignoreGeneratedIndex) &#123;</span><br><span class="line">        subscriberMethods = findUsingReflection(subscriberClass);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        subscriberMethods = findUsingInfo(subscriberClass);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (subscriberMethods.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Subscriber "</span> + subscriberClass</span><br><span class="line">                + <span class="string">" and its super classes have no public methods with the @Subscribe annotation"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        METHOD_CACHE.put(subscriberClass, subscriberMethods);</span><br><span class="line">        <span class="keyword">return</span> subscriberMethods;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里是通过 <strong>订阅者的类文件</strong> 查找里面对事件处理的订阅方法即添加了注解 <strong>@Subscribe</strong> 的方法。首先从缓存中查找（缓存的key是类文件class），如果找到了就立马返回。如果缓存中没有的话，则根据 <strong>ignoreGeneratedIndex</strong> 选择如何查找订阅方法，最后，找到订阅方法后，放入缓存，以免下次继续查找。<strong>ignoreGeneratedIndex</strong> 默认就是 <strong>false</strong> ，执行 <strong>findUsingInfo()</strong> 方法，但是这里先分析 <strong>findUsingReflection()</strong> ，因为默认配置的情况下还是会执行上面的 <strong>findUsingReflection()</strong>，就是通过反射来解析注解。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> List&lt;SubscriberMethod&gt; <span class="title">findUsingReflection</span><span class="params">(Class&lt;?&gt; subscriberClass)</span> </span>&#123;</span><br><span class="line">       FindState findState = prepareFindState();    <span class="comment">// 1</span></span><br><span class="line">       findState.initForSubscriber(subscriberClass);</span><br><span class="line">       <span class="keyword">while</span> (findState.clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">           findUsingReflectionInSingleClass(findState); <span class="comment">// 2</span></span><br><span class="line">           findState.moveToSuperclass();</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> getMethodsAndRelease(findState);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在真正执行反射查找方法时，会传递一个 <strong>FindState</strong>，跟进 <strong>prepareFindState()</strong> 看下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> FindState <span class="title">prepareFindState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">synchronized</span> (FIND_STATE_POOL) &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; POOL_SIZE; i++) &#123;</span><br><span class="line">              FindState state = FIND_STATE_POOL[i];</span><br><span class="line">              <span class="keyword">if</span> (state != <span class="keyword">null</span>) &#123;</span><br><span class="line">                  FIND_STATE_POOL[i] = <span class="keyword">null</span>;</span><br><span class="line">                  <span class="keyword">return</span> state;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> FindState();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里第一步从池中拿出一个 <strong>FindState</strong> 对象，<strong>FindState</strong> 中维护的是对订阅方法查找结果的封装。其实，往后面会发现作者这里设计的非常精妙。第二步，<strong>initForSubscriber()</strong> 就是将订阅者传给 <strong>FindState</strong> 对象。第三步做的就是不断从订阅者和订阅者的父类去查找订阅方法，一起看 <strong>findUsingReflectionInSingleClass()</strong>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">findUsingReflectionInSingleClass</span><span class="params">(FindState findState)</span> </span>&#123;</span><br><span class="line">        Method[] methods;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// This is faster than getMethods, especially when subscribers are fat classes like Activities</span></span><br><span class="line">            methods = findState.clazz.getDeclaredMethods();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable th) &#123;</span><br><span class="line">            <span class="comment">// Workaround for java.lang.NoClassDefFoundError, see https://github.com/greenrobot/EventBus/issues/149</span></span><br><span class="line">            methods = findState.clazz.getMethods();</span><br><span class="line">            findState.skipSuperClasses = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Method method : methods) &#123;</span><br><span class="line">            <span class="keyword">int</span> modifiers = method.getModifiers();</span><br><span class="line">            <span class="keyword">if</span> ((modifiers &amp; Modifier.PUBLIC) != <span class="number">0</span> &amp;&amp; (modifiers &amp; MODIFIERS_IGNORE) == <span class="number">0</span>) &#123;</span><br><span class="line">                Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span><br><span class="line">                <span class="keyword">if</span> (parameterTypes.length == <span class="number">1</span>) &#123;</span><br><span class="line">                    Subscribe subscribeAnnotation = method.getAnnotation(Subscribe.class);</span><br><span class="line">                    <span class="keyword">if</span> (subscribeAnnotation != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        Class&lt;?&gt; eventType = parameterTypes[<span class="number">0</span>];</span><br><span class="line">                        <span class="keyword">if</span> (findState.checkAdd(method, eventType)) &#123;</span><br><span class="line">                            ThreadMode threadMode = subscribeAnnotation.threadMode();</span><br><span class="line">                            findState.subscriberMethods.add(<span class="keyword">new</span> SubscriberMethod(method, eventType, threadMode,</span><br><span class="line">                                    subscribeAnnotation.priority(), subscribeAnnotation.sticky()));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (strictMethodVerification &amp;&amp; method.isAnnotationPresent(Subscribe.class)) &#123;</span><br><span class="line">                    String methodName = method.getDeclaringClass().getName() + <span class="string">"."</span> + method.getName();</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"@Subscribe method "</span> + methodName +</span><br><span class="line">                            <span class="string">"must have exactly 1 parameter but has "</span> + parameterTypes.length);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (strictMethodVerification &amp;&amp; method.isAnnotationPresent(Subscribe.class)) &#123;</span><br><span class="line">                String methodName = method.getDeclaringClass().getName() + <span class="string">"."</span> + method.getName();</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(methodName +</span><br><span class="line">                        <span class="string">" is a illegal @Subscribe method: must be public, non-static, and non-abstract"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里才是真正的查找订阅者下的订阅方法。通过对订阅者方法的遍历，看有没有注解，有的话就解析注解，然后将找到的订阅方法的集合封装到 <strong>FindState</strong> 对象中的 <strong>subscriberMethods</strong> 集合中。解析完了之后，在看 <strong>findUsingReflection()</strong> 方法的最后，返回了 <strong>getMethodsAndRelease(FindState)</strong>，将 <strong>FindState</strong> 传给了 <strong>getMethodsAndRelease(FindState)</strong> 方法，跟进去：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> List&lt;SubscriberMethod&gt; <span class="title">getMethodsAndRelease</span><span class="params">(FindState findState)</span> </span>&#123;</span><br><span class="line">      List&lt;SubscriberMethod&gt; subscriberMethods = <span class="keyword">new</span> ArrayList&lt;&gt;(findState.subscriberMethods);</span><br><span class="line">      findState.recycle();</span><br><span class="line">      <span class="keyword">synchronized</span> (FIND_STATE_POOL) &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; POOL_SIZE; i++) &#123;</span><br><span class="line">              <span class="keyword">if</span> (FIND_STATE_POOL[i] == <span class="keyword">null</span>) &#123;</span><br><span class="line">                  FIND_STATE_POOL[i] = findState;</span><br><span class="line">                  <span class="keyword">break</span>;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> subscriberMethods;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>从这里，可以知道作者设计 <strong>FindState池</strong> 的初心了，解析完了之后，将订阅方法赋给List集合，再回收 <strong>FindState</strong> ，继续接收解析，内存没有半点浪费。最后返回的是一个订阅方法的集合。这样，通过反射解析注解，找到订阅方法的方式已经分析完了。再看看通过apt处理器来找，apt处理是针对源码的处理，是执行在编译过程中的。所以性能要比反射好的多，也是推荐大家使用的方式。回到 <strong>findUsingInfo()</strong>，方法在没有配置时还是使用反射呢，一起看看：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> List&lt;SubscriberMethod&gt; <span class="title">findUsingInfo</span><span class="params">(Class&lt;?&gt; subscriberClass)</span> </span>&#123;</span><br><span class="line">       FindState findState = prepareFindState();</span><br><span class="line">       <span class="comment">//将订阅类交给findState</span></span><br><span class="line">       findState.initForSubscriber(subscriberClass);</span><br><span class="line">       <span class="comment">//扫描完当前类和其父类的订阅方法</span></span><br><span class="line">       <span class="keyword">while</span> (findState.clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">           findState.subscriberInfo = getSubscriberInfo(findState);</span><br><span class="line">           <span class="keyword">if</span> (findState.subscriberInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">               SubscriberMethod[] array = findState.subscriberInfo.getSubscriberMethods();</span><br><span class="line">               <span class="keyword">for</span> (SubscriberMethod subscriberMethod : array) &#123;</span><br><span class="line">                 <span class="comment">//根据eventType对SubscriberMethod检查</span></span><br><span class="line">                 <span class="comment">//如果有这个类型的方法，或者有这个方法类型的子类就返回false</span></span><br><span class="line">                   <span class="keyword">if</span> (findState.checkAdd(subscriberMethod.method, subscriberMethod.eventType)) &#123;</span><br><span class="line">                       findState.subscriberMethods.add(subscriberMethod);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">             <span class="comment">//没有EventBusIndex的信息时使用反射</span></span><br><span class="line">               findUsingReflectionInSingleClass(findState);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//上移到父类</span></span><br><span class="line">           findState.moveToSuperclass();</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">//置空FindState池</span></span><br><span class="line">       <span class="keyword">return</span> getMethodsAndRelease(findState);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面查找订阅方法，和通过反射查找基本一致，主要看看 <strong>getSubscriberInfo（findstate）</strong> ：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> SubscriberInfo <span class="title">getSubscriberInfo</span><span class="params">(FindState findState)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//查找是否有订阅信息，无则直接放回</span></span><br><span class="line">    <span class="keyword">if</span> (findState.subscriberInfo != <span class="keyword">null</span> &amp;&amp; findState.subscriberInfo.getSuperSubscriberInfo() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        SubscriberInfo superclassInfo = findState.subscriberInfo.getSuperSubscriberInfo();</span><br><span class="line">        <span class="keyword">if</span> (findState.clazz == superclassInfo.getSubscriberClass()) &#123;</span><br><span class="line">            <span class="keyword">return</span> superclassInfo;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (subscriberInfoIndexes != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (SubscriberInfoIndex index : subscriberInfoIndexes) &#123;</span><br><span class="line">            SubscriberInfo info = index.getSubscriberInfo(findState.clazz);</span><br><span class="line">            <span class="keyword">if</span> (info != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> info;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上述代码主要针对缓存，从缓存中获取订阅信息， 当使用apt处理时从 <strong>subscriberInfoIndexes</strong> 中<br>查找订阅信息的。而subscriberInfoIndexes是从 <strong>EventBus Builder</strong> 对象中获取：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SubscriberMethodFinder(List&lt;SubscriberInfoIndex&gt; subscriberInfoIndexes, <span class="keyword">boolean</span> strictMethodVerification,</span><br><span class="line">                          <span class="keyword">boolean</span> ignoreGeneratedIndex) &#123;</span><br><span class="line">       <span class="keyword">this</span>.subscriberInfoIndexes = subscriberInfoIndexes;</span><br><span class="line">       <span class="keyword">this</span>.strictMethodVerification = strictMethodVerification;</span><br><span class="line">       <span class="keyword">this</span>.ignoreGeneratedIndex = ignoreGeneratedIndex;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中 <strong>subscriberInfoIndexes</strong> 默认为空，结合之前的代码，还是执行了 <strong>findUsingReflection()</strong> 方法，<br>那么其何时才得到赋值。要使 <strong>subscriberInfoIndexes</strong> 得到赋值需要引入 <strong>EventBusAnnotationProcessor</strong> 库。这个在 <strong>EventBus processor使用</strong> 片段已经做了介绍。</p>
+<p>继续分析 <strong>findUsingInfo（）</strong> 方法，需要注意：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (SubscriberMethod subscriberMethod : array) &#123;</span><br><span class="line">  <span class="comment">//根据eventType对SubscriberMethod检查</span></span><br><span class="line">  <span class="comment">//如果有这个类型的方法，或者有这个方法类型的子类就返回false</span></span><br><span class="line">                   <span class="keyword">if</span> (findState.checkAdd(subscriberMethod.method, subscriberMethod.eventType)) &#123;</span><br><span class="line">                       findState.subscriberMethods.add(subscriberMethod);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里添加订阅方法的时候做了各检查，代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">checkAdd</span><span class="params">(Method method, Class&lt;?&gt; eventType)</span> </span>&#123;</span><br><span class="line">           <span class="comment">// 2 level check: 1st level with event type only (fast), 2nd level with complete signature when required.</span></span><br><span class="line">           <span class="comment">// Usually a subscriber doesn't have methods listening to the same event type.</span></span><br><span class="line">           Object existing = anyMethodByEventType.put(eventType, method);</span><br><span class="line">           <span class="keyword">if</span> (existing == <span class="keyword">null</span>) &#123;</span><br><span class="line">               <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="keyword">if</span> (existing <span class="keyword">instanceof</span> Method) &#123;</span><br><span class="line">                 <span class="comment">//只有子类中没有发现这种类型的方法才返回true</span></span><br><span class="line">                   <span class="keyword">if</span> (!checkAddWithMethodSignature((Method) existing, eventType)) &#123;</span><br><span class="line">                       <span class="comment">// Paranoia check</span></span><br><span class="line">                       <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">                   &#125;</span><br><span class="line">                   <span class="comment">// Put any non-Method object to "consume" the existing Method</span></span><br><span class="line">                   anyMethodByEventType.put(eventType, <span class="keyword">this</span>);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">return</span> checkAddWithMethodSignature(method, eventType);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里做了两步检查，第一步类型检查，第二步签名检查：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">checkAddWithMethodSignature</span><span class="params">(Method method, Class&lt;?&gt; eventType)</span> </span>&#123;</span><br><span class="line">          methodKeyBuilder.setLength(<span class="number">0</span>);</span><br><span class="line">          methodKeyBuilder.append(method.getName());</span><br><span class="line">          methodKeyBuilder.append(<span class="string">'&gt;'</span>).append(eventType.getName());</span><br><span class="line">          <span class="comment">//使用方法名称和事件类型做key，保持方法</span></span><br><span class="line">          String methodKey = methodKeyBuilder.toString();</span><br><span class="line">          Class&lt;?&gt; methodClass = method.getDeclaringClass();</span><br><span class="line">          Class&lt;?&gt; methodClassOld = subscriberClassByMethodKey.put(methodKey, methodClass);</span><br><span class="line">          <span class="comment">//如果传递过来的methodclass为父类，则直接返回</span></span><br><span class="line">          <span class="keyword">if</span> (methodClassOld == <span class="keyword">null</span> || methodClassOld.isAssignableFrom(methodClass)) &#123;</span><br><span class="line">              <span class="comment">// Only add if not already found in a sub class</span></span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              <span class="comment">// Revert the put, old class is further down the class hierarchy</span></span><br><span class="line">              subscriberClassByMethodKey.put(methodKey, methodClassOld);</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实作者，这里又做了一个优化，将方法名和事件类型当作key，来保存方法，将传来的方法类型和我们签名的保存的比较，如果保存的是父类，就返回 true，如果是子类，就将传来的方法保存起来，返回 false。这样做的意图是，如果有父类的方法了，就没有必要添加子类的方法了，因为继承会执行到的。至此查找订阅方法的过程已经完全分析完了。看懂了之后，非常的过瘾。无论哪种方式查找，都返回了 <strong>SubscriberMethod</strong> 对象，我们看看它维护了什么属性：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/** Used internally by EventBus and generated subscriber indexes. */</span><br><span class="line">public class SubscriberMethod &#123;</span><br><span class="line">    final Method method;</span><br><span class="line">    final ThreadMode threadMode;</span><br><span class="line">    final Class&lt;?&gt; eventType;</span><br><span class="line">    final int priority;</span><br><span class="line">    final boolean sticky;</span><br><span class="line">    /** Used for efficient comparison */</span><br><span class="line">    String methodString;</span><br></pre></td></tr></table></figure></p>
+<h3 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Must be called in synchronized block</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(Object subscriber, SubscriberMethod subscriberMethod)</span> </span>&#123;</span><br><span class="line">        Class&lt;?&gt; eventType = subscriberMethod.eventType;</span><br><span class="line">        <span class="comment">//根据订阅者和订阅方法构造一个订阅事件</span></span><br><span class="line">        Subscription newSubscription = <span class="keyword">new</span> Subscription(subscriber, subscriberMethod);</span><br><span class="line">        <span class="comment">//根据eventType查找Subscription集合</span></span><br><span class="line">        CopyOnWriteArrayList&lt;Subscription&gt; subscriptions = subscriptionsByEventType.get(eventType);</span><br><span class="line">        <span class="comment">//查看是否缓存过该订阅事件，没有则放进缓存</span></span><br><span class="line">        <span class="keyword">if</span> (subscriptions == <span class="keyword">null</span>) &#123;</span><br><span class="line">            subscriptions = <span class="keyword">new</span> CopyOnWriteArrayList&lt;&gt;();</span><br><span class="line">            subscriptionsByEventType.put(eventType, subscriptions);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (subscriptions.contains(newSubscription)) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Subscriber "</span> + subscriber.getClass() + <span class="string">" already registered to event "</span></span><br><span class="line">                        + eventType);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//遍历订阅事件，找到比subsecriptions中订阅事件的位置，然后根据priority插进队列</span></span><br><span class="line">        <span class="keyword">int</span> size = subscriptions.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= size; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i == size || subscriberMethod.priority &gt; subscriptions.get(i).subscriberMethod.priority) &#123;</span><br><span class="line">                subscriptions.add(i, newSubscription);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//根据订阅者查找Eventype的缓存</span></span><br><span class="line">        List&lt;Class&lt;?&gt;&gt; subscribedEvents = typesBySubscriber.get(subscriber);</span><br><span class="line">        <span class="keyword">if</span> (subscribedEvents == <span class="keyword">null</span>) &#123;</span><br><span class="line">            subscribedEvents = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            typesBySubscriber.put(subscriber, subscribedEvents);</span><br><span class="line">        &#125;</span><br><span class="line">        subscribedEvents.add(eventType);</span><br><span class="line">        <span class="comment">//如果是粘性事件。立马处理</span></span><br><span class="line">        <span class="keyword">if</span> (subscriberMethod.sticky) &#123;</span><br><span class="line">            <span class="keyword">if</span> (eventInheritance) &#123;</span><br><span class="line">                <span class="comment">// Existing sticky events of all subclasses of eventType have to be considered.</span></span><br><span class="line">                <span class="comment">// Note: Iterating over all events may be inefficient with lots of sticky events,</span></span><br><span class="line">                <span class="comment">// thus data structure should be changed to allow a more efficient lookup</span></span><br><span class="line">                <span class="comment">// (e.g. an additional map storing sub classes of super classes: Class -&gt; List&lt;Class&gt;).</span></span><br><span class="line">                Set&lt;Map.Entry&lt;Class&lt;?&gt;, Object&gt;&gt; entries = stickyEvents.entrySet();</span><br><span class="line">                <span class="keyword">for</span> (Map.Entry&lt;Class&lt;?&gt;, Object&gt; entry : entries) &#123;</span><br><span class="line">                    Class&lt;?&gt; candidateEventType = entry.getKey();</span><br><span class="line">                    <span class="keyword">if</span> (eventType.isAssignableFrom(candidateEventType)) &#123;</span><br><span class="line">                        Object stickyEvent = entry.getValue();</span><br><span class="line">                        checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Object stickyEvent = stickyEvents.get(eventType);</span><br><span class="line">                checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其实里面就做了两件事，将订阅方法和订阅者，封装到 <strong>subscriptionsByEventType</strong> 和 <strong>ypesBySubscriber</strong> ，至于这两个对象是干什么的呢？第一个是投递订阅事件的时候，就是根据 <strong>EventType</strong> 找到订阅事件，从而去分发事件，处理事件的；第二个是在调用 <strong>unregister(this)</strong> 的时候，根据订阅者找到 <strong>EventType</strong>，又根据 <strong>EventType</strong> 找到订阅事件，从而解绑用的。第二件事，就是如果是粘性事件的话，就立马投递、执行。</p>
+<h3 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Posts the given event to the event bus. */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//每个线程维护一个投递状态</span></span><br><span class="line">    PostingThreadState postingState = currentPostingThreadState.get();</span><br><span class="line">    List&lt;Object&gt; eventQueue = postingState.eventQueue;</span><br><span class="line">    eventQueue.add(event);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!postingState.isPosting) &#123;</span><br><span class="line">        postingState.isMainThread = isMainThread();</span><br><span class="line">        postingState.isPosting = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (postingState.canceled) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Internal error. Abort state was not reset"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (!eventQueue.isEmpty()) &#123;</span><br><span class="line">                postSingleEvent(eventQueue.remove(<span class="number">0</span>), postingState);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            postingState.isPosting = <span class="keyword">false</span>;</span><br><span class="line">            postingState.isMainThread = <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>post(Object object) 的方法的时候就执行了上面的代码，<strong>PostingThreadState</strong> 是维护了投递的状态，最后循环投递，直到 <strong>PostingThreadState</strong> 中的 <strong>EventQueue</strong> 为空。那么代码最终执行到：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">postToSubscription</span><span class="params">(Subscription subscription, Object event, <span class="keyword">boolean</span> isMainThread)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">switch</span> (subscription.subscriberMethod.threadMode) &#123;</span><br><span class="line">           <span class="keyword">case</span> POSTING:</span><br><span class="line">               invokeSubscriber(subscription, event);</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">case</span> MAIN:</span><br><span class="line">               <span class="keyword">if</span> (isMainThread) &#123;</span><br><span class="line">                   invokeSubscriber(subscription, event);</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">case</span> MAIN_ORDERED:</span><br><span class="line">               <span class="keyword">if</span> (mainThreadPoster != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="comment">// temporary: technically not correct as poster not decoupled from subscriber</span></span><br><span class="line">                   invokeSubscriber(subscription, event);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">case</span> BACKGROUND:</span><br><span class="line">               <span class="keyword">if</span> (isMainThread) &#123;</span><br><span class="line">                   backgroundPoster.enqueue(subscription, event);</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   invokeSubscriber(subscription, event);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">case</span> ASYNC:</span><br><span class="line">               asyncPoster.enqueue(subscription, event);</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">default</span>:</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Unknown thread mode: "</span> + subscription.subscriberMethod.threadMode);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这里根据 <strong>ThreadMode</strong> 去处理事件了。由于篇幅的问题，就分析一种了，当线程模式是主线程的时候，意味着，需要执行的代码在主线程中操作。如果是主线程，就是通过 <strong>反射，直接运行订阅的方法</strong>，如果不是主线程，需要 <strong>mainThreadPoster</strong> 将订阅事件入队列，一起看看 <strong>mainThreadPoster</strong> 的工作原理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HandlerPoster</span> <span class="keyword">extends</span> <span class="title">Handler</span> <span class="keyword">implements</span> <span class="title">Poster</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PendingPostQueue queue;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> maxMillisInsideHandleMessage;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> EventBus eventBus;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> handlerActive;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">HandlerPoster</span><span class="params">(EventBus eventBus, Looper looper, <span class="keyword">int</span> maxMillisInsideHandleMessage)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(looper);</span><br><span class="line">        <span class="keyword">this</span>.eventBus = eventBus;</span><br><span class="line">        <span class="keyword">this</span>.maxMillisInsideHandleMessage = maxMillisInsideHandleMessage;</span><br><span class="line">        queue = <span class="keyword">new</span> PendingPostQueue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(Subscription subscription, Object event)</span> </span>&#123;</span><br><span class="line">        PendingPost pendingPost = PendingPost.obtainPendingPost(subscription, event);</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            queue.enqueue(pendingPost);</span><br><span class="line">            <span class="keyword">if</span> (!handlerActive) &#123;</span><br><span class="line">                handlerActive = <span class="keyword">true</span>;</span><br><span class="line">                <span class="keyword">if</span> (!sendMessage(obtainMessage())) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Could not send handler message"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> rescheduled = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">long</span> started = SystemClock.uptimeMillis();</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                PendingPost pendingPost = queue.poll();</span><br><span class="line">                <span class="keyword">if</span> (pendingPost == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">                        <span class="comment">// Check again, this time in synchronized</span></span><br><span class="line">                        pendingPost = queue.poll();</span><br><span class="line">                        <span class="keyword">if</span> (pendingPost == <span class="keyword">null</span>) &#123;</span><br><span class="line">                            handlerActive = <span class="keyword">false</span>;</span><br><span class="line">                            <span class="keyword">return</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                eventBus.invokeSubscriber(pendingPost);</span><br><span class="line">                <span class="keyword">long</span> timeInMethod = SystemClock.uptimeMillis() - started;</span><br><span class="line">                <span class="keyword">if</span> (timeInMethod &gt;= maxMillisInsideHandleMessage) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (!sendMessage(obtainMessage())) &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Could not send handler message"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    rescheduled = <span class="keyword">true</span>;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            handlerActive = rescheduled;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>  其实，在 <strong>EventBus</strong> 初始化的时候，<strong>mainThreadPoster</strong> 就已经获取主线程的Looper了，<br>就是用到了我们Android的消息处理机制：<strong>Looper</strong>,<strong>Handler</strong> 。至于消息队列是自己维护的一个<br>单向的链表。每次向Andorid的主线程Looper投递一个空消息，然后在 <strong>HandlerMessage()</strong> 方法里<br>面从自己维护的队列中取出 <strong>PendingPost</strong> 进行处理。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">PendingPost</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> List&lt;PendingPost&gt; pendingPostPool = <span class="keyword">new</span> ArrayList&lt;PendingPost&gt;();</span><br><span class="line"></span><br><span class="line">    Object event;</span><br><span class="line">    Subscription subscription;</span><br><span class="line">    PendingPost next;</span><br><span class="line">  &#125;</span><br><span class="line">```  </span><br><span class="line">而 PendingPost 中维护的是订阅事件，EventType 和下一个 PendingPost 的地址。</span><br><span class="line"></span><br><span class="line">### 反注册</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line"><span class="comment">/** Unregisters the given subscriber from all event classes. */</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">unregister</span><span class="params">(Object subscriber)</span> </span>&#123;</span><br><span class="line">       List&lt;Class&lt;?&gt;&gt; subscribedTypes = typesBySubscriber.get(subscriber);</span><br><span class="line">       <span class="keyword">if</span> (subscribedTypes != <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">for</span> (Class&lt;?&gt; eventType : subscribedTypes) &#123;</span><br><span class="line">               unsubscribeByEventType(subscriber, eventType);</span><br><span class="line">           &#125;</span><br><span class="line">           typesBySubscriber.remove(subscriber);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           logger.log(Level.WARNING, <span class="string">"Subscriber to unregister was not registered before: "</span> + subscriber.getClass());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>反注册就是通过EventBus中 <strong>typesBySubscriber</strong> 这个属性，通过订阅者去查找订阅事件，然后去一一解绑的。当然，反注册主要是为了提高效率的，不然订阅的事件太多，非常影响性能。</p>
+<h3 id="新特性-粘性事件"><a href="#新特性-粘性事件" class="headerlink" title="新特性-粘性事件"></a>新特性-粘性事件</h3><p>在订阅方法后半部分，关于粘性事件的处理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (subscriberMethod.sticky) &#123;</span><br><span class="line">            <span class="keyword">if</span> (eventInheritance) &#123;</span><br><span class="line">                <span class="comment">// Existing sticky events of all subclasses of eventType have to be considered.</span></span><br><span class="line">                <span class="comment">// Note: Iterating over all events may be inefficient with lots of sticky events,</span></span><br><span class="line">                <span class="comment">// thus data structure should be changed to allow a more efficient lookup</span></span><br><span class="line">                <span class="comment">// (e.g. an additional map storing sub classes of super classes: Class -&gt; List&lt;Class&gt;).</span></span><br><span class="line">                Set&lt;Map.Entry&lt;Class&lt;?&gt;, Object&gt;&gt; entries = stickyEvents.entrySet();</span><br><span class="line">                <span class="keyword">for</span> (Map.Entry&lt;Class&lt;?&gt;, Object&gt; entry : entries) &#123;</span><br><span class="line">                    Class&lt;?&gt; candidateEventType = entry.getKey();</span><br><span class="line">                    <span class="keyword">if</span> (eventType.isAssignableFrom(candidateEventType)) &#123;</span><br><span class="line">                        Object stickyEvent = entry.getValue();</span><br><span class="line">                        checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Object stickyEvent = stickyEvents.get(eventType);</span><br><span class="line">                checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里看下 <strong>checkPostStickyEventToSubscription</strong>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkPostStickyEventToSubscription</span><span class="params">(Subscription newSubscription, Object stickyEvent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (stickyEvent != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// If the subscriber is trying to abort the event, it will fail (event is not tracked in posting state)</span></span><br><span class="line">            <span class="comment">// --&gt; Strange corner case, which we don't take care of here.</span></span><br><span class="line">            postToSubscription(newSubscription, stickyEvent, isMainThread());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果在注册的时候，指定要发布粘性事件，那么在订阅的时候，就立马调用 <strong>postToSubscription</strong> ，去发布了，至于它从缓存中 <strong>stickyEvents</strong> 中获取订阅事件，可能有疑问，什么时候把 <strong>EventType</strong> 放进去的呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Posts the given event to the event bus and holds on to the event (because it is sticky). The most recent sticky</span></span><br><span class="line"><span class="comment">    * event of an event's type is kept in memory for future access by subscribers using &#123;<span class="doctag">@link</span> Subscribe#sticky()&#125;.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postSticky</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">synchronized</span> (stickyEvents) &#123;</span><br><span class="line">           stickyEvents.put(event.getClass(), event);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// Should be posted after it is putted, in case the subscriber wants to remove immediately</span></span><br><span class="line">       post(event);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>粘性事件在调用 <strong>postSticky（）</strong> 方法的时候就已经放入缓存。自此关于EventBus的源码也分析完了。</p>
+<p>参考：<br>[0]. 官网git <a href="https://github.com/greenrobot/EventBus" target="_blank" rel="noopener">https://github.com/greenrobot/EventBus</a><br>[1]. <a href="http://www.10tiao.com/html/227/201607/2650236358/1.html" target="_blank" rel="noopener">http://www.10tiao.com/html/227/201607/2650236358/1.html</a>  </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/24/Android之Boradcast/" rel="next" title="Android之Boradcast">
+                <i class="fa fa-chevron-left"></i> Android之Boradcast
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/12/kotlin笔记/" rel="prev" title="kotlin笔记">
+                kotlin笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CallteFoot</p>
+              <p class="site-description motion-element" itemprop="description">The blog from a Android coder</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#EventBus基础"><span class="nav-number">1.</span> <span class="nav-text">EventBus基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#何为EventBus"><span class="nav-number">1.1.</span> <span class="nav-text">何为EventBus</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#EventBus框架"><span class="nav-number">1.1.1.</span> <span class="nav-text">EventBus框架</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EventBus基本使用"><span class="nav-number">1.2.</span> <span class="nav-text">EventBus基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#EventBus中的三个主要角色"><span class="nav-number">1.2.1.</span> <span class="nav-text">EventBus中的三个主要角色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EventBus的5种线程模型，分别是"><span class="nav-number">1.2.2.</span> <span class="nav-text">EventBus的5种线程模型，分别是:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#具体使用"><span class="nav-number">1.2.3.</span> <span class="nav-text">具体使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EventBus黏性事件"><span class="nav-number">1.2.4.</span> <span class="nav-text">EventBus黏性事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EventBus-processor使用"><span class="nav-number">1.2.5.</span> <span class="nav-text">EventBus processor使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EventBus优缺点"><span class="nav-number">1.3.</span> <span class="nav-text">EventBus优缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EventBus源码解析"><span class="nav-number">2.</span> <span class="nav-text">EventBus源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">2.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册"><span class="nav-number">2.2.</span> <span class="nav-text">注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#订阅"><span class="nav-number">2.3.</span> <span class="nav-text">订阅</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布"><span class="nav-number">2.4.</span> <span class="nav-text">发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新特性-粘性事件"><span class="nav-number">2.5.</span> <span class="nav-text">新特性-粘性事件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CallteFoot</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
