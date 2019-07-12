@@ -262,6 +262,274 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2018/07/12/flutter-install/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CallteFoot">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CallteFoot's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/12/flutter-install/" itemprop="url">Flutter_install</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-12T09:06:17+08:00">
+                2018-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flutter/" itemprop="url" rel="index">
+                    <span itemprop="name">Flutter</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>文章目录：  </p>
+<ul>
+<li>系统要求</li>
+<li>获取Flutter Sdk<ul>
+<li>克隆仓库</li>
+<li>运行flutter doctor</li>
+<li>更新系统路径</li>
+</ul>
+</li>
+<li>编译器设置</li>
+<li>平台设置</li>
+<li>IOS设置<ul>
+<li>安装Xcode</li>
+<li>设置IOS模拟器</li>
+<li>部署到IOS设备</li>
+</ul>
+</li>
+<li>Android设置<ul>
+<li>安装Android Studio</li>
+<li>设置Android设备</li>
+<li>设置Android模拟器</li>
+</ul>
+</li>
+</ul>
+<h3 id="系统要求"><a href="#系统要求" class="headerlink" title="系统要求"></a>系统要求</h3><p>安装并运行 Flutter ，你的开发环境必须满足这些最低要求：  </p>
+<ul>
+<li><strong>操作系统</strong>：macOS （64-bit）。</li>
+<li><strong>磁盘空间</strong>： 700 MB （不包括 Xcode 和 Android Studio 的磁盘空间）。</li>
+<li><strong>工具</strong>：Flutter 依赖你环境中可用的这些命令行工具。<ul>
+<li>bash， mkdir，rm，git， curl，unzip，which   </li>
+</ul>
+</li>
+</ul>
+<h3 id="获取-Flutter-SDK"><a href="#获取-Flutter-SDK" class="headerlink" title="获取 Flutter SDK"></a>获取 Flutter SDK</h3><p>获取 Flutter ，你可使用 <strong>git</strong> 去克隆 Flutter 的仓库然后添加 <strong>flutter</strong> 工具到你的路径，运行 flutter doctor 显示你可能要安装的依赖。</p>
+<h4 id="克隆仓库"><a href="#克隆仓库" class="headerlink" title="克隆仓库"></a>克隆仓库</h4><p>如果你是第一次在你机器上安装 Flutter ，克隆 <strong>beta</strong> 分支的仓库然后添加 <strong>flutter</strong> 工具到你的路径：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone -b beta https://github.com/flutter/flutter.git</span><br><span class="line">$ export PATH=`pwd`/flutter/bin:$PATH</span><br></pre></td></tr></table></figure></p>
+<p>上面的命令会在当前的终端窗口暂时设置 PATH 变量，要永久添加 Flutter 到你的路径，请参阅 <a href="http://doc.flutter-dev.cn/setup-macos/#update-your-path" target="_blank" rel="noopener">更新你的路径</a>。</p>
+<p>要更新一个现有版本的 Flutter ，请参阅<a href="http://doc.flutter-dev.cn/upgrading/" target="_blank" rel="noopener">更新 Flutter</a> 。</p>
+<h4 id="运行-flutter-doctor"><a href="#运行-flutter-doctor" class="headerlink" title="运行 flutter doctor"></a>运行 flutter doctor</h4><p>运行以下命令可以看到你是否需要安装任何依赖来完成安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ flutter doctor</span><br></pre></td></tr></table></figure></p>
+<p>这个命令会检查你的环境并显示一份报告在终端窗口，Dart SDK 已和 Flutter 捆绑在一起，所以你不需要额外安装 Dart 。仔细检查输出信息是否需要安装其他软件或者执行其他任务（以 <strong>粗体</strong> 字显示）。</p>
+<p>举个例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[-] Android toolchain - develop for Android devices</span><br><span class="line">    • Android SDK at /Users/obiwan/Library/Android/sdk</span><br><span class="line">    ✗ Android SDK is missing command line tools; download from https://goo.gl/XxQghQ</span><br><span class="line">    • Try re-installing or updating your Android SDK,</span><br><span class="line">      visit https://flutter.io/setup/#android-setup for detailed instructions.</span><br></pre></td></tr></table></figure></p>
+<p>这是你第一次去运行 flutter 命令（比如 <strong>flutter doctor</strong> ），它会下载依赖库，并且自行编译。后续运行这条命令就会更加快了。</p>
+<p>接下来的章节就是描述怎么执行这些任务和完成设置过程。你会看到 <strong>flutter doctor</strong> 输出了,假如你是用了 IDE ，就会显示 IntelliJ IDEA ， Android Studio 和 VS Code 这些编译器的可用插件。请参阅<a href="http://doc.flutter-dev.cn/get-started/editor/" target="_blank" rel="noopener">编译器设置</a>根据步骤去安装 Flutter 和 Dart 插件。</p>
+<p>当你安装好了所有缺失的依赖库，运行 <strong>flutter doctor</strong> 命令去验证你的设置是否正确。</p>
+<p>这个 <strong>flutter</strong> 工具使用了 Google Analytics 匿名分析 报告功能，使用情况信息和基本崩溃报告。这些数据用于帮助改进 Flutter 工具。并且这个分析报告是不会在第一次运行或者任何涉及到 <strong>flutter config</strong> 的设置运行时发送，因此你可以在任何分析之前退出分析。要禁用分析的话，输入 <strong>flutter config –no-analytics</strong> ，要显示当前配置的话输入 <strong>flutter config</strong> 。详情请参阅 Google 的隐私政策：www.google.com/intl/en/policies/privacy。</p>
+<h4 id="更新你的路径"><a href="#更新你的路径" class="headerlink" title="更新你的路径"></a>更新你的路径</h4><p>你只能在命令行中更新你当前会话窗口的 PATH 变量，如<a href="http://doc.flutter-dev.cn/setup-macos/#clone-the-repo" target="_blank" rel="noopener">克隆 Flutter</a> 库所示。当永久更新这个变量，这样子你就可以在任意终端会话中运行 flutter 命令了。</p>
+<p>对于计算机来说，永久给全部终端会话修改这个变量这些操作都是不同的。通常，你会打开新窗口时将命令输入。举个例子：</p>
+<ol>
+<li>确定好放置 Flutter SDK 的目录，你会在步骤 3 用到它。</li>
+<li>打开（或者创建） <strong>$HOME/.bash_profile</strong> 这个文件或者文件名可能不同于你计算机的。</li>
+<li><p>添加下面命令行并将 <strong>[PATH_TO_FLUTTER_GIT_DIRECTORY]</strong> 改为你克隆 Flutter 仓库的路径：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export PATH=[PATH_TO_FLUTTER_GIT_DIRECTORY]/flutter/bin:$PATH</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行 <strong>source $HOME/.bash_profile</strong> 刷新当前窗口。</p>
+</li>
+<li>验证 <strong>flutter/bin</strong> 是否在你的路径上：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo $PATH</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>更多的细节，可以参阅<a href="https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path" target="_blank" rel="noopener">StackExchange 上的问题</a>。</p>
+<h3 id="编译器设置"><a href="#编译器设置" class="headerlink" title="编译器设置"></a>编译器设置</h3><p>使用 <strong>flutter</strong> 命令行工具，你可以使用任何编辑器去开发 Flutter 应用。在命令提示符窗口输入 flutter help 可以显示可用的操作。</p>
+<p>我推荐使用我们的插件来获取<a href="http://doc.flutter-dev.cn/using-ide/" target="_blank" rel="noopener">丰富的 IDE 体验</a> ，支持编辑，运行和调试 Flutter 应用。参阅<a href="http://doc.flutter-dev.cn/get-started/editor/" target="_blank" rel="noopener">编译器设置</a>了解详细步骤。</p>
+<h3 id="平台设置"><a href="#平台设置" class="headerlink" title="平台设置"></a>平台设置</h3><p>macOS 支持为 iOS 和 Android 开发 Flutter 应用程序。现在只要在两个系统平台中的一个完成设置，就可以构建运行你的第一个 Flutter 应用程序了。</p>
+<h3 id="iOS-设置"><a href="#iOS-设置" class="headerlink" title="iOS 设置"></a>iOS 设置</h3><h4 id="安装-Xcode"><a href="#安装-Xcode" class="headerlink" title="安装 Xcode"></a>安装 Xcode</h4><p>为 iOS 开发 Flutter 应用，你需要一台安装了 Xcode 7.2 或者更新版本的 Mac 。</p>
+<ol>
+<li>安装 Xcode 7.2 或者更新版本（通过<a href="https://developer.apple.com/xcode/" target="_blank" rel="noopener">网页下载</a>或者 <a href="https://itunes.apple.com/us/app/xcode/id497799835" target="_blank" rel="noopener">App Store</a> 安装）。</li>
+<li>通过在在命令行运行 <strong>sudo xcode-select –switch /Applications/Xcode.app/Contents/Developer</strong> 来配置 Xcode 命令行工具来使用安装好的最新版本 Xcode 。</li>
+</ol>
+<p>大多数情况下，这是安装最新版 Xcode 的正确的路径。如果你想使用不同的版本，请改为指定的路径。</p>
+<p>3.确保 Xcode 许可协议是通过打开一次 Xcode 或者从命令行中运行 <strong>sudo xcodebuild -license</strong> 来签署的。<br>使用 Xcode ，你就可以在你的 iOS 设备或者在模拟器上运行 Flutter 应用。</p>
+<h4 id="设置-iOS-模拟器"><a href="#设置-iOS-模拟器" class="headerlink" title="设置 iOS 模拟器"></a>设置 iOS 模拟器</h4><p>准备在 iOS 模拟器上运行并测试你的 Flutter 应用，根据以下步骤：</p>
+<p>在你的 Mac 上，可以通过 Spotlight 或者使用以下命令找到模拟器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ open -a Simulator</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>通过检查模拟器的 <strong>Hardware &gt; Device</strong> 设置，确保你的模拟器运行 64 位的设备（iPhone 5s 或者更高版本）。</li>
+<li>根据你开发设备的屏幕尺寸，模拟高屏幕密度的 iOS 设备可能会溢出你的屏幕，在模拟器的 <strong>Window &gt; Scale</strong> 菜单设置设备的比例。</li>
+<li>运行 <strong>flutter run</strong> 来启动你的应用</li>
+</ol>
+<h4 id="部署到-iOS-设备"><a href="#部署到-iOS-设备" class="headerlink" title="部署到 iOS 设备"></a>部署到 iOS 设备</h4><p>部署你的 Flutter 应用程序到物理的 iOS 设备，你需要一些额外的工具和一个 Apple 账号。你还需要在 Xcode 中设置物理设备的部署。</p>
+<ol>
+<li>安装 <a href="https://brew.sh/" target="_blank" rel="noopener">homebrew</a>。</li>
+<li>打开终端运行这些命令来安装部署 Flutter 应用程序到 iOS 设备的工具<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install --HEAD libimobiledevice</span><br><span class="line">$ brew install ideviceinstaller ios-deploy cocoapods</span><br><span class="line">$ pod setup</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果这些命令中的任何一个命令失败出现错误，运行 <strong>brew doctor</strong> 并根据说明解决问题。</p>
+<ol>
+<li><p>遵循 Xcode 的签名流程来配置你的项目：</p>
+<ol>
+<li>打开默认的 Xcode 工作空间，找到你的 Flutter 项目目录并打开终端运行 <strong>open ios/Runner.xcworkspace</strong> 。</li>
+<li>在 Xcode 左边的导航面板，选择 <strong>Runner</strong> 项目。</li>
+<li><p>在 <strong>Runner</strong> 目标设置界面，确保在 <strong>General &gt; Signing &gt; Team</strong> 选择了你的开发团队，当你选择了开发团队，Xcode 创建和下载一个开发证书，向你的设备注册你的账户，并创建和下载配置文件（如果你需要的话）。</p>
+<ul>
+<li>要开始你的第一个 iOS 开发项目，你可能需要在 Xcode 上注册你的 Apple ID。<br>Xcode account add<br>任意的 Apple ID 都支持开发和测试。需要注册 Apple 开发者计划才能分发你的应用到 App Store 。请参阅 <a href="https://developer.apple.com/support/compare-memberships/" target="_blank" rel="noopener">Apple 会员类型之间的差异</a>。</li>
+<li>你第一次用物理设备开发 iOS 时，你需要同时信任该设备上的 Mac 和开发证书。 当你的 iOS 设备第一次连接到你的 Mac 时，在对话框提示中选择 <strong>Trust</strong>。<br><a href="&quot;images/trust-computer.png&quot;">Trust Mac</a><br>然后，打开 iOS 设备上的设置，选择 <strong>常规 &gt; 设备管理</strong> 然后信任你的证书。<br>如果 Xcode 的自动签名失败，验证项目的 <strong>General &gt; Identity &gt; Bundle Identifier</strong> 是否唯一。<br><a href="&quot;xcode-unique-bundle-id.png&quot;">Check the app’s Bundle ID</a><br>运行flutter run 启动你的应用程序。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="Android设置"><a href="#Android设置" class="headerlink" title="Android设置"></a>Android设置</h3><h4 id="安装-Android-Studio"><a href="#安装-Android-Studio" class="headerlink" title="安装 Android Studio"></a>安装 Android Studio</h4><p>为 Android 开发 Flutter 应用，你可以使用 Mac ，Windows 或者是 Linux（64 位）机器。</p>
+<p>Flutter 要求安装和配置 Android Studio：</p>
+<ol>
+<li><p>下载并安装 <a href="https://developer.android.com/studio/index.html" target="_blank" rel="noopener">Android Studio</a>。</p>
+</li>
+<li><p>启动 Android Studio，并执行 Android Studio 安装向导。这将会安装 Flutter 为 Android 开发所需的最新的 Android SDK ，Android SDK 平台工具和 Android SDK 构建工具。</p>
+</li>
+</ol>
+<h4 id="设置你的-Android-设备"><a href="#设置你的-Android-设备" class="headerlink" title="设置你的 Android 设备"></a>设置你的 Android 设备</h4><p>为了在 Android 设备上运行和测试你的 Flutter 应用，你需要一台运行 Android 4.1（ API 级别 16 ）或者更高版本的 Android 设备。</p>
+<ol>
+<li>在你的设备上启动 <strong>开发者选项</strong> 和 <strong>USB 调试</strong>，详情说明可在 <a href="https://developer.android.com/studio/debug/dev-options.html" target="_blank" rel="noopener">Android 文档</a>中找到。</li>
+<li>使用 USB 线将设备插入电脑。如果在设备上出现提示，请授权你的电脑访问你的设备。</li>
+<li>在终端运行 flutter devices 命令来验证 Flutter 识别到你连接的 Android 设备。</li>
+<li>运行 flutter run 来启动的你的应用。<br>通常情况下， Flutter 使用了 adb 工具所基于的 Android SDK 版本，如果你要安装使用不同的 Android SDK 版本，就必须设置 ANDROID_HOME 环境变量设置为安装目录。</li>
+</ol>
+<h4 id="设置-Android-模拟器"><a href="#设置-Android-模拟器" class="headerlink" title="设置 Android 模拟器"></a>设置 Android 模拟器</h4><p>准备在 Android 模拟器上运行和测试你的 Flutter 应用，需要按照以下几个步骤来操作：</p>
+<ol>
+<li>在你的电脑上启动 <a href="https://developer.android.com/studio/run/emulator-acceleration.html" target="_blank" rel="noopener">VM 加速</a>。<ol>
+<li>启动 <strong>Android Studio &gt; Tools &gt; Android &gt; AVD Manager</strong> 和选择 <strong>Create Virtual Device</strong> 。</li>
+<li>选择一个设备的定义和选择 <strong>Next</strong> 。</li>
+<li>为你的模拟器 Android 版本选择一个或者多个系统镜像，和选择 <strong>Next</strong> 。推荐使用 x86 or x86_64 镜像。</li>
+<li>为了提高模拟器性能，选择 <strong>Hardware - GLES 2.0</strong> 来启动<a href="https://developer.android.com/studio/run/emulator-acceleration.html" target="_blank" rel="noopener">硬件加速</a>。</li>
+<li>验证 AVD 的配置是否正确，然后选择 Finish 。</li>
+</ol>
+</li>
+</ol>
+<p>有关上述步骤的详细信息,请查阅<a href="https://developer.android.com/studio/run/managing-avds.html" target="_blank" rel="noopener">管理 AVDs</a> 。</p>
+<ol>
+<li>在 Android 虚拟设备管理器中，在工具栏点击 <strong>Run</strong> 。模拟器启动和显示所选操作系统版本和设备的默认界面。</li>
+<li>通过 <strong>flutter run</strong> 来启动你的应用，连接设备的名称是 <strong>Android SDK built for <platform></platform></strong> ，这里的 platform 是指设备 soc 芯片系列，比如 x86 。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2018/07/05/Android音视频点知识/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2635,189 +2903,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2018/06/14/AndroidSupport库-AsynListUtil/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CallteFoot">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CallteFoot's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/14/AndroidSupport库-AsynListUtil/" itemprop="url">Android Support库:AsynListUtil</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-14T09:21:13+08:00">
-                2018-06-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Support/" itemprop="url" rel="index">
-                    <span itemprop="name">Support</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;在介绍完 Android Support 库发展历程（<a href="http://blog.chengyunfeng.com/?p=1047）后，" target="_blank" rel="noopener">http://blog.chengyunfeng.com/?p=1047）后，</a> 再分别介绍下 Android Support 库中有用但是被忽略的一些功能。了解这些功能，在需要的时候可以避免在引入其他类似的第三方库或者避免自己重复制造轮子，提高开发效率。  </p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;这是一系列的介绍文章，每次介绍 Support 库中的一个功能，篇幅尽可能的短，方便大家利用碎片时间阅读。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;这次介绍来自 recyclerview-v7 中的 AsyncListUtil 类。</p>
-<h4 id="RecyclerView"><a href="#RecyclerView" class="headerlink" title="RecyclerView"></a>RecyclerView</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;RecyclerView 发布后大家应该都放弃使用 ListView 了。使用 RecyclerView 需要对数据控制的更精细，比如如果删除了某个位置的数据，则需要使用 RecyclerView.Adapter 的 notifyItemRemoved(int position) 函数来通知 RecyclerView 被删除的数据，这样 RecyclerView 就可以实现一个删除该条数据的动画，而 ListView 只要数据变化了，都只需要调用 notifyDataSetChanged() 即可。  </p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;而在使用 RecyclerView 过程中数据来源是各种各样的，数据可以来自于网络、也可以是数据库、还可以是读取文件，不同的数据来源对 Adapter 的处理也是有差别的。本次介绍的 AsyncListUtil <strong>适用于数据来源数据库或者本地磁盘的情况</strong>。</p>
-<h4 id="AsyncListUtil"><a href="#AsyncListUtil" class="headerlink" title="AsyncListUtil"></a>AsyncListUtil</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 是一个用来异步加载数据的类。例如，如果你的数据是来至于数据库的，则可以使用 AsyncListUtil 在后台批量加载 Cursor 中的数据，当数据加载完成后在通知 UI 线程使用，并且 AsyncListUtil 支持数据缓存，这样可以实现非常流畅的滚动性能。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 在后台线程加载数据，每次加载一批数据，数据的个数是可以配置的，并且在内存中缓存了一些数据来提高效率。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 使用一个后台线程来加载数据，所以 AsyncListUtil 适合用来从磁盘加载数据的情况（比如，读取数据库、读取文件等），而不适合从网络获取数据的情况。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;AsyncListUtil 有如下四个函数可以使用：</p>
-<ul>
-<li>T getItem (int position)： 返回 position 位置的数据，如果数据尚未加载完成，则返回 null;</li>
-<li>int getItemCount () 返回数据集的个数，该数值为 DataCallback.refreshData() 函数返回的值</li>
-<li>void onRangeChanged () 更新当前数据可见范围，当 RecyclerView 滚动的时候，需要回调这个函数来告诉 AsyncListUtil 可见数据范围发生变化，需要根据当前新的可见数据范围来加载所需数据，在 RecyclerView 的 <a href="https://developer.android.google.cn/reference/android/support/v7/widget/RecyclerView.OnScrollListener.html#onScrolled(android.support.v7.widget.RecyclerView, int, int" target="_blank" rel="noopener">onScrolled(RecyclerView, int, int)</a>) 中调用该函数即可。</li>
-<li>void refresh () ： 如果数据发生了变化， 调用该函数来强制重新加载数据，丢弃之前缓存的数据。<br>AsyncListUtil 有两个回调函数分别处理数据加载和 UI 通知事件：AsyncListUtil.DataCallback 和 AsyncListUtil.ViewCallback。</li>
-</ul>
-<h4 id="AsyncListUtil-DataCallback"><a href="#AsyncListUtil-DataCallback" class="headerlink" title="AsyncListUtil.DataCallback"></a>AsyncListUtil.DataCallback</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;DataCallback 类提供了在后台加载数据的功能，里面定义了如下四个函数，这些函数都是在后台线程中执行的:</p>
-<ul>
-<li>int refreshData () ： 刷新数据，返回新的数据个数，如果你所加载的数据来自于 Cursor，则当数据发生变化的时候，在这里从新生成一个 Cursor 并返回 Cursor 的数目。</li>
-<li>void fillData (T[] data, int startPosition, int itemCount) ：加载数据，其中 data 数组是加载后的数据，而 startPosition 是数据开始的位置，而 itemCount 是加载数据的 个数。 data 数组中的对象是可以重复利用的，如果 data[i] 的数据不为 null，则可以重复利用而无需重新创建数据对象。</li>
-<li>int getMaxCachedTiles () ： 返回缓存数量的限制，一般不用实现这个函数，默认实现即可。</li>
-<li>void recycleData (T[] data, int itemCount) ： 回收 fillData 中所创建的数据，如果你的数据包含需要回收的资源，则可以在这里处理。  </li>
-</ul>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;一般只需要实现 refreshData 和 fillData 函数即可。</p>
-<h4 id="AsyncListUtil-ViewCallback"><a href="#AsyncListUtil-ViewCallback" class="headerlink" title="AsyncListUtil.ViewCallback"></a>AsyncListUtil.ViewCallback</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;ViewCallback 类提供了和 RecyclerView 关联的接口，里面的函数都是在 UI 线程中调用的，该类同样定义了四个函数：</p>
-<ul>
-<li>void onItemLoaded (int position) ： 当 position 位置的数据加载完后会调用该函数；</li>
-<li>void onDataRefresh () ： 当数据集发生变化的时候调用；</li>
-<li>void getItemRangeInto (int[] outRange) ： 返回当前可见的数据范围，参数 outRange 数组长度为2， outRange[0] 为第一个可见数据的位置，outRange[1] 为 最后一个可见数据的位置；</li>
-<li>void extendRangeInto (int[] range, int[] outRange, int scrollHint) 用来计算平滑滚动所需要加载的额外数据，一般不用实现这个函数，默认实现即可；</li>
-</ul>
-<p> 参考：<br> [1]. 示例代码 <a href="https://github.com/CattleFoot/RecyclerViewUtils" target="_blank" rel="noopener">https://github.com/CattleFoot/RecyclerViewUtils</a><br> [2]. 官网文档 <a href="https://developer.android.google.cn/reference/android/support/v7/util/AsyncListUtil" target="_blank" rel="noopener">https://developer.android.google.cn/reference/android/support/v7/util/AsyncListUtil</a><br> [3]. 译文 <a href="http://blog.chengyunfeng.com/?p=1057" target="_blank" rel="noopener">http://blog.chengyunfeng.com/?p=1057</a><br> [4]. 分页加载ORM数据 <a href="https://blog.csdn.net/zhangphil/article/details/78661838" target="_blank" rel="noopener">https://blog.csdn.net/zhangphil/article/details/78661838</a>  </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2868,7 +2953,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2879,7 +2964,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2890,7 +2975,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">71</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,HttpURLConnection," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概要在使用 HttpURLConnection前应对一些基础概念有所认识，比如 TCP/IP 协议，HTTP 报文， Socket 等。  Socket是 TCP 协议层的概念，如果要使用 Socket 直接通信，需要使用远程地址和端口号。其中，端口号根据具体的协议而不同，比如 HTTP 协议默认使用的端口号为 80/tcp。 HttpURLConnection 是在底层连接上的一个请求，最终也是">
+<meta name="keywords" content="Java,HttpURLConnection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java之HttpURLConnection">
+<meta property="og:url" content="https://cattlefoot.github.io/2019/02/15/java之HttpURLConnection/index.html">
+<meta property="og:site_name" content="CallteFoot&#39;s blog">
+<meta property="og:description" content="概要在使用 HttpURLConnection前应对一些基础概念有所认识，比如 TCP/IP 协议，HTTP 报文， Socket 等。  Socket是 TCP 协议层的概念，如果要使用 Socket 直接通信，需要使用远程地址和端口号。其中，端口号根据具体的协议而不同，比如 HTTP 协议默认使用的端口号为 80/tcp。 HttpURLConnection 是在底层连接上的一个请求，最终也是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cattlefoot.github.io/2019/02/15/java之HttpURLConnection/images/HttpURLConnection-flow.png">
+<meta property="og:updated_time" content="2019-02-15T14:12:43.033Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java之HttpURLConnection">
+<meta name="twitter:description" content="概要在使用 HttpURLConnection前应对一些基础概念有所认识，比如 TCP/IP 协议，HTTP 报文， Socket 等。  Socket是 TCP 协议层的概念，如果要使用 Socket 直接通信，需要使用远程地址和端口号。其中，端口号根据具体的协议而不同，比如 HTTP 协议默认使用的端口号为 80/tcp。 HttpURLConnection 是在底层连接上的一个请求，最终也是">
+<meta name="twitter:image" content="https://cattlefoot.github.io/2019/02/15/java之HttpURLConnection/images/HttpURLConnection-flow.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cattlefoot.github.io/2019/02/15/java之HttpURLConnection/"/>
+
+
+
+
+
+  <title>java之HttpURLConnection | CallteFoot's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CallteFoot's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Victory belongs to the most persevering</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cattlefoot.github.io/2019/02/15/java之HttpURLConnection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CallteFoot">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CallteFoot's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java之HttpURLConnection</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-15T16:41:23+08:00">
+                2019-02-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/HTTP/" itemprop="url" rel="index">
+                    <span itemprop="name">HTTP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>在使用 HttpURLConnection前应对一些基础概念有所认识，比如 TCP/IP 协议，HTTP 报文， Socket 等。</p>
+<ul>
+<li><strong>Socket</strong>是 <strong>TCP</strong> 协议层的概念，如果要使用 <strong>Socket</strong> 直接通信，需要使用远程地址和端口号。其中，端口号根据具体的协议而不同，比如 <strong>HTTP</strong> 协议默认使用的端口号为 <strong>80/tcp</strong>。</li>
+<li><strong>HttpURLConnection</strong> 是在底层连接上的一个请求，最终也是通过 <strong>Socket</strong> 连接网络，所谓的 underlaying Socket。使用 <strong>HttpURLConnection</strong> 不需要指定远程地址和端口号。</li>
+<li><strong>HttpURLConnectionU</strong> 只是一个抽象类，只能通过 <strong>url.openConection()</strong> 方法创建具体的实例。严格来说，openConection() 方法返回的是 <strong>URLConnection</strong> 的子类。根据 url 对象的不同，如可能不是 http:// 开头的，那么 openConection() 返回的可能就不是 HttpURLConnection。   </li>
+</ul>
+<p>⚠️ 由于Android是基于java开发，因此关于http请求也是基于HttpURLConnection实现的，但是在android API 23之前的sdk提供过HttpClient网路请求处理类，它们区别如下：</p>
+<ul>
+<li>标准Java接口(java.NET) —-HttpURLConnection，可以实现简单的基于URL请求、响应功能；</li>
+<li>Apache接口(org.appache.http)—-HttpClient，使用起来更方面更强大，不易扩展；</li>
+</ul>
+<h3 id="请求流程"><a href="#请求流程" class="headerlink" title="请求流程"></a>请求流程</h3><p><img src="./images/HttpURLConnection-flow.png" alt="HttpURLConnection-flow"><br>首先看一个简单的GET请求：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="comment">//构建URL对象</span></span><br><span class="line">           URL url = <span class="keyword">new</span> URL(requestUrl);</span><br><span class="line">           <span class="comment">//获取HttpURLConnection实例,httpurlconnection为同步请求</span></span><br><span class="line">           HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">           <span class="comment">//设置请求方法</span></span><br><span class="line">           connection.setRequestMethod(<span class="string">"GET"</span>);</span><br><span class="line">           <span class="comment">//设置链接超时时间</span></span><br><span class="line">           connection.setConnectTimeout(<span class="number">10000</span>);</span><br><span class="line">           <span class="comment">//设置读取超时时间</span></span><br><span class="line">           connection.setReadTimeout(<span class="number">15000</span>);</span><br><span class="line">           <span class="comment">//添加Header</span></span><br><span class="line">           connection.setRequestProperty(<span class="string">"Connection"</span>, <span class="string">"keep-Alive"</span>);</span><br><span class="line">           <span class="comment">//建立链接，请求前需设定请求行、请求报头；</span></span><br><span class="line">           connection.connect();</span><br><span class="line">           StringBuffer response = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">           BufferedReader reader;</span><br><span class="line">           <span class="keyword">if</span> (connection.getResponseCode() == HttpURLConnection.HTTP_OK) &#123;</span><br><span class="line">               <span class="comment">//将响应流转换成字符串，响应流只能读取一次</span></span><br><span class="line">               reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(connection.getInputStream()));</span><br><span class="line">               String line;</span><br><span class="line">               <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   response.append(line);</span><br><span class="line">               &#125;</span><br><span class="line">               System.out.println(response.toString());</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(connection.getErrorStream()));</span><br><span class="line">               String line;</span><br><span class="line">               <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   response.append(line);</span><br><span class="line">               &#125;</span><br><span class="line">               System.out.println(response.toString());</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p>⚠️：对于get请求</p>
+<ol>
+<li>url与参数之间用？隔开。</li>
+<li>键值对中键与值用=连接。</li>
+<li>两个键值对之间用&amp;连接。</li>
+</ol>
+<h3 id="请求属性设置"><a href="#请求属性设置" class="headerlink" title="请求属性设置"></a>请求属性设置</h3><ul>
+<li>setRequestMethod:设定请求的方法，默认是GET</li>
+<li>setDoInput:设置是否从httpUrlConnection读入，默认情况下是true;</li>
+<li>setDoOutput:设置是否向httpUrlConnection输出，为post请求时，参数要放在http正文内，因此需要设为true, 默认情况下是false;</li>
+<li>setUseCaches:设置是否使用缓存，Post请求不能使用缓存</li>
+<li>setConnectTimeOut:单位:毫秒，设置连接超时时间,如果不设置超时（timeout），在网络异常的情况下，可能会导致程序僵死而不继续往下执行。</li>
+<li>setReadTimeOut:单位:毫秒，设置读取超时时间<br>以上属性需要在调用 <strong>connect()</strong> 之前完成，调用connect()后就与服务器建立 <strong>Socket</strong> 连接，而连接以后，连接属性就不可以再修改；但是可以查询服务器返回的头信息了（header information）</li>
+</ul>
+<h3 id="请求头或响应头设置"><a href="#请求头或响应头设置" class="headerlink" title="请求头或响应头设置"></a>请求头或响应头设置</h3><p>HTTP请求允许一个key带多个用逗号分开的values，但是HttpURLConnection只提供了单个操作的方法：</p>
+<ul>
+<li>setRequestProperty: 设置HTTP HEAD 中的一些参数，如果参数存在则覆盖；</li>
+<li>addRequestProperty: 向HTTP HEAD 中的添加参数，允许一个key存在多个value；</li>
+</ul>
+<h3 id="发送URL请求"><a href="#发送URL请求" class="headerlink" title="发送URL请求"></a>发送URL请求</h3><p>建立实际连接之后，就是发送请求，把请求参数传到服务器，这就需要使用outputStream把请求参数传给服务器：</p>
+<ul>
+<li>getOutputStream(),此处getOutputStream会隐含的进行connect(即：如同调用上面的connect()方法，所以在开发中不调用上述的connect()也可以)。</li>
+</ul>
+<h3 id="获取响应"><a href="#获取响应" class="headerlink" title="获取响应"></a>获取响应</h3><p>请求发送成功之后，即可获取响应的状态码，如果成功既可以读取响应中的数据，获取这些数据的方法包括：</p>
+<ul>
+<li>getContent</li>
+<li>getHeaderField</li>
+<li>getInputStream<br>对于大部分请求来说，getInputStream和getContent用的最多的。<br>获取响应头标准信息通过以下方式获取：<ul>
+<li>getContentEncoding</li>
+<li>getContentLength</li>
+<li>getContentType</li>
+<li>getDate</li>
+<li>getExpiration</li>
+<li>getLastModifed<br>查询头信息信息：<ul>
+<li>getHeaderFieldKey</li>
+<li>getHeaderField</li>
+<li>getHeaderFields() 返回一个包含消息头所有字段的标准 map 对象</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="对于get请求一般不需要向http正文内写数据与发送数据，但对于post需要的"><a href="#对于get请求一般不需要向http正文内写数据与发送数据，但对于post需要的" class="headerlink" title="对于get请求一般不需要向http正文内写数据与发送数据，但对于post需要的"></a>对于get请求一般不需要向http正文内写数据与发送数据，但对于post需要的</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//向服务端发送一个json内容请求，（这里的json可以替换成字符串或者文件等）</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            URL url = <span class="keyword">new</span> URL(requestUrl);</span><br><span class="line">            HttpURLConnection mConnection = (HttpURLConnection) url.openConnection();</span><br><span class="line">            <span class="comment">//设置链接超时时间</span></span><br><span class="line">            mConnection.setConnectTimeout(<span class="number">10000</span>);</span><br><span class="line">            <span class="comment">//设置读取超时时间</span></span><br><span class="line">            mConnection.setReadTimeout(<span class="number">15000</span>);</span><br><span class="line">            <span class="comment">//设置请求方法</span></span><br><span class="line">            mConnection.setRequestMethod(“POST”);</span><br><span class="line">            <span class="comment">//添加Header，设定请求参数类型为json类型</span></span><br><span class="line">            mConnection.setRequestProperty(<span class="string">"Content-Type"</span>, <span class="string">"application/json;charset=utf-8"</span>);</span><br><span class="line">            <span class="comment">//接受输入流</span></span><br><span class="line">            mConnection.setDoInput(<span class="keyword">true</span>);</span><br><span class="line">            <span class="comment">//有请求数据时，必须开启此项！</span></span><br><span class="line">            mConnection.setDoOutput(<span class="keyword">true</span>);</span><br><span class="line">            <span class="comment">//POST不支持缓存</span></span><br><span class="line">            mConnection.setUseCaches(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">            String body = <span class="keyword">new</span> Gson().toJson(<span class="keyword">new</span> User(<span class="string">"18667148156"</span>, <span class="string">"123456"</span>));</span><br><span class="line">            BufferedWriter writer = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(mConnection.getOutputStream(), <span class="string">"UTF-8"</span>));</span><br><span class="line">            writer.write(body);</span><br><span class="line">            writer.close();</span><br><span class="line"></span><br><span class="line">            StringBuffer response = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">            BufferedReader reader;</span><br><span class="line">            System.out.println(mConnection.getResponseCode() + <span class="string">"   "</span> + mConnection.getResponseMessage());</span><br><span class="line">            <span class="keyword">if</span> (mConnection.getResponseCode() == HttpURLConnection.HTTP_OK) &#123;</span><br><span class="line">                <span class="comment">//将响应流转换成字符串，响应流只能读取一次</span></span><br><span class="line">                reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(mConnection.getInputStream()));</span><br><span class="line">                String line;</span><br><span class="line">                <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    response.append(line);</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(response.toString());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                InputStream inputStream = mConnection.getErrorStream();</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">null</span> != inputStream) &#123;</span><br><span class="line">                    reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(mConnection.getErrorStream()));</span><br><span class="line">                    String line;</span><br><span class="line">                    <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        response.append(line);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    response.append(mConnection.getResponseMessage());</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(response.toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (ProtocolException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>小结：  </p>
+<ul>
+<li>HttpURLConnection的connect()函数，实际上 <strong>只是建立了一个与服务器的tcp连接</strong>，并没有实际发送http请求。无论是post还是get，<strong>http请求实际上直到HttpURLConnection的getInputStream()这个函数里面才正式发送出去</strong>；</li>
+<li>在用POST方式发送URL请求时，URL请求参数的设定顺序是重中之重， 对connection对象的一切配置（那一堆set函数都必须要在connect()函数执行之前完成。而对outputStream的写操作，又必须要在inputStream的读操作之前。 这些顺序实际上是由http请求的格式决定的。如果inputStream读操作在outputStream的写操作之前，会抛出例外：java.net.ProtocolException: Cannot write output after reading input；</li>
+<li>http请求实际上由两部分组成， 一个是http头，所有关于此次http请求的配置都在http头里面定义，一个是正文content。connect()函数会根据HttpURLConnection对象的配置值生成http头部信息，因此在调用connect函数之前，就必须把所有的配置准备好。</li>
+<li>在http头后面紧跟着的是http请求的正文，正文的内容是通过outputStream流写入的，实际上outputStream不是一个网络流，充其量是个字符串流，往里面写入的东西不会立即发送到网络，而是存在于内存缓冲区中，待outputStream流关闭时，根据输入的内容生成http正文。至此，http请求的东西已经全部准备就绪。在getInputStream()函数调用的时候，就会把准备好的http请求正式发送到服务器了，然后返回一个输入流，用于读取服务器对于此次http请求的返回信息。由于http 请求在getInputStream的时候已经发送出去了（包括http头和正文），因此在getInputStream()函数 之后对connection对象进行设置（对http头的信息进行修改）或者写入outputStream（对正文进行修改）都是没有意义的了，执行这些操作会导致异常的发生。</li>
+</ul>
+<p>⚠️： HTTP 传输的消息要使用 URL UTF-8 编码，英文字母、数字和部分符号保持不变，空格编码成’+’。其他字符编码成 “%XY” 形式的字节序列，特别是中文字符，不能直接传输。可以考虑使用<br>URLEncoder.encode(string, “UTF-8”) 方法。HttpURLConnection 只能发送一个请求</p>
+<h3 id="简单的上传文件"><a href="#简单的上传文件" class="headerlink" title="简单的上传文件"></a>简单的上传文件</h3><ul>
+<li><p>基础的文件上传<br>在post请求传递参数时知道，可以从连接中得到一个输出流，输出流可以像服务器写数据。同理，可以使用这个输出流将文件写到服务器。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    URL url = <span class="keyword">new</span> URL(getUrl);</span><br><span class="line">    HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">    connection.setRequestMethod(<span class="string">"POST"</span>);</span><br><span class="line">    connection.setDoOutput(<span class="keyword">true</span>);</span><br><span class="line">    connection.setDoInput(<span class="keyword">true</span>);</span><br><span class="line">    connection.setUseCaches(<span class="keyword">false</span>);</span><br><span class="line">    connection.setRequestProperty(<span class="string">"Content-Type"</span>, <span class="string">"file/*"</span>);<span class="comment">//设置数据类型</span></span><br><span class="line">    connection.connect();</span><br><span class="line"></span><br><span class="line">    OutputStream outputStream = connection.getOutputStream();</span><br><span class="line">    <span class="comment">//这里的file即为需要上传的文件</span></span><br><span class="line">    FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(<span class="string">"file"</span>);<span class="comment">//把文件封装成一个流</span></span><br><span class="line">    <span class="keyword">int</span> length = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">while</span> ((length = fileInputStream.read(bytes)) != -<span class="number">1</span>)&#123;</span><br><span class="line">        outputStream.write(bytes,<span class="number">0</span>,length);<span class="comment">//写的具体操作</span></span><br><span class="line">    &#125;</span><br><span class="line">    fileInputStream.close();</span><br><span class="line">    outputStream.close();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> responseCode = connection.getResponseCode();</span><br><span class="line">    <span class="keyword">if</span>(responseCode == HttpURLConnection.HTTP_OK)&#123;</span><br><span class="line">      InputStream inputStream = connection.getErrorStream();</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> != inputStream) &#123;</span><br><span class="line">          reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(mConnection.getErrorStream()));</span><br><span class="line">          String line;</span><br><span class="line">          <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">              response.append(line);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          response.append(mConnection.getResponseMessage());</span><br><span class="line">      &#125;</span><br><span class="line">      connection.disconnect();</span><br><span class="line">      System.out.println(response.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过multipart上传文件或者参数<br>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This utility class provides an abstraction layer for sending multipart HTTP</span></span><br><span class="line"><span class="comment"> * POST requests to a web server.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> www.codejava.net</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MultipartUtility</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String boundary;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LINE_FEED = <span class="string">"\r\n"</span>;</span><br><span class="line">    <span class="keyword">private</span> HttpURLConnection httpConn;</span><br><span class="line">    <span class="keyword">private</span> String charset;</span><br><span class="line">    <span class="keyword">private</span> OutputStream outputStream;</span><br><span class="line">    <span class="keyword">private</span> PrintWriter writer;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * * This constructor initializes a new HTTP POST request with content type</span></span><br><span class="line"><span class="comment">     * * is set to multipart/form-data</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> requestURL</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> charset</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MultipartUtility</span><span class="params">(String requestURL, String charset)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.charset = charset;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// creates a unique boundary based on time stamp</span></span><br><span class="line">        boundary = <span class="string">"---"</span> + System.currentTimeMillis() + <span class="string">"---"</span>;</span><br><span class="line"></span><br><span class="line">        URL url = <span class="keyword">new</span> URL(requestURL);</span><br><span class="line">        httpConn = (HttpURLConnection) url.openConnection();</span><br><span class="line">        httpConn.setUseCaches(<span class="keyword">false</span>);</span><br><span class="line">        httpConn.setDoOutput(<span class="keyword">true</span>); <span class="comment">// indicates POST method</span></span><br><span class="line">        httpConn.setDoInput(<span class="keyword">true</span>);</span><br><span class="line">        httpConn.setRequestProperty(<span class="string">"Content-Type"</span>,</span><br><span class="line">                <span class="string">"multipart/form-data; boundary="</span> + boundary);</span><br><span class="line">        outputStream = httpConn.getOutputStream();</span><br><span class="line">        writer = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> OutputStreamWriter(outputStream, charset),</span><br><span class="line">                <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * * Adds a form field to the request</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> name field name</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> value field value</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addFormField</span><span class="params">(String name, String value)</span> </span>&#123;</span><br><span class="line">        writer.append(<span class="string">"--"</span> + boundary).append(LINE_FEED);</span><br><span class="line">        writer.append(<span class="string">"Content-Disposition: form-data; name=\""</span> + name + <span class="string">"\""</span>)</span><br><span class="line">                .append(LINE_FEED);</span><br><span class="line">        writer.append(<span class="string">"Content-Type: text/plain; charset="</span> + charset).append(</span><br><span class="line">                LINE_FEED);</span><br><span class="line">        writer.append(LINE_FEED);</span><br><span class="line">        writer.append(value).append(LINE_FEED);</span><br><span class="line">        writer.flush();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * * Adds a upload file section to the request</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> fieldName name attribute in &lt;input type="file" name="..." /&gt;</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> uploadFile a File to be uploaded</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addFilePart</span><span class="params">(String fieldName, File uploadFile)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        String fileName = uploadFile.getName();</span><br><span class="line">        writer.append(<span class="string">"--"</span> + boundary).append(LINE_FEED);</span><br><span class="line">        <span class="comment">//⚠️这里的fileName为表单指定的name值</span></span><br><span class="line">        writer.append(</span><br><span class="line">                <span class="string">"Content-Disposition: form-data; name=\""</span> + fieldName</span><br><span class="line">                        + <span class="string">"\"; filename=\""</span> + fileName + <span class="string">"\""</span>)</span><br><span class="line">                .append(LINE_FEED);</span><br><span class="line">        writer.append(</span><br><span class="line">                <span class="string">"Content-Type: "</span></span><br><span class="line">                        + URLConnection.guessContentTypeFromName(fileName))</span><br><span class="line">                .append(LINE_FEED);</span><br><span class="line">        writer.append(<span class="string">"Content-Transfer-Encoding: binary"</span>).append(LINE_FEED);</span><br><span class="line">        writer.append(LINE_FEED);</span><br><span class="line">        writer.flush();</span><br><span class="line"></span><br><span class="line">        FileInputStream inputStream = <span class="keyword">new</span> FileInputStream(uploadFile);</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line">        <span class="keyword">int</span> bytesRead = -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> ((bytesRead = inputStream.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">            outputStream.write(buffer, <span class="number">0</span>, bytesRead);</span><br><span class="line">        &#125;</span><br><span class="line">        outputStream.flush();</span><br><span class="line">        inputStream.close();</span><br><span class="line"></span><br><span class="line">        writer.append(LINE_FEED);</span><br><span class="line">        writer.flush();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * * Adds a header field to the request.</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> name - name of the header field</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@param</span> value - value of the header field</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addHeaderField</span><span class="params">(String name, String value)</span> </span>&#123;</span><br><span class="line">        writer.append(name + <span class="string">": "</span> + value).append(LINE_FEED);</span><br><span class="line">        writer.flush();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * * Completes the request and receives response from the server.</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@return</span> a list of Strings as response in case the server returned</span></span><br><span class="line"><span class="comment">     * * status OK, otherwise an exception is thrown.</span></span><br><span class="line"><span class="comment">     * * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">finish</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        List&lt;String&gt; response = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        writer.append(LINE_FEED).flush();</span><br><span class="line">        writer.append(<span class="string">"--"</span> + boundary + <span class="string">"--"</span>).append(LINE_FEED);</span><br><span class="line">        writer.close();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// checks server's status code first</span></span><br><span class="line">        <span class="keyword">int</span> status = httpConn.getResponseCode();</span><br><span class="line">        <span class="keyword">if</span> (status == HttpURLConnection.HTTP_OK) &#123;</span><br><span class="line">            BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(</span><br><span class="line">                    httpConn.getInputStream()));</span><br><span class="line">            String line;</span><br><span class="line">            <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                response.add(line);</span><br><span class="line">            &#125;</span><br><span class="line">            reader.close();</span><br><span class="line">            <span class="comment">//关闭链接</span></span><br><span class="line">            httpConn.disconnect();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Server returned non-OK status: "</span> + status);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">File directory = <span class="keyword">new</span> File(<span class="string">""</span>);<span class="comment">//参数为空</span></span><br><span class="line"></span><br><span class="line">       String author = directory.getAbsolutePath();</span><br><span class="line"></span><br><span class="line">       String charset = <span class="string">"UTF-8"</span>;</span><br><span class="line">       File uploadFile1 = <span class="keyword">new</span> File(author + <span class="string">"aop.png"</span>);</span><br><span class="line">       String requestURL = <span class="string">"http://xxxxx/upload"</span>;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           MultipartUtility multipart = <span class="keyword">new</span> MultipartUtility(requestURL, charset);</span><br><span class="line"></span><br><span class="line">           multipart.addFormField(<span class="string">"description"</span>, <span class="string">"Cool Pictures"</span>);</span><br><span class="line">           multipart.addFormField(<span class="string">"keywords"</span>, <span class="string">"Java,upload,Spring"</span>);</span><br><span class="line">           <span class="comment">//</span></span><br><span class="line">           multipart.addFilePart(<span class="string">"file"</span>, uploadFile1);</span><br><span class="line"></span><br><span class="line">           List&lt;String&gt; response = multipart.finish();</span><br><span class="line"></span><br><span class="line">           System.out.println(<span class="string">"SERVER REPLIED:"</span>);</span><br><span class="line"></span><br><span class="line">           <span class="keyword">for</span> (String line : response) &#123;</span><br><span class="line">               System.out.println(line);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">           System.err.println(ex);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p>七请求输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">-----1550237637934---</span><br><span class="line">Content-Disposition: form-data; name=&quot;description&quot;</span><br><span class="line">Content-Type: text/plain; charset=UTF-8</span><br><span class="line"></span><br><span class="line">Cool Pictures</span><br><span class="line"></span><br><span class="line">-----1550237637934---</span><br><span class="line">Content-Disposition: form-data; name=&quot;keywords&quot;</span><br><span class="line">Content-Type: text/plain; charset=UTF-8</span><br><span class="line"></span><br><span class="line">Java,upload,Spring</span><br><span class="line"></span><br><span class="line">-----1550237637934---</span><br><span class="line">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;aop.png&quot;</span><br><span class="line">Content-Type: image/png</span><br><span class="line">Content-Transfer-Encoding: binary</span><br><span class="line">......//二进制数据</span><br><span class="line">-----1550237637934---</span><br></pre></td></tr></table></figure></p>
+<p>其中—–1550237637934—代表一个数据块的开始或结束，这个数据需要在头文件中指定，如上文中的boundary。<br>⚠️http最早出现时就是为了浏览器与服务器之间的数据传输，所以有固定的协议，协议规范了一定的数据格式，所以在浏览器中传递数据时会自动按照一定的格式封装。在android中不能自动封装，所以这些操作需要手动操作。</p>
+<ul>
+<li>下载文件<br>从服务器下载文件是比较简单的操作，只要得到输入流，就可以从流中读出数据。使用示例如下：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">     String urlPath = <span class="string">"https://www.baidu.com/"</span>;</span><br><span class="line">      URL url = <span class="keyword">new</span> URL(urlPath);</span><br><span class="line">      HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">      connection.setRequestMethod(<span class="string">"GET"</span>);</span><br><span class="line">      connection.connect();</span><br><span class="line">      <span class="keyword">int</span> responseCode = connection.getResponseCode();</span><br><span class="line">      <span class="keyword">if</span>(responseCode == HttpURLConnection.HTTP_OK)&#123;</span><br><span class="line">          InputStream inputStream = connection.getInputStream();</span><br><span class="line">          File dir = <span class="keyword">new</span> File(<span class="string">"fileDir"</span>);</span><br><span class="line">          <span class="keyword">if</span> (!dir.exists())&#123;</span><br><span class="line">              dir.mkdirs();</span><br><span class="line">          &#125;</span><br><span class="line">          File file = <span class="keyword">new</span> File(dir, <span class="string">"fileName"</span>);<span class="comment">//根据目录和文件名得到file对象</span></span><br><span class="line">          FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(file);</span><br><span class="line">          <span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>*<span class="number">8</span>];</span><br><span class="line">          <span class="keyword">int</span> len = -<span class="number">1</span>;</span><br><span class="line">          <span class="keyword">while</span> ((len = inputStream.read(buf)) != -<span class="number">1</span>)&#123;</span><br><span class="line">              fos.write(buf, <span class="number">0</span>, len);</span><br><span class="line">          &#125;</span><br><span class="line">          fos.flush();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li>对于有些请求服务可能会对客户端进行过滤，如是否是浏览器，是否为android手机等客户端：<br>这个主要看头部信息的user-agent，如设定客户端为浏览器：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">connection.setRequestProperty(<span class="string">"user-agent"</span>,</span><br><span class="line">                 <span class="string">"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.7 Safari/537.36"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>参考：<br>[1] <a href="http://www.blogjava.net/supercrsky/articles/247449.html" target="_blank" rel="noopener">http://www.blogjava.net/supercrsky/articles/247449.html</a><br>[2] <a href="https://blog.csdn.net/woxueliuyun/article/details/43267365" target="_blank" rel="noopener">https://blog.csdn.net/woxueliuyun/article/details/43267365</a><br>[3] <a href="https://www.codejava.net/java-se/networking/upload-files-by-sending-multipart-request-programmatically" target="_blank" rel="noopener">https://www.codejava.net/java-se/networking/upload-files-by-sending-multipart-request-programmatically</a><br>[4] <a href="https://www.techcoil.com/blog/how-to-upload-a-file-via-a-http-multipart-request-in-java-without-using-any-external-libraries/" target="_blank" rel="noopener">https://www.techcoil.com/blog/how-to-upload-a-file-via-a-http-multipart-request-in-java-without-using-any-external-libraries/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/HttpURLConnection/" rel="tag"># HttpURLConnection</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/12/Android通过系统获取图片及截图/" rel="next" title="Android通过系统获取图片及截图">
+                <i class="fa fa-chevron-left"></i> Android通过系统获取图片及截图
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CallteFoot</p>
+              <p class="site-description motion-element" itemprop="description">The blog from a Android coder</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概要"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求流程"><span class="nav-number">2.</span> <span class="nav-text">请求流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求属性设置"><span class="nav-number">3.</span> <span class="nav-text">请求属性设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求头或响应头设置"><span class="nav-number">4.</span> <span class="nav-text">请求头或响应头设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发送URL请求"><span class="nav-number">5.</span> <span class="nav-text">发送URL请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取响应"><span class="nav-number">6.</span> <span class="nav-text">获取响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对于get请求一般不需要向http正文内写数据与发送数据，但对于post需要的"><span class="nav-number">7.</span> <span class="nav-text">对于get请求一般不需要向http正文内写数据与发送数据，但对于post需要的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的上传文件"><span class="nav-number">8.</span> <span class="nav-text">简单的上传文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">9.</span> <span class="nav-text">注意</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CallteFoot</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
