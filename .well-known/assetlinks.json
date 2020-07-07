@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "com.weimai.enze",
+    "package_name": "com.wcg.test",
     "sha256_cert_fingerprints":
     ["2E:69:E2:2B:38:48:F9:6D:1B:7B:39:96:1D:AF:B0:4D:A5:77:AB:22:60:3B:2C:74:2B:7F:16:06:7E:EF:BF:F7"]
   }
